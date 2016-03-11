@@ -9,6 +9,8 @@
 import urllib2, urllib
 import json
 
+from Station import Station
+
 class NPS_Climate(object):
     def __init__(self):
         self.baseURL = 'http://data.rcc-acis.org/'
@@ -16,10 +18,16 @@ class NPS_Climate(object):
 
     def getStationList(self, state = None, wxElement = None, county = None, bbox = None):
         self.source = 'StnMeta'
-        return self._formatInputDict(state = state, elems = wxElement
+        return self._call_ACIS(state = state, elems = wxElement
             , county = county, bbox = bbox)
 
-    def _call(self):
+    def _call_ACIS(self, **kwargs):
+        '''
+        Common method for calling the ACIS services.
+
+        Returns python dictionary bu de-serializing json response
+        '''
+        self._formatInputDict(**kwargs)
         self.url = self.baseURL + self.source
         params = urllib.urlencode({'params':json.dumps(self.input_dict)})
         request = urllib2.Request(self.url, params, {'Accept':'application/json'})
@@ -31,7 +39,8 @@ class NPS_Climate(object):
         for k in kwargs:
             if kwargs[k]:
                 self.input_dict[k] = kwargs[k]
-        return self._call()
+
+
 
 
 if __name__ == '__main__':
