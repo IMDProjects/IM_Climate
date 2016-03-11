@@ -14,7 +14,7 @@ import IM_Climate
 
 class StationList(IM_Climate):
     def __init__(self):
-        self.source = 'StnMeta'
+        self.webServiceSource = 'StnMeta'
 
     def getStationList(self, state = None, wxElement = None, county = None, bbox = None):
         return self._call_ACIS(state = state, elems = wxElement
