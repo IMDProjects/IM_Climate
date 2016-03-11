@@ -26,7 +26,11 @@ class IM_Climate(object):
                             ,'obst':'Obs time temperature (?F)'
                             ,'pcpn': 'Precipitation (inches)'
                             ,'snow' : 'Snowfall (inches)'
-                            ,'snwd': 'Snow depth (inches)'}
+                            ,'snwd': 'Snow depth (inches)'
+                            ,'cddXX': 'Cooling Degree Days; where XX is base temperature'
+                            ,'hddXX': 'Heating Degree Days; where XX is base temperature'
+                            ,'gddXX': 'Growing Degree Days; where XX is base temperature'
+                            }
 
     def _call_ACIS(self, **kwargs):
         '''
@@ -51,8 +55,18 @@ class IM_Climate(object):
             if kwargs[k]:
                 self.input_dict[k] = kwargs[k]
 
+    def _getFipsCodes(self):
+        data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
+        d = data.read()
+        return d
+
+    @property
+    def FipsCodes (self):
+        return self._getFipsCodes()
 
 
 
 if __name__ == '__main__':
     c = IM_Climate()
+    print c.FipsCodes
+    #c._getFipsCodes()
