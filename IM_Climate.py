@@ -1,12 +1,10 @@
 #-------------------------------------------------------------------------------
-# Name:        module1
-# Purpose:
+# Name:       IM_Climate
+# Purpose: Simple API to interface with ACIS Sytsem
 #
-# Author:      antip
-#
-# Created:     10/03/2016
-# Copyright:   (c) antip 2016
-# Licence:     <your licence>
+# Author:      Iventory and Montoring Division,  National Park Service
+#               Lisa Nelson, Brent Frakes
+
 #-------------------------------------------------------------------------------
 import urllib2, urllib
 import json
