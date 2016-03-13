@@ -32,6 +32,11 @@ class IM_Climate(object):
                             ,'gddXX': 'Growing Degree Days; where XX is base temperature'
                             }
 
+        self.reduceCodes = {'max': 'Maximum value for the period'
+                , 'min':'Minimum value for the period'
+                , 'sum' : 'Sum of the values for the period'
+                , 'mean': 'Average of the values for the period'}
+
     def _call_ACIS(self, **kwargs):
         '''
         Common method for calling the ACIS services.
@@ -50,23 +55,29 @@ class IM_Climate(object):
         '''
         Method to pack all arguments into a dictionary using to call the web
             service.
+
+        This method is need primarily for the purpose of filtering our any
+            argument that is None.
         '''
         for k in kwargs:
             if kwargs[k]:
                 self.input_dict[k] = kwargs[k]
 
-    def _getFipsCodes(self):
+    def listFipsCodes(self, state = None):
+        fipCode = []
         data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
-        d = data.read()
-        return d
+        for line in data.readlines():
+            line = line.split(',')
+            if state:
+                if line[0] == state:
+                    fipCode.append(line[3] + ', ' + line[0] + ' : ' + line[1] + line[2])
+            else:
+                fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
+        return fipCode
 
-    @property
-    def FipsCodes (self):
-        return self._getFipsCodes()
 
 
 
 if __name__ == '__main__':
     c = IM_Climate()
-    print c.FipsCodes
-    #c._getFipsCodes()
+    print c.listFipsCodes(state =  'CO')
