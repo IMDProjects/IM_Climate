@@ -23,5 +23,5 @@ class StationFinder(IM_Climate):
 
 if __name__ == '__main__':
     c = StationFinder()
-    stations =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
-    a = stations.getStationIDs()
+    stationList =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
+    a = stationList.stationIDs

@@ -15,14 +15,14 @@ class DataRequestor(IM_Climate):
 
     def getMonthySummary(self, stations, wxElement, reduceCode, startYear = None, endYear = None):
         self.duration = 'mly'
-        response = self._call_ACIS(sids = self._extractStationList(stations), sdate = startYear + '-01',
-            edate = endYear + '-12', elems = 'mly_' + reduceCode +'_' + wxElement)
+        response = self._call_ACIS(sids = self._extractStationList(stations), sdate = str(startYear) + '-01',
+            edate = str(endYear) + '-12', elems = 'mly_' + reduceCode +'_' + wxElement)
         return WxData(response, startDate = startYear, endDate = endYear, dateInterval = 'monthly')
 
     def _extractStationList(self, stations):
-        if type(stations) == 'WxData':
-            return stations['meta']['stationList']
-        else:
+        try:
+            return stations.stationIDs
+        except:
             return stations
 
 

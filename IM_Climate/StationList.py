@@ -4,12 +4,13 @@ class StationList(list):
     def __init__(self, *args, **kwargs):
         super(StationList, self).__init__(*args, **kwargs)
 
-    def getStationIDs(self):
+    @property
+    def stationIDs(self):
         '''
         Returns a list of all station IDs
         '''
         data = [z['sids'][0] for z in self]
-        print data
+        return data
 
 
 if __name__ == '__main__':
@@ -26,4 +27,4 @@ if __name__ == '__main__':
             u'state': u'CO',
             u'uid': 77459}]
     s = StationList(stations)
-    s.getStationIDs()
+    print s.stationIDs
