@@ -40,6 +40,10 @@ class WxData(dict, dataObjects):
                 dateList.append(str(year) + '-' + str(month))
         self['meta']['dateList'] = dateList
 
+    @property
+    def metadata(self):
+        return [k for k in self['meta'].items()]
+
 
 
 
@@ -62,5 +66,6 @@ if __name__ == '__main__':
 
     s = WxData(data, startDate = '1980-01-01', endDate = '1980-01-05', dateInterval = 'daily')
     #s = WxData(data, startDate = '1980', endDate = '1983', dateInterval = 'monthly')
-    print s['meta']
-    print s.toJSON()
+    #print s.keys()
+    #print s.toJSON()
+    print s.metadata

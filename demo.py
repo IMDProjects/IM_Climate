@@ -13,7 +13,7 @@ print stations.toJSON()
 #Request data for the respective stations
 dr = DataRequestor()
 #All methods of DataRequestor return a WxData dictionary object with extended methods
-data = dr.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981')
+data = dr.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '2011')
 
 #The data object has two components, metadata and data
 print data['meta']
