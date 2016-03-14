@@ -1,8 +1,8 @@
 import json
 
-class StationList(list):
+class StationInfo(dict):
     def __init__(self, *args, **kwargs):
-        super(StationList, self).__init__(*args, **kwargs)
+        super(StationInfo, self).__init__(*args, **kwargs)
 
     @property
     def stationIDs(self):
@@ -21,7 +21,7 @@ class StationList(list):
         return data
 
 if __name__ == '__main__':
-    stations =  [{u'elev': 10549.9,
+    stations =  {[{u'elev': 10549.9,
             u'll': [-106.17, 39.49],
             u'name': u'Copper Mountain',
             u'sids': [u'USS0006K24S 6'],
@@ -33,7 +33,7 @@ if __name__ == '__main__':
             u'sids': [u'USS0006K29S 6'],
             u'state': u'CO',
             u'uid': 77459}]
-    s = StationList(stations)
+    s = StationInfo(stations)
     print s.stationIDs
     print s.stationNames
 

@@ -1,5 +1,5 @@
 import urllib2, urllib
-from StationList import StationList
+from StationInfo import StationInfo
 from ACIS import ACIS
 
 class StationFinder(ACIS):
