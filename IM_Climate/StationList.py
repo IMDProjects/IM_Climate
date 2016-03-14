@@ -9,9 +9,16 @@ class StationList(list):
         '''
         Returns a list of all station IDs
         '''
-        data = [z['sids'][0] for z in self]
+        data = [str(z['sids'][0]) for z in self]
         return data
 
+    @property
+    def stationNames(self):
+        '''
+        Returns a list of all station IDs
+        '''
+        data = [str(z['name'] + ', ' + z['state'] + ' (elev: ' + str(z['elev']) + ')') for z in self]
+        return data
 
 if __name__ == '__main__':
     stations =  [{u'elev': 10549.9,
@@ -28,3 +35,4 @@ if __name__ == '__main__':
             u'uid': 77459}]
     s = StationList(stations)
     print s.stationIDs
+    print s.stationNames

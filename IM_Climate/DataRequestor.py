@@ -1,9 +1,9 @@
-from IM_Climate import IM_Climate
+from ACIS import ACIS
 from WxData import WxData
 
 
 
-class DataRequestor(IM_Climate):
+class DataRequestor(ACIS):
     def __init__(self):
         super(DataRequestor,self).__init__()
         self.webServiceSource = 'MultiStnData'

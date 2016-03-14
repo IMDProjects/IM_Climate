@@ -1,18 +1,10 @@
-#-------------------------------------------------------------------------------
-# Name:       IM_Climate
-# Purpose: Simple API to interface with ACIS Sytsem
-#
-# Author:      Iventory and Montoring Division,  National Park Service
-#               Lisa Nelson, Brent Frakes
-
-#-------------------------------------------------------------------------------
 import urllib2, urllib
 import json
 
-class IM_Climate(object):
+class ACIS(object):
 
     '''
-    Base class with common methods
+    Base class with common methods for interacting with ACIS web services
     '''
     def __init__(self):
         self.baseURL = 'http://data.rcc-acis.org/'

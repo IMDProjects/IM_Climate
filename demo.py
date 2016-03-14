@@ -5,6 +5,7 @@ from IM_Climate.DataRequestor import DataRequestor
 sf = StationFinder()
 stations = sf.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
 print stations.stationIDs
+print stations.stationNames
 
 #Request data for the respective stations
 dr = DataRequestor()

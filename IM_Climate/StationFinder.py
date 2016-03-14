@@ -1,8 +1,8 @@
 import urllib2, urllib
 from StationList import StationList
-from IM_Climate import IM_Climate
+from ACIS import ACIS
 
-class StationFinder(IM_Climate):
+class StationFinder(ACIS):
     def __init__(self):
         super(StationFinder,self).__init__()
         self.webServiceSource = 'StnMeta'
