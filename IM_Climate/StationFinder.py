@@ -18,10 +18,11 @@ class StationFinder(ACIS):
         results =  self._call_ACIS(state = state, elems = wxElement
             , county = countyCode, bbox = bbox)
 
-        return StationList(results['meta'])
+        return StationInfo(results)
 
 
 if __name__ == '__main__':
     c = StationFinder()
     stationList =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
     a = stationList.stationIDs
+    print a

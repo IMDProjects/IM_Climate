@@ -1,12 +1,14 @@
 import dateutil.parser
 import datetime
 
+from dataObjects import dataObjects
+
 def setDate(date):
     if date:
         return dateutil.parser.parse(str(date)).date()
 
 
-class WxData(dict):
+class WxData(dict, dataObjects):
     def __init__(self,  *args, **kwargs):
         super(WxData, self).__init__(*args, **kwargs)
         self['meta'] = {}
@@ -61,3 +63,4 @@ if __name__ == '__main__':
     s = WxData(data, startDate = '1980-01-01', endDate = '1980-01-05', dateInterval = 'daily')
     #s = WxData(data, startDate = '1980', endDate = '1983', dateInterval = 'monthly')
     print s['meta']
+    print s.toJSON()
