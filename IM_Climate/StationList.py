@@ -36,3 +36,4 @@ if __name__ == '__main__':
     s = StationList(stations)
     print s.stationIDs
     print s.stationNames
+
