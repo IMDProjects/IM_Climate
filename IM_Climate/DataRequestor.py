@@ -4,20 +4,20 @@ from WxData import WxData
 
 
 class DataRequestor(ACIS):
-    def __init__(self):
-        super(DataRequestor,self).__init__()
+    def __init__(self,*args,**kwargs):
+        super(DataRequestor,self).__init__(*args,**kwargs)
         self.webServiceSource = 'MultiStnData'
 
-    def getDailyWxObservations(self, stations, wxElement, startDate, endDate):
+    def getDailyWxObservations(self, stations, wxElement, startDate, endDate, **kwargs):
         response =  self._call_ACIS(sids = self._extractStationList(stations), sdate = startDate,
             edate = endDate, elems = wxElement, add = 'f', meta = 'sids')
-        return WxData(response, startDate = startDate, endDate = endDate, dateInterval = 'daily')
+        return WxData(response, startDate = startDate, endDate = endDate, dateInterval = 'daily', **kwargs)
 
-    def getMonthySummary(self, stations, wxElement, reduceCode, startYear = None, endYear = None):
+    def getMonthySummary(self, stations, wxElement, reduceCode, startYear = None, endYear = None, **kwargs):
         self.duration = 'mly'
         response = self._call_ACIS(sids = self._extractStationList(stations), sdate = str(startYear) + '-01',
             edate = str(endYear) + '-12', elems = 'mly_' + reduceCode +'_' + wxElement)
-        return WxData(response, startDate = startYear, endDate = endYear, dateInterval = 'monthly')
+        return WxData(response, startDate = startYear, endDate = endYear, dateInterval = 'monthly', **kwargs)
 
     def _extractStationList(self, stations):
         try:

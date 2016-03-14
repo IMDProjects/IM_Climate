@@ -6,7 +6,8 @@ class ACIS(object):
     '''
     Base class with common methods for interacting with ACIS web services
     '''
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(ACIS,self).__init__(*args, **kwargs)
         self.baseURL = 'http://data.rcc-acis.org/'
         self.input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
@@ -71,5 +72,5 @@ class ACIS(object):
 
 
 if __name__ == '__main__':
-    c = IM_Climate()
+    c = ACIS()
     print c.listFipsCodes(state =  'CO')

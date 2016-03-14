@@ -7,7 +7,7 @@ class StationFinder(ACIS):
         super(StationFinder,self).__init__()
         self.webServiceSource = 'StnMeta'
 
-    def find(self, state = None, wxElement = None, countyCode = None, bbox = None):
+    def find(self, state = None, wxElement = None, countyCode = None, bbox = None, **kwargs):
         '''Returns a list object of stations based on the the specified criteria:
                 state - Two-letter state acronym (e.g., CO)
                 wxElement - Weather element code (e.g., tmin)
@@ -16,7 +16,7 @@ class StationFinder(ACIS):
         '''
 
         results =  self._call_ACIS(state = state, elems = wxElement
-            , county = countyCode, bbox = bbox)
+            , county = countyCode, bbox = bbox, **kwargs)
 
         return StationInfo(results)
 
