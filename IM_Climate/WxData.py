@@ -20,7 +20,6 @@ class WxData(dict, dataObjects):
         elif self['meta']['dateInterval'] == 'monthly':
             self._addMonthlyDates()
 
-
     def _addDailyDates(self):
         '''
         Creates list of all daily dates
@@ -32,6 +31,7 @@ class WxData(dict, dataObjects):
         for i in range(diff.days + 1):
             dateList.append((d1 + datetime.timedelta(i)).isoformat())
         self['meta']['dateList'] = dateList
+        self['meta']['stationIDs'] = self.stationIDList
 
     def _addMonthlyDates(self):
         dateList = []
@@ -44,6 +44,20 @@ class WxData(dict, dataObjects):
     def metadata(self):
         return [k for k in self['meta'].items()]
 
+    @property
+    def stationIDList(self):
+        '''
+        List of all stationIDs within dataset
+        '''
+        return [k['meta']['sids'][0] for k in self['data']]
+
+    def getStationData(self, stationID):
+        '''
+        Returns time series of data for a specied station
+        '''
+        for d in self['data']:
+            if d['meta']['sids'][0] == stationID:
+                return d['data']
 
 
 
@@ -69,3 +83,5 @@ if __name__ == '__main__':
     #print s.keys()
     #print s.toJSON()
     print s.metadata
+    #print s.stationIDList
+    #print s.getStationData('03005 1')
