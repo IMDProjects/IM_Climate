@@ -15,10 +15,12 @@ class WxData(dict, dataObjects):
         self['meta']['startDate'] = kwargs['startDate']
         self['meta']['endDate'] = kwargs['endDate']
         self['meta']['dateInterval'] = kwargs['dateInterval']
+        self['meta']['stationIDs'] = self.stationIDList
         if self['meta']['dateInterval'] == 'daily':
             self._addDailyDates()
         elif self['meta']['dateInterval'] == 'monthly':
             self._addMonthlyDates()
+
 
     def _addDailyDates(self):
         '''
@@ -30,15 +32,26 @@ class WxData(dict, dataObjects):
         diff = d2 - d1
         for i in range(diff.days + 1):
             dateList.append((d1 + datetime.timedelta(i)).isoformat())
-        self['meta']['dateList'] = dateList
-        self['meta']['stationIDs'] = self.stationIDList
+        self._verifyDates(dateList)
+
+
 
     def _addMonthlyDates(self):
         dateList = []
         for year in range(int(self['meta']['startDate']), int(self['meta']['endDate']) + 1):
             for month in range (1,13):
                 dateList.append(str(year) + '-' + str(month))
-        self['meta']['dateList'] = dateList
+        self._verifyDates(dateList)
+
+
+    def _verifyDates(self, dateList):
+        '''
+        Confirms length of date list matches length of time series
+        '''
+        if len(dateList) == len(self.getStationData( self.stationIDList[0])):
+            self['meta']['dateList'] = dateList
+        else:
+            raise Exception('Dates do not match data')
 
     @property
     def metadata(self):
