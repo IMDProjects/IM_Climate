@@ -5,31 +5,28 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 import GUI.NPS_root as rt
 
-class base(object):
-    def __init__(self, **kwargs):
-        return
-    
-class NPS_Plotter(base):
+
+class NPS_Plotter(object):
     '''
     Creates stand-alone graph widget with numerous controls
     '''
     def __init__(self, xAxis, yData, Title = 'Title'
                  ,xLabel = 'X Label', yLabel = 'Y Label', plotType = 'line', **kwargs):
         super(NPS_Plotter, self).__init__(**kwargs)
-        
+
         self.xAxis = xAxis
         self.yData = yData
         self.plotType = plotType
 
         self.root=rt.NPS_root()
         #To instantiate StrinVar and IntVar classes, Tk() must already be instantiated
-        self.Title = Tk.StringVar() 
+        self.Title = Tk.StringVar()
         self.xMax = Tk.IntVar()
         self.xMin = Tk.IntVar()
         self.yMax = Tk.IntVar()
         self.yMin = Tk.IntVar()
-        self.xLabel = Tk.StringVar() 
-        self.yLabel = Tk.StringVar() 
+        self.xLabel = Tk.StringVar()
+        self.yLabel = Tk.StringVar()
 
         self.yMax.set(max(y for y in self.yData if y is not None))
         self.yMin.set(min(y for y in self.yData if y is not None))
@@ -38,8 +35,9 @@ class NPS_Plotter(base):
         self.xLabel.set(xLabel)
         self.yLabel.set(yLabel)
         self.Title.set(Title)
-        
-    
+        self.app()
+
+
     def app(self):
         self.add_graph_controls_frame()
         self.drawGraph()
@@ -70,7 +68,7 @@ class NPS_Plotter(base):
         self.canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
         self.canvas._tkcanvas.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
         self.graphFrame.grid(row=1, rowspan=10)
-        
+
 
     def add_graph_controls_frame(self):
         graphControls = Tk.Frame(self.root)
@@ -88,7 +86,7 @@ class NPS_Plotter(base):
         self.yMinSelector.config(textvariable = str(self.yMin))
         self.yMinSelector.config(width=5)
         self.yMinSelector.grid(row = 2, column = 2, sticky = 'w')
-        
+
         #YMax Selector
         Tk.Label(graphControls, text = 'Max Y' ).grid(row = 2, column=3)
         self.yMaxSelector = Tk.Entry(graphControls)
@@ -116,13 +114,13 @@ class NPS_Plotter(base):
         self.ctlPlotType.set(self.plotType)
         self.ctlPlotType.grid(row = 4, column = 2)
 
-        #X Label 
+        #X Label
         Tk.Label(graphControls, text = 'X-Axis Label' ).grid(row = 5, column=1)
         self.ctlXLabel = Tk.Entry(graphControls)
         self.ctlXLabel.config(textvariable = str(self.xLabel))
         self.ctlXLabel.grid(row = 5, column = 2, columnspan=3, sticky = 'we')
 
-        #Y Label 
+        #Y Label
         Tk.Label(graphControls, text = 'Y-Axis Label' ).grid(row = 6, column=1)
         self.ctlYLabel = Tk.Entry(graphControls)
         self.ctlYLabel.config(textvariable = str(self.yLabel))
@@ -134,7 +132,7 @@ class NPS_Plotter(base):
         self.btnDrawGraph.grid(row = 10, column = 4, sticky = 'e', pady=10)
         self.btnDrawGraph.bind("<Button 1>", self.redrawGraph)
 
-            
+
     def redrawGraph(self, *args):
         try:
             self.yMax.set(int(self.yMaxSelector.get()))
@@ -152,15 +150,15 @@ class NPS_Plotter(base):
             self.xMin.set(int(self.xMinSelector.get()))
         except:
             pass
-            
+
         self.Title.set(self.ctlTitle.get())
         self.plotType = self.ctlPlotType.get()
         self.xLabel.set(self.ctlXLabel.get())
         self.yLabel.set(self.ctlYLabel.get())
         self.graphFrame.destroy()
         self.drawGraph()
-        
-        
+
+
 if  __name__ == '__main__':
     cg = NPS_Plotter(xAxis = [1,2,3,4,5]
                         ,yData = [1,2,7,0,5]

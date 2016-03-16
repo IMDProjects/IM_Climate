@@ -58,6 +58,10 @@ class WxData(dict, dataObjects):
         return [k for k in self['meta'].items()]
 
     @property
+    def dateList(self):
+        return self['meta']['dateList']
+
+    @property
     def stationIDList(self):
         '''
         List of all stationIDs within dataset
@@ -70,7 +74,7 @@ class WxData(dict, dataObjects):
         '''
         for d in self['data']:
             if d['meta']['sids'][0] == stationID:
-                return d['data']
+                return [element[0] for element in d['data']]
 
 
 
@@ -95,6 +99,6 @@ if __name__ == '__main__':
     #s = WxData(data, startDate = '1980', endDate = '1983', dateInterval = 'monthly')
     #print s.keys()
     #print s.toJSON()
-    print s.metadata
+    #print s.metadata
     #print s.stationIDList
-    #print s.getStationData('03005 1')
+    print s.getStationData('03005 1')
