@@ -27,13 +27,20 @@ class NPS_Plotter(object):
         self.yMin = Tk.IntVar()
         self.xLabel = Tk.StringVar()
         self.yLabel = Tk.StringVar()
+        self.xTicLabel = Tk.StringVar()
 
         self.yMax.set(max(y for y in self.yData if y is not None))
         self.yMin.set(min(y for y in self.yData if y is not None))
-        self.xMax.set(max(x for x in self.xAxis if x is not None))
-        self.xMin.set(min(x for x in self.xAxis if x is not None))
+
+        self.falseX = [x for x in range(0, len(self.xAxis))]
+##        self.xMax.set(max(x for x in self.xAxis if x is not None))
+##        self.xMin.set(min(x for x in self.xAxis if x is not None))
+        self.xMax.set(max(x for x in self.falseX if x is not None))
+        self.xMin.set(min(x for x in self.falseX if x is not None))
         self.xLabel.set(xLabel)
         self.yLabel.set(yLabel)
+        self.xTicLabel.set( ('aa','ba', 'c', 'd', 'e'))
+        #self.xTicLabel.set(map(str, xAxis))
         self.Title.set(Title)
         self.app()
 
@@ -51,16 +58,20 @@ class NPS_Plotter(object):
 
         self.graphFrame = Tk.Frame(self.root)
         f = Figure(figsize=(7,5), dpi=100)
-        a = f.add_subplot(111)
+        subplot = f.add_subplot(111)
         if self.plotType == 'line':
-            a.plot(self.xAxis, self.yData)
+            #a.plot(self.xAxis, self.yData)
+            subplot.plot(self.falseX, self.yData)
         elif self.plotType == 'bar':
-            a.bar(self.xAxis, self.yData)
-        a.set_title(self.Title.get())
-        a.set_xlabel(self.xLabel.get())
-        a.set_ylabel(self.yLabel.get())
-        a.set_ylim(self.yMin.get(), self.yMax.get())
-        a.set_xlim(self.xMin.get(), self.xMax.get())
+            subplot.bar(self.xAxis, self.yData)
+        subplot.set_title(self.Title.get())
+        subplot.set_xlabel(self.xLabel.get())
+        subplot.set_ylabel(self.yLabel.get())
+        subplot.set_ylim(self.yMin.get(), self.yMax.get())
+        subplot.set_xlim(self.xMin.get(), self.xMax.get())
+        #a.set_xticklabels( self.xTicLabel.get(),  rotation = 45)
+        #a.set_xticklabels(map(str, self.xAxis), rotation = 45)
+        subplot.xticks(self.falseX, map(str, self.xAxis), rotation='vertical')
 
         # a tk.DrawingArea
         self.canvas = FigureCanvasTkAgg(f, master = self.graphFrame)
@@ -160,7 +171,9 @@ class NPS_Plotter(object):
 
 
 if  __name__ == '__main__':
-    cg = NPS_Plotter(xAxis = [1,2,3,4,5]
+    xAxis = ['aa','ba','c','d','e']
+    #xAxis = [1,2,3,4,5]
+    cg = NPS_Plotter(xAxis = xAxis
                         ,yData = [1,2,7,0,5]
                      ,Title = 'Demo Title'
                      ,xLabel = 'X Label Demo'

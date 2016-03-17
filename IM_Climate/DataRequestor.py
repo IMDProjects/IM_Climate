@@ -20,6 +20,11 @@ class DataRequestor(ACIS):
         return WxData(response, startDate = startYear, endDate = endYear, dateInterval = 'monthly', **kwargs)
 
     def _extractStationList(self, stations):
+        '''
+        If the station is a WxData objects, extracts list of stations using method.
+        Otherwise, assumes stations is a list
+        '''
+
         try:
             return stations.stationIDs
         except:
@@ -32,4 +37,4 @@ if __name__=='__main__':
     stations = ['KCAR', 'USC00052281']
     d =  s.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
     #d =  s.getDailyWxObservations(stations = stations, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
-    print d['meta']
+    print d.metadata
