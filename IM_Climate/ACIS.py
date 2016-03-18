@@ -57,7 +57,7 @@ class ACIS(object):
             if kwargs[k]:
                 self.input_dict[k] = kwargs[k]
 
-    def listFipsCodes(self, state = None):
+    def countyCodes(self, state = None):
         fipCode = []
         data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
         for line in data.readlines():
@@ -75,7 +75,7 @@ class ACIS(object):
 
 if __name__ == '__main__':
     c = ACIS()
-    print c.listFipsCodes(state =  'CO')
+    print c.countyCodes(state =  'CO')
     print c._getCurrentYear()
-    print c.listFipsCodes('CO')
+    print c.countyCodes('CO')
     print c.wxElements

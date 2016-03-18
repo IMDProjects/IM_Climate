@@ -2,14 +2,18 @@ from IM_Climate.StationFinder import StationFinder
 from IM_Climate.DataRequestor import DataRequestor
 
 
+sf = StationFinder()
+#list county codes to aid in searching
+sf.countyCodes(state = 'CO')
+
 #Find Stations meeting specified criteria
 #The find method returns a stationInfo dictionary object with extended methods
-sf = StationFinder()
 stationInfo = sf.find(state = 'CO', wxElement = 'avgt', countyCode = '08117')
 print stationInfo.stationIDs
 print stationInfo.stationNames
 print stationInfo.metadata
 print stationInfo.toJSON()
+
 
 #Request data for the respective stations
 #All methods of DataRequestor return a WxData dictionary object with extended methods

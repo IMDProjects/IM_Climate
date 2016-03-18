@@ -3,8 +3,8 @@ from StationInfo import StationInfo
 from ACIS import ACIS
 
 class StationFinder(ACIS):
-    def __init__(self):
-        super(StationFinder,self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
     def find(self, state = None, wxElement = None, countyCode = None, bbox = None, **kwargs):
