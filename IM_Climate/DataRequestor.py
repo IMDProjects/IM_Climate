@@ -6,7 +6,7 @@ class DataRequestor(ACIS):
         super(DataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'MultiStnData'
 
-    def getDailyWxObservations(self, stations, wxElement, startDate, endDate, **kwargs):
+    def getDailyWxObservations(self, stations, wxElement, startDate = None, endDate = None, **kwargs):
         '''
         Returns the daily weather element observations for one or more stations.
         Flags and time of observation, if they exist, are also returned.
@@ -43,7 +43,7 @@ class DataRequestor(ACIS):
         self.duration = 'mly'
         self.startYear = startYear
         self.endYear = endYear
-        self._formatDates()
+        self._formatYears()
 
         response = self._call_ACIS(sids = self._extractStationList(stations),
             sdate = str(startYear) + '-01', edate = str(endYear) + '-12',
@@ -61,7 +61,7 @@ class DataRequestor(ACIS):
         except:
             return stations
 
-    def _formatDates(self):
+    def _formatYears(self):
         '''
         Method to deal with dates that default to None.
         Generally, it set dates to a 30-year range, depending on if start or end
