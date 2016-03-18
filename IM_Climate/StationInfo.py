@@ -1,7 +1,7 @@
 import json
 from dataObjects import dataObjects
 
-class StationInfo(dict, dataObjects):
+class StationInfo(dataObjects):
     def __init__(self, *args, **kwargs):
         super(StationInfo, self).__init__(*args, **kwargs)
 

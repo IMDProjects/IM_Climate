@@ -1,10 +1,11 @@
 import urllib2, urllib
 import json
+from datetime import date
 
 class ACIS(object):
 
     '''
-    Base class with common methods for interacting with ACIS web services
+    Base class for all objects interacting with ACIS web services
     '''
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
@@ -68,9 +69,13 @@ class ACIS(object):
                 fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
         return fipCode
 
-
+    def getCurrentYear(self):
+        return date.today().year
 
 
 if __name__ == '__main__':
     c = ACIS()
     print c.listFipsCodes(state =  'CO')
+    print c.getCurrentYear()
+    print c.listFipsCodes('CO')
+    print c.wxElements

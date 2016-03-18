@@ -3,15 +3,13 @@ import datetime
 
 from dataObjects import dataObjects
 
-def setDate(date):
-    if date:
-        return dateutil.parser.parse(str(date)).date()
 
 
-class WxData(dict, dataObjects):
+
+class WxData(dataObjects):
     def __init__(self,  *args, **kwargs):
         super(WxData, self).__init__(*args, **kwargs)
-        self['meta'] = {}
+
         self['meta']['startDate'] = kwargs['startDate']
         self['meta']['endDate'] = kwargs['endDate']
         self['meta']['dateInterval'] = kwargs['dateInterval']
@@ -53,9 +51,7 @@ class WxData(dict, dataObjects):
         else:
             raise Exception('Dates do not match data')
 
-    @property
-    def metadata(self):
-        return [k for k in self['meta'].items()]
+
 
     @property
     def dateList(self):

@@ -77,10 +77,10 @@ class DataRequestor(ACIS):
 
 
 if __name__=='__main__':
-    s = DataRequestor()
-    s.wxElements
+    dr = DataRequestor()
+    dr.wxElements
     stations = ['KCAR', 'USC00052281']
-    #d =  s.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
-    d =  s.getDailyWxObservations(stations = stations, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
-    print d.metadata
-    print d.getStationData(d.stationIDList[0])
+    data =  s.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
+    #data =  s.getDailyWxObservations(stations = stations, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
+    print data.metadata
+    #print data.getStationData(d.stationIDList[0])
