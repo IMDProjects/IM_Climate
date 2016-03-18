@@ -1,6 +1,4 @@
-import dateutil.parser
 import datetime
-
 from dataObjects import dataObjects
 
 
@@ -24,8 +22,8 @@ class WxData(dataObjects):
         '''
         Creates list of all daily dates
         '''
-        d1 = setDate(self['meta']['startDate'])
-        d2 = setDate(self['meta']['endDate'])
+        d1 = self._parseDate(self['meta']['startDate'])
+        d2 = self._parseDate(self['meta']['endDate'])
         dateList = []
         diff = d2 - d1
         for i in range(diff.days + 1):

@@ -69,7 +69,7 @@ class ACIS(object):
                 fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
         return fipCode
 
-    def getCurrentYear(self):
+    def _getCurrentYear(self):
         return date.today().year
 
 

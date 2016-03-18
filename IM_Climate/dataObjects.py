@@ -1,9 +1,6 @@
 import json
+import dateutil.parser
 
-
-def setDate(date):
-    if date:
-        return dateutil.parser.parse(str(date)).date()
 
 class dataObjects(dict):
 
@@ -31,9 +28,13 @@ class dataObjects(dict):
         for i in kwarg.items():
             self['meta'][i[0]] = i[1]
 
+    def _parseDate(self, date):
+        if date:
+            return dateutil.parser.parse(str(date)).date()
+
+
 
 if __name__=='__main__':
     d = dataObjects()
-    print d.getCurrentYear()
     d.addMetadata(elk = 5)
     print d.metadata

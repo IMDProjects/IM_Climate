@@ -68,11 +68,11 @@ class DataRequestor(ACIS):
         dates are specified.
         '''
         if not self.endYear and self.startYear:
-            self.endYear = self.getCurrentYear()
+            self.endYear = self._getCurrentYear()
         elif not self.startYear and self.endYear:
             self.startYear = self.endYear - 30
         elif not self.startYear and not self.endYear:
-            self.endYear = self.getCurrentYear()
+            self.endYear = self._getCurrentYear()
             self.startYear = self.endYear  - 30
 
 
@@ -80,7 +80,7 @@ if __name__=='__main__':
     dr = DataRequestor()
     dr.wxElements
     stations = ['KCAR', 'USC00052281']
-    data =  s.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
-    #data =  s.getDailyWxObservations(stations = stations, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
+    data =  dr.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
+    data =  dr.getDailyWxObservations(stations = stations, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
     print data.metadata
-    #print data.getStationData(d.stationIDList[0])
+    print data.getStationData(data.stationIDList[0])
