@@ -1,19 +1,16 @@
 from ACIS import ACIS
 from WxData import WxData
 
-
-
 class DataRequestor(ACIS):
-    def __init__(self,*args,**kwargs):
-        super(DataRequestor,self).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(DataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'MultiStnData'
 
     def getDailyWxObservations(self, stations, wxElement, startDate, endDate, **kwargs):
         '''
         Returns the daily weather element observations for one or more stations.
-        Flags and time of observation (if it exists), are also returned.
+        Flags and time of observation, if they exist, are also returned.
         '''
-
         response =  self._call_ACIS(sids = self._extractStationList(stations), sdate = startDate,
             edate = endDate, elems = wxElement, add = 'f,t', meta = 'sids', **kwargs)
         return WxData(response, startDate = startDate, endDate = endDate, dateInterval = 'daily', **kwargs)
@@ -44,11 +41,9 @@ class DataRequestor(ACIS):
 
         '''
         self.duration = 'mly'
-        if not endYear:
-            endYear = self.getCurrentYear()
-        if not startYear:
-            startYear = self.CurrentYear() - 30
-
+        self.startYear = startYear
+        self.endYear = endYear
+        self._formatDates()
 
         response = self._call_ACIS(sids = self._extractStationList(stations),
             sdate = str(startYear) + '-01', edate = str(endYear) + '-12',
@@ -61,13 +56,24 @@ class DataRequestor(ACIS):
         If the station is a stationList object, extracts list of stations.
         Otherwise, assumes stations to be a list.
         '''
-
         try:
             return stations.stationIDs
         except:
             return stations
 
-
+    def _formatDates(self):
+        '''
+        Method to deal with dates that default to None.
+        Generally, it set dates to a 30-year range, depending on if start or end
+        dates are specified.
+        '''
+        if not self.endYear and self.startYear:
+            self.endYear = self.getCurrentYear()
+        elif not self.startYear and self.endYear:
+            self.startYear = self.endYear - 30
+        elif not self.startYear and not self.endYear:
+            self.endYear = self.getCurrentYear()
+            self.startYear = self.endYear  - 30
 
 
 if __name__=='__main__':
