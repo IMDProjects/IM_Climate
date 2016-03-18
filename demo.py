@@ -3,25 +3,29 @@ from IM_Climate.DataRequestor import DataRequestor
 
 
 #Find Stations meeting specified criteria
-sf = StationFinder()
-
 #The find method returns a stationInfo dictionary object with extended methods
-stations = sf.find(state = 'CO', wxElement = 'avgt', countyCode = '08117')
-print stations.stationIDs
-print stations.stationNames
-print stations.toJSON()
+sf = StationFinder()
+stationInfo = sf.find(state = 'CO', wxElement = 'avgt', countyCode = '08117')
+print stationInfo.stationIDs
+print stationInfo.stationNames
+print stationInfo.metadata
+print stationInfo.toJSON()
 
 #Request data for the respective stations
-dr = DataRequestor()
 #All methods of DataRequestor return a WxData dictionary object with extended methods
-data = dr.getMonthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1970', endYear = '1975')
+dr = DataRequestor()
+#Get mean monthly values of average temperature from 1970-1975
+wxdata = dr.getMonthySummary(stations = stationInfo, wxElement = 'avgt', reduceCode = 'mean', startYear = '1970', endYear = '1975')
+#Get the daily average temperatures observations, inlcuding flags, for set of stations.
+wxdataData_daily = dr.getDailyWxObservations(stations = stationInfo, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05')
 
-#The data object has two components, metadata and data
-print data.metadata  #All metadata
-print data.dateList  #The dateList
-print data.getStationData(data.stationIDList[0]) #Get data for first station
+
+#All returned objects (stationInfo and WxData) have metadata
+print wxdata.metadata  #All metadata
+print wxdata.dateList  #The dateList
+print wxdata.getStationData(wxdata.stationIDList[0]) #Get data for first station
 
 #One extended method is the JSON export
-print data.toJSON()
+print wxdata.toJSON()
 
 

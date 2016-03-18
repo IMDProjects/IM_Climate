@@ -84,3 +84,4 @@ if __name__=='__main__':
     data =  dr.getDailyWxObservations(stations = stations, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
     print data.metadata
     print data.getStationData(data.stationIDList[0])
+    print data.keys()

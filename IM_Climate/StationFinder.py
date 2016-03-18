@@ -23,6 +23,7 @@ class StationFinder(ACIS):
 
 if __name__ == '__main__':
     c = StationFinder()
-    stationList =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
-    a = stationList.stationIDs
-    print stationList.metadata
+    stationInfo =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
+    #print stationInfo
+    print stationInfo.stationIDs
+    print stationInfo.metadata

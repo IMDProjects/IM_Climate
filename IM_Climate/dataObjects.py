@@ -1,5 +1,6 @@
 import json
 import dateutil.parser
+from datetime import date
 
 
 class dataObjects(dict):
@@ -9,23 +10,26 @@ class dataObjects(dict):
     '''
     def __init__(self,*args,**kwargs):
         super(dataObjects,self).__init__(*args,**kwargs)
-        if not self.get('meta', None):  #set up metadata for standard structure used by ACIS
-            self['meta'] = [{}]
 
     def toJSON(self):
         return json.dumps(self)
 
-
     def _addStandardMetadataElements(self):
-        self['meta']
+        self._addMetadata(dateCreated = date.today().isoformat())
 
     @property
     def metadata(self):
-        return self['meta'][0]
+        return self['meta']
+
+    @property
+    def dateCreated(self):
+        '''returns the date the object was created
+        '''
+        return self['meta']
 
     def _addMetadata(self, **kwarg):
         for i in kwarg.items():
-            self['meta'][0][i[0]] = i[1]
+            self['meta'][i[0]] = i[1]
 
     def _parseDate(self, date):
         if date:
@@ -34,6 +38,9 @@ class dataObjects(dict):
 
 
 if __name__=='__main__':
-    d = dataObjects()
+    stuff = {'meta':{},'data':[]}
+    d = dataObjects(stuff)
+    d._addStandardMetadataElements()
     d._addMetadata(elk = 5)
     print d.metadata
+    print d.dateCreated

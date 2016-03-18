@@ -4,13 +4,17 @@ from dataObjects import dataObjects
 class StationInfo(dataObjects):
     def __init__(self, *args, **kwargs):
         super(StationInfo, self).__init__(*args, **kwargs)
+        self['data'] = self['meta'] #swap keys
+        self['meta'] = {} #clear out the existing meta key
+        self._addStandardMetadataElements()
+
 
     @property
     def stationIDs(self):
         '''
         Returns a list of all station IDs
         '''
-        data = [str(z['sids'][0]) for z in self['meta']]
+        data = [str(z['sids'][0]) for z in self['data']]
         return data
 
     @property
@@ -18,7 +22,7 @@ class StationInfo(dataObjects):
         '''
         Returns a list of all station IDs
         '''
-        data = [str(z['name'] + ', ' + z['state'] + ' (elev: ' + str(z['elev']) + ')') for z in self['meta']]
+        data = [str(z['name'] + ', ' + z['state'] + ' (elev: ' + str(z['elev']) + ')') for z in self['data']]
         return data
 
 if __name__ == '__main__':
@@ -39,4 +43,5 @@ if __name__ == '__main__':
     print s.stationNames
     print(s.toJSON())
     print s.metadata
+
 

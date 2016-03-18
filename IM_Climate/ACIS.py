@@ -76,6 +76,6 @@ class ACIS(object):
 if __name__ == '__main__':
     c = ACIS()
     print c.listFipsCodes(state =  'CO')
-    print c.getCurrentYear()
+    print c._getCurrentYear()
     print c.listFipsCodes('CO')
     print c.wxElements

@@ -1,13 +1,10 @@
 import datetime
 from dataObjects import dataObjects
 
-
-
-
 class WxData(dataObjects):
     def __init__(self,  *args, **kwargs):
         super(WxData, self).__init__(*args, **kwargs)
-
+        self['meta'] = {}
         self._addMetadata(startDate = kwargs['startDate'])
         self._addMetadata(endDate = kwargs['endDate'])
         self._addMetadata(dateInterval = kwargs['dateInterval'])
@@ -16,6 +13,7 @@ class WxData(dataObjects):
             self._addDailyDates()
         elif self.dateInterval == 'monthly':
             self._addMonthlyDates()
+        self._addStandardMetadataElements()
 
 
     def _addDailyDates(self):
