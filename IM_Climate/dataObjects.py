@@ -9,12 +9,11 @@ class dataObjects(dict):
     '''
     def __init__(self,*args,**kwargs):
         super(dataObjects,self).__init__(*args,**kwargs)
-        if not self.get('meta', None):
-            self['meta'] = {}
+        if not self.get('meta', None):  #set up metadata for standard structure used by ACIS
+            self['meta'] = [{}]
 
     def toJSON(self):
         return json.dumps(self)
-
 
 
     def _addStandardMetadataElements(self):
@@ -22,11 +21,11 @@ class dataObjects(dict):
 
     @property
     def metadata(self):
-        return [k for k in self['meta'].items()]
+        return self['meta'][0]
 
-    def addMetadata(self, **kwarg):
+    def _addMetadata(self, **kwarg):
         for i in kwarg.items():
-            self['meta'][i[0]] = i[1]
+            self['meta'][0][i[0]] = i[1]
 
     def _parseDate(self, date):
         if date:
@@ -36,5 +35,5 @@ class dataObjects(dict):
 
 if __name__=='__main__':
     d = dataObjects()
-    d.addMetadata(elk = 5)
+    d._addMetadata(elk = 5)
     print d.metadata

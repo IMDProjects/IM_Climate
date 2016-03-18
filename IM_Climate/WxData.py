@@ -8,13 +8,13 @@ class WxData(dataObjects):
     def __init__(self,  *args, **kwargs):
         super(WxData, self).__init__(*args, **kwargs)
 
-        self['meta']['startDate'] = kwargs['startDate']
-        self['meta']['endDate'] = kwargs['endDate']
-        self['meta']['dateInterval'] = kwargs['dateInterval']
-        self['meta']['stationIDs'] = self.stationIDList
-        if self['meta']['dateInterval'] == 'daily':
+        self._addMetadata(startDate = kwargs['startDate'])
+        self._addMetadata(endDate = kwargs['endDate'])
+        self._addMetadata(dateInterval = kwargs['dateInterval'])
+        self._addMetadata(stationIDs = self.stationIDList)
+        if self.dateInterval == 'daily':
             self._addDailyDates()
-        elif self['meta']['dateInterval'] == 'monthly':
+        elif self.dateInterval == 'monthly':
             self._addMonthlyDates()
 
 
@@ -22,8 +22,8 @@ class WxData(dataObjects):
         '''
         Creates list of all daily dates
         '''
-        d1 = self._parseDate(self['meta']['startDate'])
-        d2 = self._parseDate(self['meta']['endDate'])
+        d1 = self._parseDate(self.startDate)
+        d2 = self._parseDate(self.endDate)
         dateList = []
         diff = d2 - d1
         for i in range(diff.days + 1):
@@ -31,10 +31,9 @@ class WxData(dataObjects):
         self._verifyDates(dateList)
 
 
-
     def _addMonthlyDates(self):
         dateList = []
-        for year in range(int(self['meta']['startDate']), int(self['meta']['endDate']) + 1):
+        for year in range(int(self.startDate), int(self.endDate) + 1):
             for month in range (1,13):
                 dateList.append(str(year) + '-' + str(month))
         self._verifyDates(dateList)
@@ -45,10 +44,9 @@ class WxData(dataObjects):
         Confirms length of date list matches length of time series
         '''
         if len(dateList) == len(self.getStationData( self.stationIDList[0])):
-            self['meta']['dateList'] = dateList
+            self._addMetadata(dateList = dateList)
         else:
             raise Exception('Dates do not match data')
-
 
 
     @property
@@ -70,6 +68,17 @@ class WxData(dataObjects):
             if d['meta']['sids'][0] == stationID:
                 return [element[0] for element in d['data']]
 
+    @property
+    def dateInterval(self):
+        return self.metadata['dateInterval']
+
+    @property
+    def startDate (self):
+        return self.metadata['startDate']
+
+    @property
+    def endDate (self):
+        return self.metadata['endDate']
 
 
 
@@ -90,9 +99,8 @@ if __name__ == '__main__':
                                 u'DLLC2 7']}}]}
 
     s = WxData(data, startDate = '1980-01-01', endDate = '1980-01-05', dateInterval = 'daily')
-    #s = WxData(data, startDate = '1980', endDate = '1983', dateInterval = 'monthly')
-    #print s.keys()
-    #print s.toJSON()
-    #print s.metadata
-    #print s.stationIDList
+    print s.keys()
+    print s.toJSON()
+    print s.metadata
+    print s.stationIDList
     print s.getStationData('03005 1')

@@ -25,4 +25,4 @@ if __name__ == '__main__':
     c = StationFinder()
     stationList =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
     a = stationList.stationIDs
-    print a
+    print stationList.metadata

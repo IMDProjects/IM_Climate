@@ -38,4 +38,5 @@ if __name__ == '__main__':
     print s.stationIDs
     print s.stationNames
     print(s.toJSON())
+    print s.metadata
 
