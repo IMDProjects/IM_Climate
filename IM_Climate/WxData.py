@@ -4,7 +4,7 @@ from dataObjects import dataObjects
 class WxData(dataObjects):
     def __init__(self,  *args, **kwargs):
         super(WxData, self).__init__(*args, **kwargs)
-        self['meta'] = {}
+        self['meta'] = {}   #Wx data return from ACIS does not have a 'meta' section
         self._addMetadata(startDate = kwargs['startDate'])
         self._addMetadata(endDate = kwargs['endDate'])
         self._addMetadata(dateInterval = kwargs['dateInterval'])
@@ -36,7 +36,6 @@ class WxData(dataObjects):
                 dateList.append(str(year) + '-' + str(month))
         self._verifyDates(dateList)
 
-
     def _verifyDates(self, dateList):
         '''
         Confirms length of date list matches length of time series
@@ -45,7 +44,6 @@ class WxData(dataObjects):
             self._addMetadata(dateList = dateList)
         else:
             raise Exception('Dates do not match data')
-
 
     @property
     def dateList(self):
@@ -77,8 +75,6 @@ class WxData(dataObjects):
     @property
     def endDate (self):
         return self.metadata['endDate']
-
-
 
 if __name__ == '__main__':
 

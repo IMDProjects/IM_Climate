@@ -9,10 +9,10 @@ sf.countyCodes(state = 'CO')
 #Find Stations meeting specified criteria
 #The find method returns a stationInfo dictionary object with extended methods
 stationInfo = sf.find(state = 'CO', wxElement = 'avgt', countyCode = '08117')
-print stationInfo.stationIDs
-print stationInfo.stationNames
-print stationInfo.metadata
-print stationInfo.toJSON()
+print(stationInfo.stationIDs)
+print(stationInfo.stationNames)
+print(stationInfo.metadata)
+print(stationInfo.toJSON())
 
 
 #Request data for the respective stations
@@ -25,11 +25,11 @@ wxdataData_daily = dr.getDailyWxObservations(stations = stationInfo, wxElement =
 
 
 #All returned objects (stationInfo and WxData) have metadata
-print wxdata.metadata  #All metadata
-print wxdata.dateList  #The dateList
-print wxdata.getStationData(wxdata.stationIDList[0]) #Get data for first station
+print(wxdata.metadata)  #All metadata
+print(wxdata.dateList)  #The dateList
+print(wxdata.getStationData(wxdata.stationIDList[0])) #Get data for first station
 
 #One extended method is the JSON export
-print wxdata.toJSON()
+print(wxdata.toJSON())
 
 

@@ -39,9 +39,9 @@ if __name__ == '__main__':
             u'state': u'CO',
             u'uid': 77459}]}
     s = StationInfo(stations)
-    print s.stationIDs
-    print s.stationNames
+    print(s.stationIDs)
+    print(s.stationNames)
     print(s.toJSON())
-    print s.metadata
+    print(s.metadata)
 
 

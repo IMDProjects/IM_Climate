@@ -2,6 +2,17 @@ import urllib2, urllib
 import json
 from datetime import date
 
+##import urllib.request
+##import urllib.parse
+##
+##input_dict = {"county":"22033"}
+##params = urllib.parse.urlencode({'params':json.dumps(input_dict)})
+##params = params.encode('utf-8')
+##req = urllib.request.urlopen('http://data.rcc-acis.org/StnMeta', data = params)
+##z = req.read()
+##print (z)
+
+
 class ACIS(object):
 
     '''
@@ -68,6 +79,7 @@ class ACIS(object):
             else:
                 fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
         return fipCode
+
 
     def _getCurrentYear(self):
         return date.today().year

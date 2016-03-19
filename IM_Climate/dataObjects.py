@@ -25,7 +25,7 @@ class dataObjects(dict):
     def dateCreated(self):
         '''returns the date the object was created
         '''
-        return self['meta']
+        return self['meta']['dateCreated']
 
     def _addMetadata(self, **kwarg):
         for i in kwarg.items():
@@ -35,12 +35,10 @@ class dataObjects(dict):
         if date:
             return dateutil.parser.parse(str(date)).date()
 
-
-
 if __name__=='__main__':
     stuff = {'meta':{},'data':[]}
     d = dataObjects(stuff)
     d._addStandardMetadataElements()
     d._addMetadata(elk = 5)
-    print d.metadata
-    print d.dateCreated
+    print(d.metadata)
+    print(d.dateCreated)
