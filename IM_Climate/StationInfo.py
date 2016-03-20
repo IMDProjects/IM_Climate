@@ -1,14 +1,16 @@
 import json
 try:
+    #python 2.x
     from dataObjects import dataObjects
 except:
+    #python 3.x
     from .dataObjects import dataObjects
 
 class StationInfo(dataObjects):
-    def __init__(self, *args, **kwargs):
-        super(StationInfo, self).__init__(*args, **kwargs)
-        self['data'] = self['meta'] #swap keys
-        self['meta'] = {} #clear out the existing meta key
+    def __init__(self, info, *args, **kwargs):
+        info['data'] = info['meta'] #swap keys
+        info['meta'] = {} #clear out the existing meta key
+        super(StationInfo, self).__init__(info, **kwargs)
         self._addStandardMetadataElements()
 
 
@@ -41,7 +43,8 @@ if __name__ == '__main__':
             u'sids': [u'USS0006K29S 6'],
             u'state': u'CO',
             u'uid': 77459}]}
-    s = StationInfo(stations)
+    queryParams = {'sids':'USS0006K29S 6'}
+    s = StationInfo(stations, queryParams = queryParams)
     print(s.stationIDs)
     print(s.stationNames)
     print(s.toJSON())

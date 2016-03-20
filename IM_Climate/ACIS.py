@@ -1,21 +1,12 @@
 try:
-    #python 2.x compatability
+    #python 2.x
     import urllib2, urllib
 except:
-    #python 3.x compatability
+    #python 3.x
     import urllib.request
     import urllib.parse
 import json
 from datetime import date
-
-
-##
-##input_dict = {"county":"22033"}
-##params = urllib.parse.urlencode({'params':json.dumps(input_dict)})
-##params = params.encode('utf-8')
-##req = urllib.request.urlopen('http://data.rcc-acis.org/StnMeta', data = params)
-##z = req.read()
-##print (z)
 
 
 class ACIS(object):

@@ -1,5 +1,4 @@
 import json
-#import dateutil.parser
 from datetime import date
 
 
@@ -36,7 +35,6 @@ class dataObjects(dict):
 
     def _parseDate(self, d):
         if d:
-            #return dateutil.parser.parse(str(date)).date()
             d = d.split('-')
             d = list(map(int,d))
             return date(d[0], d[1], d[2])
@@ -48,5 +46,5 @@ if __name__=='__main__':
     d._addStandardMetadataElements()
     d._addMetadata(elk = 5)
     print(d.metadata)
-    #print(d.dateCreated)
+    print(d.dateCreated)
     print (d.keys())

@@ -19,11 +19,16 @@ print(stationInfo.toJSON())
 #Request data for the respective stations
 #All methods of DataRequestor return a WxData dictionary object with extended methods
 dr = DataRequestor()
-#Get mean monthly values of average temperature from 1970-1975. the stationIfno
+
+#Get mean monthly values of average temperature from 1970-1975. The stationIfno
 #object can be used as the argument for the stations
-wxdata = dr.getMonthySummary(stations = stationInfo, wxElement = 'avgt', reduceCode = 'mean', startYear = '1970', endYear = '1975')
+wxdata = dr.monthySummary(stations = stationInfo, wxElement = 'avgt', reduceCode = 'mean', startYear = '1970', endYear = '1975')
+
+#Get yearly summary
+wxdata = dr.yearlySummary(stations = stationInfo, wxElement = 'avgt', reduceCode = 'mean', startYear = '1970', endYear = '1975')
+
 #Get the daily average temperatures observations, inlcuding flags, for set of stations.
-wxdataData_daily = dr.getDailyWxObservations(stations = stationInfo, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05')
+wxdataData_daily = dr.dailyWxObservations(stations = stationInfo, wxElement = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05')
 
 
 #All returned objects (stationInfo and WxData) have metadata

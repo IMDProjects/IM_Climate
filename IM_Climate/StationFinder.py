@@ -21,7 +21,7 @@ class StationFinder(ACIS):
         results =  self._call_ACIS(state = state, elems = wxElement
             , county = countyCode, bbox = bbox, **kwargs)
 
-        return StationInfo(results)
+        return StationInfo(results, queryParams = self.input_dict)
 
 
 if __name__ == '__main__':

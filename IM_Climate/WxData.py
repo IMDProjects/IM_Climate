@@ -1,7 +1,9 @@
 import datetime
 try:
+    #python 2.x
     from dataObjects import dataObjects
 except:
+    #python 3.x
     from .dataObjects import dataObjects
 
 class WxData(dataObjects):
