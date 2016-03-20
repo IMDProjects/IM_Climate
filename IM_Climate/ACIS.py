@@ -1,9 +1,14 @@
-import urllib2, urllib
+try:
+    #python 2.x compatability
+    import urllib2, urllib
+except:
+    #python 3.x compatability
+    import urllib.request
+    import urllib.parse
 import json
 from datetime import date
 
-##import urllib.request
-##import urllib.parse
+
 ##
 ##input_dict = {"county":"22033"}
 ##params = urllib.parse.urlencode({'params':json.dumps(input_dict)})
@@ -50,11 +55,19 @@ class ACIS(object):
         '''
         self._formatInputDict(**kwargs)
         self.url = self.baseURL + self.webServiceSource
-        params = urllib.urlencode({'params':json.dumps(self.input_dict)})
-        request = urllib2.Request(self.url, params, {'Accept':'application/json'})
-        response = urllib2.urlopen(request)
-        jsonData = response.read()
-        return json.loads(jsonData)
+        try:
+            #python 2.x
+            params = urllib.urlencode({'params':json.dumps(self.input_dict)})
+            request = urllib2.Request(self.url, params, {'Accept':'application/json'})
+            response = urllib2.urlopen(request)
+            jsonData = response.read()
+        except:
+            #python 3.x
+            params = urllib.parse.urlencode({'params':json.dumps(self.input_dict)})
+            params = params.encode('utf-8')
+            req = urllib.request.urlopen(self.url, data = params)
+            jsonData = req.read().decode() #decode() added for python 3.x
+        return json.loads(str(jsonData))
 
     def _formatInputDict(self,**kwargs):
         '''
@@ -70,9 +83,14 @@ class ACIS(object):
 
     def countyCodes(self, state = None):
         fipCode = []
-        data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
+        try:
+            #python 2.x
+            data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
+        except:
+            #python 3.x
+            data = urllib.request.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
         for line in data.readlines():
-            line = line.split(',')
+            line = str(line).split(',')
             if state:
                 if line[0] == state:
                     fipCode.append(line[3] + ', ' + line[0] + ' : ' + line[1] + line[2])
@@ -87,7 +105,27 @@ class ACIS(object):
 
 if __name__ == '__main__':
     c = ACIS()
-    print c.countyCodes(state =  'CO')
-    print c._getCurrentYear()
-    print c.countyCodes('CO')
-    print c.wxElements
+    print (c.countyCodes(state =  'CO'))
+    print (c._getCurrentYear())
+    print (c.countyCodes('CO'))
+    print (c.wxElements)
+
+    c.input_dict = {
+        'bbox': "-102,48,-98,50",
+        'sdate': "2008-01",
+        'edate': "2010-12",
+        'elems': [{
+            'name': "pcpn",
+            'interval': "yly",
+            'duration': "yly",
+            'reduce': {
+                'reduce': "sum",
+                'add': "mcnt"
+            },
+            'maxmissing': '7',
+            'smry': ["max", "min", "mean"]
+        }],
+        'meta': "name,state,ll"
+    }
+    c.webServiceSource = 'MultiStnData '
+    c._call_ACIS()

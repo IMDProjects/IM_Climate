@@ -1,5 +1,8 @@
 import json
-from dataObjects import dataObjects
+try:
+    from dataObjects import dataObjects
+except:
+    from .dataObjects import dataObjects
 
 class StationInfo(dataObjects):
     def __init__(self, *args, **kwargs):

@@ -1,20 +1,31 @@
 import datetime
-from dataObjects import dataObjects
+try:
+    from dataObjects import dataObjects
+except:
+    from .dataObjects import dataObjects
 
 class WxData(dataObjects):
-    def __init__(self,  *args, **kwargs):
-        super(WxData, self).__init__(*args, **kwargs)
+    def __init__(self, data, duration,  *args, **kwargs):
         self['meta'] = {}   #Wx data return from ACIS does not have a 'meta' section
-        self._addMetadata(startDate = kwargs['startDate'])
-        self._addMetadata(endDate = kwargs['endDate'])
-        self._addMetadata(dateInterval = kwargs['dateInterval'])
-        self._addMetadata(stationIDs = self.stationIDList)
-        if self.dateInterval == 'daily':
+        kwargs['duration'] = duration
+        super(WxData, self).__init__(data, *args, **kwargs)
+
+        if duration == 'dly':
             self._addDailyDates()
-        elif self.dateInterval == 'monthly':
+        elif duration == 'mly':
             self._addMonthlyDates()
+        elif duration == 'yly':
+            self._addYearlyDates()
+        else:
+            raise Exception('Invalid dateInteval')
         self._addStandardMetadataElements()
 
+
+    def _addYearlyDates(self):
+        dateList = []
+        for year in range(int(self.startDate), int(self.endDate) + 1):
+            dateList.append(str(year))
+        self._verifyDates(dateList)
 
     def _addDailyDates(self):
         '''
@@ -92,9 +103,9 @@ if __name__ == '__main__':
                                 u'USC00052281 6',
                                 u'DLLC2 7']}}]}
 
-    s = WxData(data, startDate = '1980-01-01', endDate = '1980-01-05', dateInterval = 'daily')
-    print s.keys()
-    print s.toJSON()
-    print s.metadata
-    print s.stationIDList
-    print s.getStationData('03005 1')
+    s = WxData(data,  duration = 'dly', queryParams = {'sid':'Station 5'}, startDate = '1980-01-01', endDate = '1980-01-05')
+    print (s.keys())
+    print (s.toJSON())
+    print (s.metadata)
+    print (s.stationIDList)
+    print (s.getStationData('03005 1'))

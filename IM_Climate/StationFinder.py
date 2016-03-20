@@ -1,6 +1,9 @@
-import urllib2, urllib
-from StationInfo import StationInfo
-from ACIS import ACIS
+try:
+    from StationInfo import StationInfo
+    from ACIS import ACIS
+except:
+    from .ACIS import ACIS
+    from .StationInfo import StationInfo
 
 class StationFinder(ACIS):
     def __init__(self, *args, **kwargs):
