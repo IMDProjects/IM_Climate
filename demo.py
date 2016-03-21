@@ -5,6 +5,8 @@ from IM_Climate.DataRequestor import DataRequestor
 sf = StationFinder()
 #list county codes to aid in searching
 print(sf.countyCodes(state = 'CO'))
+#list valid weather elements to search by
+print(sf.wxElements)
 
 #Find Stations meeting specified criteria
 #Find all stations in Summit County, CO with average temperature
