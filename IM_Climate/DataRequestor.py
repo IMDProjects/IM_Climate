@@ -1,7 +1,9 @@
 try:
+    #python 2.x
     from ACIS import ACIS
     from WxData import WxData
 except:
+    #python 3.x
     from .ACIS import ACIS
     from .WxData import WxData
 
