@@ -25,11 +25,11 @@ class StationInfo(dataObjects):
         '''
         Returns a list of all station IDs
         '''
-        return [str(z['name'] + ', ' + z['state'] + ' (elev: ' + str(z.get('elev',-9999)) + ')') for z in self['data']]
+        return [str(z['name']) for z in self['data']]
 
     def dropStation(self, stationID):
         '''
-        Removes specifed station from stationInfo object
+        Removes specified station from self
         '''
         for e in self['data']:
             sids = e['sids']
