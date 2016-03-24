@@ -15,7 +15,10 @@ class StationFinder(ACIS):
                 state - Two-letter state acronym (e.g., CO)
                 wxElement - Weather element code (e.g., tmin)
                 countyCode - County fips code (e.g., 08117)
-                bbox - Bounding box (e.g.,
+                bbox - A latitude/longitude bounding box defined
+                    in decimal degrees (West, South, East, North) with negative
+                    values indicating west longitude and south latitude
+                    (e.g. -90.7, 40.5, -88.9, 41.5).
         '''
 
         results =  self._call_ACIS(state = state, elems = wxElement

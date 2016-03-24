@@ -13,22 +13,43 @@ class StationInfo(dataObjects):
         super(StationInfo, self).__init__(info, **kwargs)
         self._addStandardMetadataElements()
 
-
     @property
     def stationIDs(self):
         '''
         Returns a list of all station IDs
         '''
-        data = [str(z['sids'][0]) for z in self['data']]
-        return data
+        return [str(z['sids'][0]) for z in self['data']]
 
     @property
     def stationNames(self):
         '''
         Returns a list of all station IDs
         '''
-        data = [str(z['name'] + ', ' + z['state'] + ' (elev: ' + str(z['elev']) + ')') for z in self['data']]
-        return data
+        return [str(z['name'] + ', ' + z['state'] + ' (elev: ' + str(z.get('elev',-9999)) + ')') for z in self['data']]
+
+    def dropStation(self, stationID):
+        '''
+        Removes specifed station from stationInfo object
+        '''
+        for e in self['data']:
+            sids = e['sids']
+            for s in sids:
+                if s.find(stationID) >= 0:
+                    self['data'].remove(e)
+
+    def match(self, stationNames):
+        '''Matches provided station names to full list of stations. Matching is
+            done using wildcard around provided stationName.
+            Returns list of matched station names'''
+        if type(stationNames) == str:
+            stationNames = [stationNames]
+        matches = []
+        for sn in stationNames:
+            for es in self.stationNames:
+                if es.lower().find(sn.lower()) >= 0:
+                    matches.append(es)
+                    break
+        return matches
 
 if __name__ == '__main__':
     stations =  {u'meta': [{u'elev': 10549.9,
@@ -49,5 +70,8 @@ if __name__ == '__main__':
     print(s.stationNames)
     print(s.toJSON())
     print(s.metadata)
+    print s.match(stationNames = ['ell','cop'])
+    s.dropStation(stationID = 'USS0006K24S 6')
+    print s.stationNames
 
 
