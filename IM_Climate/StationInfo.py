@@ -51,6 +51,14 @@ class StationInfo(dataObjects):
                     break
         return matches
 
+    def getStationMetadata(self, stationName = None, stationID = None):
+        '''
+        Returns all station metadata for a stationName or StationID
+        '''
+        for station in self['data']:
+            if station['name'] or stationID in station['sids'] == stationName:
+                return station
+
 if __name__ == '__main__':
     stations =  {u'meta': [{u'elev': 10549.9,
             u'll': [-106.17, 39.49],
@@ -71,7 +79,6 @@ if __name__ == '__main__':
     print(s.toJSON())
     print(s.metadata)
     print s.match(stationNames = ['ell','cop'])
-    s.dropStation(stationID = 'USS0006K24S 6')
-    print s.stationNames
-
-
+    #s.dropStation(stationID = 'USS0006K24S 6')
+    print(s.stationNames)
+    print(s.getStationMetadata(stationName = 'Elliot Ridge'))
