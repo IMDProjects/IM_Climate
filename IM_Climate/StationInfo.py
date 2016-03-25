@@ -27,28 +27,14 @@ class StationInfo(dataObjects):
         '''
         return [str(z['name']) for z in self['data']]
 
-    def dropStation(self, stationID):
-        '''
-        Removes specified station from self
-        '''
-        for e in self['data']:
-            sids = e['sids']
-            for s in sids:
-                if s.find(stationID) >= 0:
-                    self['data'].remove(e)
 
-    def match(self, stationNames):
-        '''Matches provided station names to full list of stations. Matching is
-            done using wildcard around provided stationName.
-            Returns list of matched station names'''
-        if type(stationNames) == str:
-            stationNames = [stationNames]
+    def match(self, string):
+        '''Matches provided string to full station metadata.
+            Returns list of matched station metadata'''
         matches = []
-        for sn in stationNames:
-            for es in self.stationNames:
-                if es.lower().find(sn.lower()) >= 0:
-                    matches.append(es)
-                    break
+        for meta in self['data']:
+            if str(meta).lower().find(string.lower()) >= 0:
+                matches.append(meta)
         return matches
 
     def getStationMetadata(self, stationName = None, stationID = None):
@@ -78,7 +64,5 @@ if __name__ == '__main__':
     print(s.stationNames)
     print(s.toJSON())
     print(s.metadata)
-    print s.match(stationNames = ['ell','cop'])
-    #s.dropStation(stationID = 'USS0006K24S 6')
-    print(s.stationNames)
+    print s.match('ell')
     print(s.getStationMetadata(stationName = 'Elliot Ridge'))
