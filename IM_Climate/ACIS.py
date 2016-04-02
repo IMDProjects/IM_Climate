@@ -1,10 +1,12 @@
 try:
     #python 2.x
     import urllib2, urllib
+    pyVersion = 2
 except:
     #python 3.x
     import urllib.request
     import urllib.parse
+    pyVersion = 3
 import json
 from datetime import date
 
@@ -46,14 +48,12 @@ class ACIS(object):
         '''
         self._formatInputDict(**kwargs)
         self.url = self.baseURL + self.webServiceSource
-        try:
-            #python 2.x
+        if pyVersion == 2:      #python 2.x
             params = urllib.urlencode({'params':json.dumps(self.input_dict)})
             request = urllib2.Request(self.url, params, {'Accept':'application/json'})
             response = urllib2.urlopen(request)
             jsonData = response.read()
-        except:
-            #python 3.x
+        elif pyVersion == 3:    #python 3.x
             params = urllib.parse.urlencode({'params':json.dumps(self.input_dict)})
             params = params.encode('utf-8')
             req = urllib.request.urlopen(self.url, data = params)
@@ -69,7 +69,7 @@ class ACIS(object):
             argument that is None.
         '''
         for k in kwargs:
-            if kwargs[k]:
+            if kwargs[k] and kwargs[k] <> 'None':
                 self.input_dict[k] = kwargs[k]
 
     def countyCodes(self, state = None):

@@ -12,6 +12,8 @@ class dataObjects(dict):
         super(dataObjects,self).__init__(data)
         kwargs['queryParams'] = queryParams
         self._addMetadata(**kwargs)
+        if self.get('error'):
+            raise Exception(self['error'])
 
     def toJSON(self):
         return json.dumps(self)

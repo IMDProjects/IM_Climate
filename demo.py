@@ -26,7 +26,7 @@ dr = DataRequestor()
 #Get mean monthly values of average temperature from 1970-1975. The stationIfno
 #object can be used as the argument for the stations
 wxdata = dr.monthySummary(stations = stationInfo, wxElement = 'avgt',
-    reduceCode = 'mean', startYear = '1970', endYear = '1975')
+    reduceCode = 'mean', startYear = '1970', endYear = '1995')
 
 #Get yearly summary
 wxdata_yearly = dr.yearlySummary(stations = stationInfo, wxElement = 'avgt',

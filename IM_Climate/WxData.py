@@ -9,57 +9,15 @@ except:
 class WxData(dataObjects):
     def __init__(self, data, duration,  *args, **kwargs):
         self['meta'] = {}   #Wx data return from ACIS does not have a 'meta' section
+        if not self.get('data'):
+            self['data'] = []
         kwargs['duration'] = duration
         super(WxData, self).__init__(data, *args, **kwargs)
-
-        if duration == 'dly':
-            self._addDailyDates()
-        elif duration == 'mly':
-            self._addMonthlyDates()
-        elif duration == 'yly':
-            self._addYearlyDates()
-        else:
-            raise Exception('Invalid dateInteval')
         self._addStandardMetadataElements()
-
-
-    def _addYearlyDates(self):
-        dateList = []
-        for year in range(int(self.startDate), int(self.endDate) + 1):
-            dateList.append(str(year))
-        self._verifyDates(dateList)
-
-    def _addDailyDates(self):
-        '''
-        Creates list of all daily dates
-        '''
-        d1 = self._parseDate(self.startDate)
-        d2 = self._parseDate(self.endDate)
-        dateList = []
-        diff = d2 - d1
-        for i in range(diff.days + 1):
-            dateList.append((d1 + datetime.timedelta(i)).isoformat())
-        self._verifyDates(dateList)
-
-
-    def _addMonthlyDates(self):
-        dateList = []
-        for year in range(int(self.startDate), int(self.endDate) + 1):
-            for month in range (1,13):
-                dateList.append(str(year) + '-' + str(month))
-        self._verifyDates(dateList)
-
-    def _verifyDates(self, dateList):
-        '''
-        Confirms length of date list matches length of time series
-        '''
-        if len(dateList) == len(self.getStationData( self.stationIDList[0])):
-            self._addMetadata(dateList = dateList)
-        else:
-            raise Exception('Dates do not match data')
 
     @property
     def dateList(self):
+        return 'TURNED OFF UNTIL WE FIGURE OUT DATA STRUCTURE'
         return self['meta']['dateList']
 
     @property
@@ -89,9 +47,35 @@ class WxData(dataObjects):
     def endDate (self):
         return self.metadata['endDate']
 
+    def append(self, newStationData):
+        '''
+        Appends additional weather data to the wxData objects
+        '''
+##        for sd in newStationData['data']:
+##            self['data'].append(sd)
+        self['data'].append(newStationData['data'])
+
+    @property
+    def data(self):
+        return self['data']
+
 if __name__ == '__main__':
 
     data =  {u'data': [{u'data': [[u'11.0'], [u'14.0'], [u'4.5'], [u'6.0'], [u'3.5']],
+            u'meta': {u'sids': [u'14607 1',
+                                u'171175 2',
+                                u'CAR 3',
+                                u'72712 4',
+                                u'KCAR 5',
+                                u'USW00014607 6',
+                                u'CAR 7']}},
+           {u'data': [[u'18.5'], [u'24.0'], [u'10.5'], [u'12.0'], [u'21.0']],
+            u'meta': {u'sids': [u'03005 1',
+                                u'052281 2',
+                                u'USC00052281 6',
+                                u'DLLC2 7']}}]}
+
+    moreData =  {u'data': [{u'data': [[u'11.0'], [u'14.0'], [u'4.5'], [u'6.0'], [u'3.5']],
             u'meta': {u'sids': [u'14607 1',
                                 u'171175 2',
                                 u'CAR 3',
@@ -111,3 +95,5 @@ if __name__ == '__main__':
     print (s.metadata)
     print (s.stationIDList)
     print (s.getStationData('03005 1'))
+    s.append(moreData)
+    print len(s.data)

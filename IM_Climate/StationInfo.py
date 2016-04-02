@@ -2,10 +2,11 @@ import json
 try:
     #python 2.x
     from dataObjects import dataObjects
+    pyVersion = 2
 except:
     #python 3.x
     from .dataObjects import dataObjects
-
+    pyVersion = 2
 class StationInfo(dataObjects):
     def __init__(self, info, *args, **kwargs):
         info['data'] = info['meta'] #swap keys
@@ -18,7 +19,17 @@ class StationInfo(dataObjects):
         '''
         Returns a list of all station IDs
         '''
-        return [str(z['sids'][0]) for z in self['data']]
+        #return [str(z['sids'][0]) for z in self['data']]
+        data = []
+        for z in self['data']:
+            try:
+                data.append(str(z['sids'][0]))
+            except:
+                '''
+                NOT SURE AT PRESENT WHAT TO DO IF 'sids' is empty!
+                '''
+                pass
+        return data
 
     @property
     def stationNames(self):

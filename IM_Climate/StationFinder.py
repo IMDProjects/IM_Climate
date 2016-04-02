@@ -1,7 +1,9 @@
 try:
+    #python 2.x
     from StationInfo import StationInfo
     from ACIS import ACIS
 except:
+    #python 3.x
     from .ACIS import ACIS
     from .StationInfo import StationInfo
 
@@ -10,7 +12,8 @@ class StationFinder(ACIS):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
-    def find(self, state = None, wxElement = None, countyCode = None, bbox = None, **kwargs):
+    def find(self, state = None, wxElement = None, countyCode = None,
+        bbox = None, HUC = None, **kwargs):
         '''Returns a list object of stations based on the the specified criteria:
                 state - Two-letter state acronym (e.g., CO)
                 wxElement - Weather element code (e.g., tmin)
@@ -22,14 +25,16 @@ class StationFinder(ACIS):
         '''
 
         results =  self._call_ACIS(state = state, elems = wxElement
-            , county = countyCode, bbox = bbox, **kwargs)
+            ,county = str(countyCode), bbox = bbox, basin = str(HUC), **kwargs)
 
         return StationInfo(results, queryParams = self.input_dict)
 
 
 if __name__ == '__main__':
     c = StationFinder()
-    stationInfo =  c.find(state = 'CO', wxElement = 'gdd', countyCode = '08117')
-    print(stationInfo)
+    print(c.wxElements)
+    stationInfo =  c.find(wxElement = 'avgt', countyCode = '08117')
+    #stationInfo =  c.find( countyCode = '08117')
+    #stationInfo = c.find(HUC = 14010001)
     print(stationInfo.stationIDs)
-    print(stationInfo.metadata)
+    #print(stationInfo.metadata)
