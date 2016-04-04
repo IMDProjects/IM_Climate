@@ -62,7 +62,7 @@ class DataRequestor(ACIS):
         return WxData(response, duration = self.duration, startDate = self.startYear
                 , endDate = self.endYear, queryParams = self.input_dict, **kwargs)
 
-    def monthySummary_ALT(self, stations, wxElement, reduceCode, startYear = None,
+    def monthySummary_SINGLE(self, stations, wxElement, reduceCode, startYear = None,
          endYear = None,   **kwargs):
 
         '''
@@ -145,7 +145,7 @@ class DataRequestor(ACIS):
             'duration': self.duration,
             'reduce': {
                 'reduce': reduceCode,
-                'add': "mcnt"
+                'add': 'mcnt'
             },
             'maxmissing': self.maxMissing,
             #'smry': ["max", "min", "mean"]
@@ -188,7 +188,7 @@ if __name__=='__main__':
     print(dr.wxElements)
     #stations = ['KCAR', 'USC00052281']
     stations = ['93005 1', '94035 1', '23066 1', '03013 1', '93013 1', '03016 1', '03017 1', '050848 2', '051294 2', '051528 2', '051564 2', '051741 2', '052184 2', '03005 1', '052446 2', '053038 2', '053146 2', '053662 2', '053951 2', '054076 2', '054834 2', '055322 2', '055722 2', '057337 2', '057936 2', '058204 2', '058429 2', '059243 2', '24047 1', '23069 1', '052803 2', '051268 2', '050898 2', '054346 2', '052048 2', '050307 2', '058468 2', '051816 2', '054250 2', '058431 2', '058436 2', '054542 2', '050873 2', '055990 2', '057428 2', '057928 2', '051570 2', '053016 2', '055531 2', '056710 2', '057867 2', '058574 2', '23070 1', '056258 2', '058793 2', '057866 2', '056559 2', '03008 1', '054934 2', '055327 2', '051886 2', '052000 2', '057862 2', '053010 2', '050776 2', '058092 2', '056271 2', '053463 2', '054538 2', '054870 2', '23061 1', '050126 2', '050125 2', '055711 2', '059181 2', '059183 2', '052326 2', '054865 2', '058154 2', '058510 2', '055706 2']
-    data = dr.monthySummary_ALT(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
+    data = dr.monthySummary_SINGLE(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
     #data = dr.monthySummary(stations = stations, wxElement = 'avgt', reduceCode = 'mean', startYear = '1980', endYear = '1981' )
     print data['data']
     #print len(data.stationIDList)
