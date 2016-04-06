@@ -8,12 +8,12 @@ class dataObjects(dict):
     '''
     Base class for all dictionary typed data objects
     '''
-    def __init__(self, data, queryParams, *args,**kwargs):
-        super(dataObjects,self).__init__(data)
-        kwargs['queryParams'] = queryParams
-        self._addMetadata(**kwargs)
-        if self.get('error'):
-            raise Exception(self['error'])
+    def __init__(self, *args,**kwargs):
+        if not self.get('meta'):
+            self['meta'] = {}
+        if not self.get('data'):
+            self['data'] = {}
+
 
     def toJSON(self):
         return json.dumps(self)

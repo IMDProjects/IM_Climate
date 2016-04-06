@@ -32,7 +32,7 @@ class DataRequestor(ACIS):
             , endDate = endDate, queryParams = self.input_dict, **kwargs)
 
     def monthySummary(self, stationID, parameter, reduceCode, startDate = 'por',
-         endDate = 'por',  **kwargs):
+         endDate = 'por', maxMissing = 1,  **kwargs):
 
         '''
         RETURNS
@@ -60,20 +60,11 @@ class DataRequestor(ACIS):
 
         '''
         duration = 'mly'
-        maxMissing = 1
-
         elems = duration + '_' + reduceCode +'_' + parameter
 
         return self._iterateOverStations(uids = stationID, sdate = startDate,
                 edate = endDate, elems = elems, maxmissing = maxMissing
                 , **kwargs)
-
-##        response = self._call_ACIS(uid = stationID, sdate = startDate,
-##                edate = endDate, elems = elems, maxmissing = maxMissing
-##                , **kwargs)
-##
-##        return WxData(response, duration = duration, startDate = startYearMonth
-##                    ,endDate = endYearMonth, queryParams = self.input_dict, **kwargs)
 
 
     def _iterateOverStations(self, uids, **kwargs):
@@ -152,7 +143,7 @@ if __name__=='__main__':
     dr = DataRequestor()
     print(dr.parameters)
     stationID = ['3940', '3941']
-    data_monthly = dr.monthySummary(stationID = stationID, parameter = ['mint', 'avgt'], reduceCode = 'mean', startYear = '1980', endYear = '1981' )
+    data_monthly = dr.monthySummary(stationID = stationID, parameter = 'avgt', reduceCode = 'mean', startDate = '1980-01', endDate = '1980-12' )
     #data_annual = dr.yearlySummary(stationID = stationID, parameter = 'avgt', reduceCode = 'mean')
     #data = dr.dailyWxObservations(stationID = stationID, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
     #print(data.metadata)

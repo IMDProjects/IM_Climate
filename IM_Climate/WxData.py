@@ -1,47 +1,39 @@
-## TO DO: ADD PERIOD OF RECORD
-##IDEAL STRUCTURE
-###{Station: {Parameter: [date, value, flags]}}
-
-
-import datetime
-try:
-    #python 2.x
+try:    #python 2.x
     from dataObjects import dataObjects
-except:
-    #python 3.x
+except: #python 3.x
     from .dataObjects import dataObjects
 
 class WxData(dataObjects):
-    def __init__(self, data, duration,  *args, **kwargs):
+    def __init__(self, dateInterval, aggregation, data = None, *args, **kwargs):
         '''
         Data object that holds and organizes all weather data returned by ACIS
         using the StnData request.
 
-        Meta: {Duration, Aggregation, PeriodOfRecord,DateRequested}
+        This object differs from the ACIS data structure
+
+        Meta: {dateInterval, Aggregation, PeriodOfRecord, DateRequested}
         Data: Station:Parameter:({date,value,flags}
         '''
 
-        self['meta'] = {}   #Wx data return from ACIS does not have a 'meta' section
-        if not self.get('data'):
-            self['data'] = []
-        kwargs['duration'] = duration
-        super(WxData, self).__init__(data, *args, **kwargs)
+        self['meta'] = {}
+        self['data'] = {}
+        self['meta']['dateInterval'] = dateInterval
+        self['meta']['aggregation'] = aggregation
+        super(WxData, self).__init__(*args, **kwargs)
         self._addStandardMetadataElements()
 
     @property
-    def stationIDList(self):
+    def stationIDs(self):
         '''
         List of all stationIDs within dataset
         '''
-        return [k['meta']['uid'] for k in self['data']]
+        return self['data'].keys()
 
-    def getStationData(self, stationID):
+    def getStationData(self, stationID, parameter):
         '''
-        Returns time series of data for a specied station
+        Returns time series of data for a specied station and parameter
         '''
-        for d in self['data']:
-            if d['meta']['uid'] == stationID:
-                return [element[0] for element in d['data']]
+        return self['data'][stationID][parameter]
 
     @property
     def dateInterval(self):
@@ -55,13 +47,11 @@ class WxData(dataObjects):
     def endDate (self):
         return self.metadata['endDate']
 
-    def append(self, newStationData):
+    def add(self, newData, parameter):
         '''
-        Appends additional weather data to the wxData objects
+        Appends additional weather data to the wxData object
         '''
-##        for sd in newStationData['data']:
-##            self['data'].append(sd)
-        self['data'].append(newStationData['data'])
+        self['data']={newData['meta']['uid']: {parameter : tuple(newData['data'])}}
 
     @property
     def data(self):
@@ -70,39 +60,41 @@ class WxData(dataObjects):
 
 if __name__ == '__main__':
 
-    data =  {u'data': [{u'data': [[u'11.0'], [u'14.0'], [u'4.5'], [u'6.0'], [u'3.5']],
-            u'meta': {u'sids': [u'14607 1',
-                                u'171175 2',
-                                u'CAR 3',
-                                u'72712 4',
-                                u'KCAR 5',
-                                u'USW00014607 6',
-                                u'CAR 7']}},
-           {u'data': [[u'18.5'], [u'24.0'], [u'10.5'], [u'12.0'], [u'21.0']],
-            u'meta': {u'sids': [u'03005 1',
-                                u'052281 2',
-                                u'USC00052281 6',
-                                u'DLLC2 7']}}]}
+    dateInterval = 'mly'
+    aggregation = 'avg'
+    wxObs = {u'data': [[u'1980-01', u'30.92'],
+           [u'1980-02', u'35.78'],
+           [u'1980-03', u'39.16'],
+           [u'1980-04', u'50.30'],
+           [u'1980-05', u'57.19'],
+           [u'1980-06', u'68.95']],
+         u'meta': {u'elev': 5092.0,
+                   u'll': [-108.05, 39.45],
+                   u'name': u'GRAND VALLEY',
+                   u'sids': [u'053508 2', u'USC00053508 6'],
+                   u'state': u'CO',
+                   u'uid': 3941}}
 
-    moreData =  {u'data': [{u'data': [[u'11.0'], [u'14.0'], [u'4.5'], [u'6.0'], [u'3.5']],
-            u'meta': {u'sids': [u'14607 1',
-                                u'171175 2',
-                                u'CAR 3',
-                                u'72712 4',
-                                u'KCAR 5',
-                                u'USW00014607 6',
-                                u'CAR 7']}},
-           {u'data': [[u'18.5'], [u'24.0'], [u'10.5'], [u'12.0'], [u'21.0']],
-            u'meta': {u'sids': [u'03005 1',
-                                u'052281 2',
-                                u'USC00052281 6',
-                                u'DLLC2 7']}}]}
+    moreWxObs = {u'data': [[u'1980-01', u'30.92'],
+           [u'1980-02', u'35.78'],
+           [u'1980-03', u'39.16'],
+           [u'1980-04', u'50.30'],
+           [u'1980-05', u'57.19'],
+           [u'1980-06', u'68.95']],
+         u'meta': {u'elev': 5092.0,
+                   u'll': [-108.05, 39.45],
+                   u'name': u'GRAND VALLEY',
+                   u'sids': [u'053508 2', u'USC00053508 6'],
+                   u'state': u'CO',
+                   u'uid': 3941}}
 
-    s = WxData(data,  duration = 'dly', queryParams = {'sid':'Station 5'}, startDate = '1980-01-01', endDate = '1980-01-05')
+    s = WxData(dateInterval = 'mly', aggregation = 'avg')
+    s.add(wxObs, 'avgt')
+    print s
     print (s.keys())
     print (s.toJSON())
     print (s.metadata)
-    print (s.stationIDList)
-    print (s.getStationData('03005 1'))  ##TRY TO RETURN SAME STRUCTURE AS WHAT WAS DONE FOR THE CLIMATE VERIFIER
-    s.append(moreData)
-    print len(s.data)
+    print (s.stationIDs)
+    print (s.getStationData(3941, 'avgt'))
+    s.add(moreWxObs, 'mint')
+    print (s.getStationData(3941, 'mint'))
