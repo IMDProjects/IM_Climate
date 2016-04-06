@@ -1,3 +1,8 @@
+## TO DO: ADD PERIOD OF RECORD
+##IDEAL STRUCTURE
+###{Station: {Parameter: [date, value, flags]}}
+
+
 import datetime
 try:
     #python 2.x
@@ -8,6 +13,14 @@ except:
 
 class WxData(dataObjects):
     def __init__(self, data, duration,  *args, **kwargs):
+        '''
+        Data object that holds and organizes all weather data returned by ACIS
+        using the StnData request.
+
+        Meta: {Duration, Aggregation, PeriodOfRecord,DateRequested}
+        Data: Station:Parameter:({date,value,flags}
+        '''
+
         self['meta'] = {}   #Wx data return from ACIS does not have a 'meta' section
         if not self.get('data'):
             self['data'] = []
@@ -16,23 +29,18 @@ class WxData(dataObjects):
         self._addStandardMetadataElements()
 
     @property
-    def dateList(self):
-        return 'TURNED OFF UNTIL WE FIGURE OUT DATA STRUCTURE'
-        return self['meta']['dateList']
-
-    @property
     def stationIDList(self):
         '''
         List of all stationIDs within dataset
         '''
-        return [k['meta']['sids'][0] for k in self['data']]
+        return [k['meta']['uid'] for k in self['data']]
 
     def getStationData(self, stationID):
         '''
         Returns time series of data for a specied station
         '''
         for d in self['data']:
-            if d['meta']['sids'][0] == stationID:
+            if d['meta']['uid'] == stationID:
                 return [element[0] for element in d['data']]
 
     @property
@@ -58,6 +66,7 @@ class WxData(dataObjects):
     @property
     def data(self):
         return self['data']
+
 
 if __name__ == '__main__':
 
@@ -94,6 +103,6 @@ if __name__ == '__main__':
     print (s.toJSON())
     print (s.metadata)
     print (s.stationIDList)
-    print (s.getStationData('03005 1'))
+    print (s.getStationData('03005 1'))  ##TRY TO RETURN SAME STRUCTURE AS WHAT WAS DONE FOR THE CLIMATE VERIFIER
     s.append(moreData)
     print len(s.data)

@@ -1,15 +1,12 @@
-try:
-    #python 2.x
+import json
+#from datetime import date
+try:    #python 2.x
     import urllib2, urllib
     pyVersion = 2
-except:
-    #python 3.x
+except: #python 3.x
     import urllib.request
     import urllib.parse
     pyVersion = 3
-import json
-from datetime import date
-
 
 class ACIS(object):
 
@@ -23,7 +20,7 @@ class ACIS(object):
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
 
 
-        self.wxElements = {'maxt':	'Maximum temperature (?F)'
+        self.parameters = {'maxt':	'Maximum temperature (?F)'
                             ,'mint':'Minimum temperature (?F)'
                             ,'avgt':'Average temperature (?F)'
                             ,'obst':'Obs time temperature (?F)'
@@ -33,6 +30,7 @@ class ACIS(object):
                             ,'cddXX': 'Cooling Degree Days; where XX is base temperature'
                             ,'hddXX': 'Heating Degree Days; where XX is base temperature'
                             ,'gddXX': 'Growing Degree Days; where XX is base temperature'
+                            ,'climograph': 'Annual Average Temperature and Precipitation'
                             }
 
         self.reduceCodes = {'max': 'Maximum value for the period'
@@ -57,16 +55,13 @@ class ACIS(object):
             params = urllib.parse.urlencode({'params':json.dumps(self.input_dict)})
             params = params.encode('utf-8')
             req = urllib.request.urlopen(self.url, data = params)
-            jsonData = req.read().decode() #decode() added for python 3.x
+            jsonData = req.read().decode()
         return json.loads(str(jsonData))
 
     def _formatInputDict(self,**kwargs):
         '''
         Method to pack all arguments into a dictionary using to call the web
-            service.
-
-        This method is need primarily for the purpose of filtering our any
-            argument that is None.
+            service. Filters out any argument of None.
         '''
         for k in kwargs:
             if kwargs[k] and kwargs[k] <> 'None':
@@ -74,11 +69,9 @@ class ACIS(object):
 
     def countyCodes(self, state = None):
         fipCode = []
-        try:
-            #python 2.x
+        if pyVersion == 2:
             data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
-        except:
-            #python 3.x
+        elif pyVersion == 3:
             data = urllib.request.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
         for line in data.readlines():
             line = str(line).split(',')
@@ -89,20 +82,14 @@ class ACIS(object):
                 fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
         return fipCode
 
-
-    def _getCurrentYear(self):
-        return date.today().year
-
-
 if __name__ == '__main__':
     c = ACIS()
     print (c.countyCodes(state =  'CO'))
-    print (c._getCurrentYear())
     print (c.countyCodes('CO'))
-    print (c.wxElements)
+    print (c.parameters)
 
     c.input_dict = {
-        'bbox': "-102,48,-98,50",
+        'uid': 3940,
         'sdate': "2008-01",
         'edate': "2010-12",
         'elems': [{
@@ -118,5 +105,5 @@ if __name__ == '__main__':
         }],
         'meta': "name,state,ll"
     }
-    c.webServiceSource = 'MultiStnData '
+    c.webServiceSource = 'StnData'
     c._call_ACIS()

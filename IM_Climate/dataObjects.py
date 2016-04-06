@@ -19,17 +19,17 @@ class dataObjects(dict):
         return json.dumps(self)
 
     def _addStandardMetadataElements(self):
-        self._addMetadata(dateCreated = date.today().isoformat())
+        self._addMetadata(dateRequested = date.today().isoformat())
 
     @property
     def metadata(self):
         return self['meta']
 
-    @property
-    def dateCreated(self):
-        '''returns the date the object was created
-        '''
-        return self['meta']['dateCreated']
+    def toCSV(self):
+        pass
+
+    def toGeoJSON(self):
+        pass
 
     def _addMetadata(self, **kwargs):
         for i in kwargs.items():
@@ -48,5 +48,4 @@ if __name__=='__main__':
     d._addStandardMetadataElements()
     d._addMetadata(elk = 5)
     print(d.metadata)
-    print(d.dateCreated)
     print (d.keys())

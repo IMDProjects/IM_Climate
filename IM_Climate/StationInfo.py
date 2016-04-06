@@ -1,12 +1,8 @@
-import json
-try:
-    #python 2.x
+try:    #python 2.x
     from dataObjects import dataObjects
-    pyVersion = 2
-except:
-    #python 3.x
+except: #python 3.x
     from .dataObjects import dataObjects
-    pyVersion = 2
+
 class StationInfo(dataObjects):
     def __init__(self, info, *args, **kwargs):
         info['data'] = info['meta'] #swap keys
@@ -19,17 +15,7 @@ class StationInfo(dataObjects):
         '''
         Returns a list of all station IDs
         '''
-        #return [str(z['sids'][0]) for z in self['data']]
-        data = []
-        for z in self['data']:
-            try:
-                data.append(str(z['sids'][0]))
-            except:
-                '''
-                NOT SURE AT PRESENT WHAT TO DO IF 'sids' is empty!
-                '''
-                pass
-        return data
+        return [z['uid'] for z in self['data']]
 
     @property
     def stationNames(self):
@@ -48,12 +34,12 @@ class StationInfo(dataObjects):
                 matches.append(meta)
         return matches
 
-    def getStationMetadata(self, stationName = None, stationID = None):
+    def getStationMetadata(self, stationID):
         '''
-        Returns all station metadata for a stationName or StationID
+        Returns all station metadata
         '''
         for station in self['data']:
-            if station['name'] or stationID in station['sids'] == stationName:
+            if stationID == station['uid']:
                 return station
 
 if __name__ == '__main__':
@@ -69,11 +55,11 @@ if __name__ == '__main__':
             u'sids': [u'USS0006K29S 6'],
             u'state': u'CO',
             u'uid': 77459}]}
-    queryParams = {'sids':'USS0006K29S 6'}
+    queryParams = {'Example':'Example'}
     s = StationInfo(stations, queryParams = queryParams)
     print(s.stationIDs)
     print(s.stationNames)
     print(s.toJSON())
     print(s.metadata)
     print s.match('ell')
-    print(s.getStationMetadata(stationName = 'Elliot Ridge'))
+    print(s.getStationMetadata(stationID = 67175))
