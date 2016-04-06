@@ -46,10 +46,10 @@ class StationFinder(ACIS):
 
 if __name__ == '__main__':
     c = StationFinder()
-    print(c.parameters)
+    #print(c.parameters)
     stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
-    stationInfo =  c.find( countyCode = '08117')
-    stationInfo = c.find(HUC = 14010001)
+    #stationInfo =  c.find( countyCode = '08117')
+    #stationInfo = c.find(HUC = 14010001)
     print(stationInfo.stationIDs)
-    print(stationInfo.metadata)
-    print c.HUCs()
+    #print(stationInfo.metadata)
+    #print c.HUCs()

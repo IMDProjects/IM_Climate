@@ -5,9 +5,9 @@ except: #python 3.x
 
 class StationInfo(dataObjects):
     def __init__(self, info, *args, **kwargs):
-        info['data'] = info['meta'] #swap keys
-        info['meta'] = {} #clear out the existing meta key
         super(StationInfo, self).__init__(info, **kwargs)
+        self['data'] = self['meta'] #swap keys
+        self['meta'] = {} #clear out the existing meta key
         self._addStandardMetadataElements()
 
     @property

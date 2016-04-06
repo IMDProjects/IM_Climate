@@ -8,7 +8,9 @@ class dataObjects(dict):
     '''
     Base class for all dictionary typed data objects
     '''
-    def __init__(self, *args,**kwargs):
+    def __init__(self, data = None, *args,**kwargs):
+        if data:
+            super(dataObjects,self).__init__(data)
         if not self.get('meta'):
             self['meta'] = {}
         if not self.get('data'):

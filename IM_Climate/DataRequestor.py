@@ -72,8 +72,8 @@ class DataRequestor(ACIS):
             response = self._call_ACIS(uid = uid, **kwargs)
             print response
 
-        return WxData(response, duration = duration, startDate = startDate
-                    ,endDate = endDate, queryParams = self.input_dict, **kwargs)
+##        return WxData(response, duration = duration, startDate = startDate
+##                    ,endDate = endDate, queryParams = self.input_dict, **kwargs)
 
 
     def yearlySummary(self, stationID, parameter, reduceCode, startYear = 'por',
