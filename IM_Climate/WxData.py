@@ -51,7 +51,14 @@ class WxData(dataObjects):
         '''
         Appends additional weather data to the wxData object
         '''
-        self['data']={newData['meta']['uid']: {parameter : tuple(newData['data'])}}
+        #Duck Type - check is parameter dictionary exists
+        #If not, then add the parameter dictionary in exception
+        try:
+            self['data'][newData['meta']['uid']].keys()
+        except:
+            self['data'][newData['meta']['uid']]={}
+
+        self['data'][newData['meta']['uid']][parameter] = tuple(newData['data'])
 
     @property
     def data(self):
@@ -62,6 +69,8 @@ if __name__ == '__main__':
 
     dateInterval = 'mly'
     aggregation = 'avg'
+
+    #Station #1
     wxObs = {u'data': [[u'1980-01', u'30.92'],
            [u'1980-02', u'35.78'],
            [u'1980-03', u'39.16'],
@@ -73,8 +82,8 @@ if __name__ == '__main__':
                    u'name': u'GRAND VALLEY',
                    u'sids': [u'053508 2', u'USC00053508 6'],
                    u'state': u'CO',
-                   u'uid': 3941}}
-
+                   u'uid': 3940}}
+    #Station #2,
     moreWxObs = {u'data': [[u'1980-01', u'30.92'],
            [u'1980-02', u'35.78'],
            [u'1980-03', u'39.16'],
@@ -94,7 +103,8 @@ if __name__ == '__main__':
     print (s.keys())
     print (s.toJSON())
     print (s.metadata)
-    print (s.stationIDs)
-    print (s.getStationData(3941, 'avgt'))
+    print (s.getStationData(3940, 'avgt'))
     s.add(moreWxObs, 'mint')
+    s.add(moreWxObs, 'Maxt')
     print (s.getStationData(3941, 'mint'))
+    print (s.stationIDs)

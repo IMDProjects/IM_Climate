@@ -15,9 +15,9 @@ class StationFinder(ACIS):
         bbox = None, HUC = None, startDate = None, endDate = None,
         supportsClimograph = None, **kwargs):
         '''
-        RETURNS
-        -------
-        A station info object of station metadata
+        INFO
+        ----
+        Standard method to find all stations based on one or more criteria
 
         ARGUMENTS
         ---------
@@ -31,6 +31,11 @@ class StationFinder(ACIS):
         HUC - 8-digit hydrological unit
         startDate -
         endDate -
+
+
+        RETURNS
+        -------
+        A station info object of station metadata
         '''
         self.input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(state = state, elems = parameter
@@ -46,10 +51,10 @@ class StationFinder(ACIS):
 
 if __name__ == '__main__':
     c = StationFinder()
-    #print(c.parameters)
+    print(c.parameters)
     stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
-    #stationInfo =  c.find( countyCode = '08117')
-    #stationInfo = c.find(HUC = 14010001)
+    stationInfo =  c.find( countyCode = '08117')
+    stationInfo = c.find(HUC = 14010001)
     print(stationInfo.stationIDs)
-    #print(stationInfo.metadata)
-    #print c.HUCs()
+    print(stationInfo.metadata)
+    print c.HUCs()[0:5]

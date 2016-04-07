@@ -32,12 +32,12 @@ class DataRequestor(ACIS):
             , endDate = endDate, queryParams = self.input_dict, **kwargs)
 
     def monthySummary(self, stationID, parameter, reduceCode, startDate = 'por',
-         endDate = 'por', maxMissing = 1,  **kwargs):
+         endDate = 'por', maxMissing = 1):
 
         '''
-        RETURNS
-        -------
-        Returns the monthly weather element summary for a single station.
+        INFO
+        -----
+        Calculates the monthly weather element summary for a single station.
         Months with more than 1 missing day are not calculated.
 
         ARGUMENTS
@@ -58,31 +58,37 @@ class DataRequestor(ACIS):
         endDate - End year and month of calculation (YYYY-MM).
             Default is the period of record.
 
+        maxMissing -
+
+        RETURNS
+        -------
+
         '''
         duration = 'mly'
         elems = duration + '_' + reduceCode +'_' + parameter
 
-        return self._iterateOverStations(uids = stationID, sdate = startDate,
-                edate = endDate, elems = elems, maxmissing = maxMissing
-                , **kwargs)
+        return self._iterateOverStationIDs(uids = stationID, duration = duration
+             ,reduceCode = reduceCode, parameter = parameter
+             ,sdate = startDate, edate = endDate, elems = elems
+             ,maxmissing = maxMissing)
 
 
-    def _iterateOverStations(self, uids, **kwargs):
+    def _iterateOverStationIDs(self, uids, duration, reduceCode, parameter, **kwargs):
+        wd = WxData(dateInterval = duration, aggregation = reduceCode)
+
         for uid in uids:
             response = self._call_ACIS(uid = uid, **kwargs)
-            print response
+            wd.add(response, parameter = parameter)
 
-##        return WxData(response, duration = duration, startDate = startDate
-##                    ,endDate = endDate, queryParams = self.input_dict, **kwargs)
-
+        return wd
 
     def yearlySummary(self, stationID, parameter, reduceCode, startYear = 'por',
          endYear = 'por',  **kwargs):
 
         '''
-        RETURNS
-        -------
-        Returns the annual weather element summary for a single station.
+        INFO
+        -----
+        Calculates the annual weather element summary for a single station.
         Years with more than 12 missing days are not calculated.
 
         ARGUMENTS
@@ -102,6 +108,10 @@ class DataRequestor(ACIS):
 
         endYear - End year of calculation. If endYear is not provided,
             it will degault to current year.
+
+        RETURNS
+        -------
+        wxData object which is an extension to the dictionary type
 
         '''
         duration = 'yly'
@@ -144,6 +154,9 @@ if __name__=='__main__':
     print(dr.parameters)
     stationID = ['3940', '3941']
     data_monthly = dr.monthySummary(stationID = stationID, parameter = 'avgt', reduceCode = 'mean', startDate = '1980-01', endDate = '1980-12' )
+    print data_monthly.stationIDs
+    print data_monthly.metadata
+    print data_monthly.data
     #data_annual = dr.yearlySummary(stationID = stationID, parameter = 'avgt', reduceCode = 'mean')
     #data = dr.dailyWxObservations(stationID = stationID, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
     #print(data.metadata)
