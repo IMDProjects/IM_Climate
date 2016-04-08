@@ -70,12 +70,12 @@ class StationInfo(dataObjects):
         for station in self.stationIDs:
             stationMetadata = self.getStationMetadata(stationID = station)
             st = {'type':'Feature', 'id':station, 'properties':stationMetadata,
-                    'geometry': {'type': 'point',
-                    'coordinates': [[stationMetadata['ll'][0]],stationMetadata['ll'][1]] }}
+                    'geometry': {'type': 'Point',
+                    'coordinates': [stationMetadata['ll'][0],stationMetadata['ll'][1]] }}
             geometeries.append(st)
         data = {
         	"type": "FeatureCollection",
-        	"geometries": geometeries}
+        	"features": geometeries}
         return json.dumps(data)
 
 if __name__ == '__main__':
