@@ -30,7 +30,7 @@ class ACIS(object):
                             ,'cddXX': 'Cooling Degree Days; where XX is base temperature'
                             ,'hddXX': 'Heating Degree Days; where XX is base temperature'
                             ,'gddXX': 'Growing Degree Days; where XX is base temperature'
-                            ,'climograph': 'Annual Average Temperature and Precipitation'
+                            #,'climograph': 'Annual Average Temperature and Precipitation'
                             }
 
         self.reduceCodes = {'max': 'Maximum value for the period'

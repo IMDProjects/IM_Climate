@@ -12,12 +12,12 @@ class StationFinder(ACIS):
         self.webServiceSource = 'StnMeta'
 
     def find(self, state = None, parameter = None, countyCode = None,
-        bbox = None, HUC = None, startDate = None, endDate = None,
-        supportsClimograph = None, **kwargs):
+        bbox = None, HUC = None, startDate = None, endDate = None, **kwargs):
         '''
         INFO
         ----
-        Standard method to find all stations based on one or more criteria
+        Standard method to find all stations and associated metadata
+        based on zero or more criteria.
 
         ARGUMENTS
         ---------
@@ -37,9 +37,14 @@ class StationFinder(ACIS):
         -------
         A station info object of station metadata
         '''
+        metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange']
+        if not parameter:
+            parameter = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
+
         self.input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(state = state, elems = parameter
-            ,county = str(countyCode), bbox = bbox, basin = str(HUC), **kwargs)
+            ,county = str(countyCode), bbox = bbox, basin = str(HUC) , meta = metadata
+            , **kwargs)
 
         return StationInfo(results, queryParams = self.input_dict)
 
@@ -53,8 +58,9 @@ if __name__ == '__main__':
     c = StationFinder()
     print(c.parameters)
     stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
-    stationInfo =  c.find( countyCode = '08117')
-    stationInfo = c.find(HUC = 14010001)
-    print(stationInfo.stationIDs)
-    print(stationInfo.metadata)
-    print c.HUCs()[0:5]
+    print stationInfo
+##    stationInfo =  c.find( countyCode = '08117')
+##    stationInfo = c.find(HUC = 14010001, parameter = 'mint')
+##    print(stationInfo.stationIDs)
+##    print(stationInfo.metadata)
+##    print c.HUCs()[0:5]

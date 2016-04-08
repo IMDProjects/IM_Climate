@@ -10,35 +10,45 @@ class DataRequestor(ACIS):
         super(DataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnData'
 
-    def dailyWxObservations(self, stationID, parameter, startDate = 'por',
-        endDate = 'por', **kwargs):
+    def dailyWxObservations(self, stationIDs, parameter, startDate = 'por',
+        endDate = 'por'):
         '''
+        INFO
+        -----
         Returns the daily weather element observations for a single station.
         Flags and time of observation, if they exist, are also returned.
 
-        Arguments:
-            stationID - The ACIS uid
+        ARGUMENTS
+        ---------
+        stationID - The ACIS uid
 
-            parameter - The weather parameter to summarize. Valid parameters
-                can be found using the DataRequestor.paramter property.
-                Note that ACIS calls a parameter an element.
+        parameter - The weather parameter to summarize. Valid parameters
+            can be found using the DataRequestor.paramter property.
+            Note that ACIS calls a parameter an element.
+
+        RETURNS
+        -------
+
         '''
         duration = 'dly'
 
-        response =  self._call_ACIS(uid = stationID, sdate = startDate,
+        return self._iterateOverStationIDs(uid = stationIDs, sdate = startDate,
             edate = endDate, elems = parameter, add = 'f,t', meta = 'sids', **kwargs)
 
-        return WxData(response, duration = duration, startDate = startDate
-            , endDate = endDate, queryParams = self.input_dict, **kwargs)
+##self._iterateOverStationIDs(uid = stationID, sdate = startDate,
+##            edate = endDate, elems = parameter, add = 'f,t', meta = 'sids', **kwargs)
+##
+##        return WxData(response, duration = duration, startDate = startDate
+##            , endDate = endDate, queryParams = self.input_dict, **kwargs)
 
-    def monthySummary(self, stationID, parameter, reduceCode, startDate = 'por',
+    def monthySummaryByYear(self, stationIDs, parameter, reduceCode, startDate = 'por',
          endDate = 'por', maxMissing = 1):
 
         '''
         INFO
         -----
-        Calculates the monthly weather element summary for a single station.
-        Months with more than 1 missing day are not calculated.
+        Monthly summary by year. Months with more than 1 missing day are not
+            calculated.
 
         ARGUMENTS
         ---------
@@ -67,13 +77,19 @@ class DataRequestor(ACIS):
         duration = 'mly'
         elems = duration + '_' + reduceCode +'_' + parameter
 
-        return self._iterateOverStationIDs(uids = stationID, duration = duration
+        return self._iterateOverStationIDs(uids = stationIDs, duration = duration
              ,reduceCode = reduceCode, parameter = parameter
              ,sdate = startDate, edate = endDate, elems = elems
              ,maxmissing = maxMissing)
 
 
     def _iterateOverStationIDs(self, uids, duration, reduceCode, parameter, **kwargs):
+        '''
+        INFO
+        ----
+        Makes data requests for one or more stationIDs. Appends data to wxData
+        object.
+        '''
         wd = WxData(dateInterval = duration, aggregation = reduceCode)
 
         for uid in uids:
@@ -83,7 +99,7 @@ class DataRequestor(ACIS):
         return wd
 
     def yearlySummary(self, stationID, parameter, reduceCode, startYear = 'por',
-         endYear = 'por',  **kwargs):
+         endYear = 'por'):
 
         '''
         INFO
@@ -111,7 +127,7 @@ class DataRequestor(ACIS):
 
         RETURNS
         -------
-        wxData object which is an extension to the dictionary type
+        WxData, an extension to the dictionary object
 
         '''
         duration = 'yly'
@@ -135,7 +151,38 @@ class DataRequestor(ACIS):
                 , endDate = endYear, queryParams = self.input_dict, **kwargs)
 
     def climograph(self):
+        '''
+        INFO
+        ----
+        Pulls tmin, tmax, tavg and precipitation to support climograph
+        '''
+
         pass
+
+
+    def monthlySummary(self, stationIDs, parameter, reduceCode, startDate = 'por',
+         endDate = 'por', maxMissing = 1):
+        '''
+        INFO
+        -----
+        Monthly summary computed for set of years (i.e, 12 one-month summaries).
+        Months with more than ??x%?? missing day are not calculated.
+
+        params = {"sid":"304174","sdate":"por","edate":"por","meta":["name","state"]
+        ,"elems":[{"name":"maxt","interval":"dly","duration":"dly","smry":{"reduce":"max","add":"date"}
+        ,"smry_only":1,"groupby":"year"}]}
+        '''
+        duration = 'dly'
+        #elems = duration + '_' + reduceCode +'_' + parameter
+
+        elems = [{"name":parameter,"interval":"mly","duration":"mly"
+                ,"smry_only":1,"groupby":"year"}]
+
+        return self._iterateOverStationIDs(uids = stationIDs, duration = duration
+             ,reduceCode = reduceCode, parameter = parameter
+             ,sdate = startDate, edate = endDate, elems = elems
+             ,maxmissing = maxMissing)
+
 
     def _extractStationList(self, stations):
         '''
@@ -152,13 +199,23 @@ class DataRequestor(ACIS):
 if __name__=='__main__':
     dr = DataRequestor()
     print(dr.parameters)
-    stationID = ['3940', '3941']
-    data_monthly = dr.monthySummary(stationID = stationID, parameter = 'avgt', reduceCode = 'mean', startDate = '1980-01', endDate = '1980-12' )
-    print data_monthly.stationIDs
-    print data_monthly.metadata
-    print data_monthly.data
-    #data_annual = dr.yearlySummary(stationID = stationID, parameter = 'avgt', reduceCode = 'mean')
-    #data = dr.dailyWxObservations(stationID = stationID, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
+    #stationIDs = [66180, 67175]
+    stationIDs = [66180]
+
+    #Monthly Summary By Year
+##    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
+##    print data_monthly.stationIDs
+##    print data_monthly.metadata
+##    print data_monthly.data
+
+    #Monthly Summary
+    data_monthly = dr.monthlySummary(stationIDs = stationIDs, parameter = 'avgt'
+    , reduceCode = 'mean' )
+    print data_monthly
+
+
+    #data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
+##    data = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
     #print(data.metadata)
 ##    print(data.getStationData(stationID))
 ##    print(data.keys())
