@@ -48,24 +48,7 @@ class StationInfo(dataObjects):
         '''
         Provides a list of stations in GeoJSON format
         '''
-        ##        {
-        ##	"type": "FeatureCollection",
-        ##	"geometries": [{
-        ##		"type": "Feature",
-        ##		"id": "<StationID>",
-        ##		"properties": {
-        ##			"UnitCode": "<UnitCode>",
-        ##			"StationCode": "<StationCode>",
-        ##			"stationName": "<StationName>",
-        ##			"SourceName": "<SourceName>"
-        ##		},
-        ##		"geometry": {
-        ##			"type": "Point",
-        ##			"coordinates": [Longitude_deg,
-        ##			Latitude_deg]
-        ##		}
-        ##	}]
-        ##}
+
         geometeries= []
         for station in self.stationIDs:
             stationMetadata = self.getStationMetadata(stationID = station)
