@@ -37,7 +37,7 @@ class StationFinder(ACIS):
         -------
         A station info object of station metadata
         '''
-        metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange']
+        metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
         if not parameter:
             parameter = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
 
