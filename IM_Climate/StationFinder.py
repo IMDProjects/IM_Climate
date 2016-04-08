@@ -18,6 +18,9 @@ class StationFinder(ACIS):
         ----
         Standard method to find all stations and associated metadata
         based on zero or more criteria.
+        If parameter is not specified, the valid_range will be for all parameters
+        collected by the station. Likewise, if parameter(s) are specified,
+        valid_range applies to the respective parameters only.
 
         ARGUMENTS
         ---------
@@ -28,7 +31,7 @@ class StationFinder(ACIS):
             in decimal degrees (West, South, East, North) with negative
             values indicating west longitude and south latitude
             (e.g. -90.7, 40.5, -88.9, 41.5).
-        HUC - 8-digit hydrological unit
+        HUC - One or more 8-digit hydrological units as a text string (e.g., '14010002,14010002')
         startDate -
         endDate -
 
@@ -60,7 +63,7 @@ if __name__ == '__main__':
     stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
     print stationInfo.toGeoJSON()
     stationInfo =  c.find( countyCode = '08117')
-    stationInfo = c.find(HUC = 14010001, parameter = 'mint')
-    print(stationInfo.stationIDs)
+    stationInfo = c.find(HUC = '14010002, 14010002', parameter = 'avgt')
+    print(len(stationInfo.stationIDs))
     print(stationInfo.metadata)
     print c.HUCs()[0:5]
