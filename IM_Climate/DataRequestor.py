@@ -11,7 +11,7 @@ class DataRequestor(ACIS):
         self.webServiceSource = 'StnData'
 
     def dailyWxObservations(self, stationIDs, parameter, startDate = 'por',
-        endDate = 'por'):
+            endDate = 'por'):
         '''
         INFO
         -----
@@ -30,16 +30,14 @@ class DataRequestor(ACIS):
         -------
 
         '''
-        duration = 'dly'
+        self.duration = 'dly'
+        self.stationIDs = stationIDs
+        self.parameter = parameter
+        self.reduceCode = None
 
-        return self._iterateOverStationIDs(uid = stationIDs, sdate = startDate,
-            edate = endDate, elems = parameter, add = 'f,t', meta = 'sids', **kwargs)
+        return self._iterateOverStationIDs(sdate = startDate,
+            edate = endDate,  add = ['f,t'], meta = 'uid',  elems = self.parameter)
 
-##self._iterateOverStationIDs(uid = stationID, sdate = startDate,
-##            edate = endDate, elems = parameter, add = 'f,t', meta = 'sids', **kwargs)
-##
-##        return WxData(response, duration = duration, startDate = startDate
-##            , endDate = endDate, queryParams = self.input_dict, **kwargs)
 
     def monthySummaryByYear(self, stationIDs, parameter, reduceCode, startDate = 'por',
          endDate = 'por', maxMissing = 1):
@@ -74,27 +72,30 @@ class DataRequestor(ACIS):
         -------
 
         '''
-        duration = 'mly'
-        elems = duration + '_' + reduceCode +'_' + parameter
+        self.duration = 'mly'
+        self.reduceCode = reduceCode
+        self.parameter = parameter
+        elems = self.duration + '_' + reduceCode +'_' + parameter
+        self.stationIDs = stationIDs
 
-        return self._iterateOverStationIDs(uids = stationIDs, duration = duration
-             ,reduceCode = reduceCode, parameter = parameter
-             ,sdate = startDate, edate = endDate, elems = elems
+        return self._iterateOverStationIDs(sdate = startDate, edate = endDate, elems = elems
              ,maxmissing = maxMissing)
 
 
-    def _iterateOverStationIDs(self, uids, duration, reduceCode, parameter, **kwargs):
+    def _iterateOverStationIDs(self, **kwargs):
         '''
         INFO
         ----
         Makes data requests for one or more stationIDs. Appends data to wxData
         object.
-        '''
-        wd = WxData(dateInterval = duration, aggregation = reduceCode)
 
-        for uid in uids:
+
+        '''
+        wd = WxData(dateInterval = self.duration, aggregation = self.reduceCode)
+
+        for uid in self.stationIDs:
             response = self._call_ACIS(uid = uid, **kwargs)
-            wd.add(response, parameter = parameter)
+            wd.add(response, parameter = self.parameter)
 
         return wd
 
@@ -198,9 +199,9 @@ class DataRequestor(ACIS):
 
 if __name__=='__main__':
     dr = DataRequestor()
-    print(dr.parameters)
-    #stationIDs = [66180, 67175]
-    stationIDs = [66180]
+    #print(dr.parameters)
+    stationIDs = [66180, 67175]
+    #stationIDs = [66180]
 
     #Monthly Summary By Year
 ##    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
@@ -208,14 +209,19 @@ if __name__=='__main__':
 ##    print data_monthly.metadata
 ##    print data_monthly.data
 
+    #Daily Data
+    dailyData = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
+    print dailyData.data
+
+
     #Monthly Summary
-    data_monthly = dr.monthlySummary(stationIDs = stationIDs, parameter = 'avgt'
-    , reduceCode = 'mean' )
-    print data_monthly
+##    data_monthly = dr.monthlySummary(stationIDs = stationIDs, parameter = 'avgt'
+##    , reduceCode = 'mean' )
+##    print data_monthly
+
 
 
     #data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
-##    data = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
     #print(data.metadata)
 ##    print(data.getStationData(stationID))
 ##    print(data.keys())
