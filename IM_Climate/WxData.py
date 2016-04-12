@@ -64,6 +64,33 @@ class WxData(dataObjects):
     def data(self):
         return self['data']
 
+    def getStationParameters(self, stationID):
+        return self['data'][stationID].keys()
+
+    def toCSV(self, filePathAndName):
+        '''
+        INFO
+        ----
+        Writes a comm-adelimited text file
+        '''
+        super(WxData,self).toCSV(filePathAndName)
+        for station in self.stationIDs:
+            for parameter in self.getStationParameters(station):
+                for data in self.getStationData(stationID = station, parameter = parameter):
+                    for line in data:
+                        self.outFile.writelines(str(station) + self._sp + parameter
+                        + self._sp + self._sp.join(data) + '\n')
+        self.outFile.close()
+
+    @property
+    def dateInterval(self):
+        return self['meta']['dateInterval']
+
+    @property
+    def aggregation(self):
+        return self['meta']['aggregation']
+
+
 
 if __name__ == '__main__':
 
@@ -108,3 +135,4 @@ if __name__ == '__main__':
     s.add(moreWxObs, 'Maxt')
     print (s.getStationData(3941, 'mint'))
     print (s.stationIDs)
+    s.toCSV(filePathAndName = r'C:\temp\data.csv')

@@ -27,8 +27,9 @@ class dataObjects(dict):
     def metadata(self):
         return self['meta']
 
-    def toCSV(self):
-        pass
+    def toCSV(self, fileNameAndPath):
+        self.outFile = open(fileNameAndPath,'w')
+        self._sp = ', '
 
     def toGeoJSON(self):
         pass

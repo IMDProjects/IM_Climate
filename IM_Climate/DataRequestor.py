@@ -36,7 +36,7 @@ class DataRequestor(ACIS):
         self.reduceCode = None
 
         return self._iterateOverStationIDs(sdate = startDate,
-            edate = endDate,  add = ['f,t'], meta = 'uid',  elems = self.parameter)
+            edate = endDate,  add = ['f','t'], meta = 'uid',  elems = self.parameter)
 
 
     def monthySummaryByYear(self, stationIDs, parameter, reduceCode, startDate = 'por',
@@ -99,7 +99,7 @@ class DataRequestor(ACIS):
 
         return wd
 
-    def yearlySummary(self, stationID, parameter, reduceCode, startYear = 'por',
+    def yearlySummary(self, stationIDs, parameter, reduceCode, startYear = 'por',
          endYear = 'por'):
 
         '''
@@ -131,25 +131,27 @@ class DataRequestor(ACIS):
         WxData, an extension to the dictionary object
 
         '''
-        duration = 'yly'
+        self.duration = 'yly'
+        self.reduceCode = reduceCode
+        self.parameter = parameter
+        self.stationIDs = stationIDs
+
         maxMissing = '12'
+
         elems =  [{
             'name': parameter,
-            'interval': duration,
-            'duration': duration,
+            'interval': self.duration,
+            'duration': self.duration,
             'reduce': {
-                'reduce': reduceCode,
+                'reduce': self.reduceCode,
                 'add': 'mcnt'
             },
             'maxmissing': maxMissing,
         }]
 
-        response = self._call_ACIS(uid = stationID,
+        return self._iterateOverStationIDs(
             sdate = startYear, edate = endYear,
-            elems = elems, **kwargs)
-
-        return WxData(response, duration = duration, startDate = startYear
-                , endDate = endYear, queryParams = self.input_dict, **kwargs)
+            elems = elems)
 
     def climograph(self):
         '''
@@ -179,10 +181,9 @@ class DataRequestor(ACIS):
         elems = [{"name":parameter,"interval":"mly","duration":"mly"
                 ,"smry_only":1,"groupby":"year"}]
 
-        return self._iterateOverStationIDs(uids = stationIDs, duration = duration
-             ,reduceCode = reduceCode, parameter = parameter
-             ,sdate = startDate, edate = endDate, elems = elems
-             ,maxmissing = maxMissing)
+        return self._iterateOverStationIDs(sdate = startDate, edate = endDate,
+            elems = elems ,maxmissing = maxMissing)
+
 
 
     def _extractStationList(self, stations):
@@ -210,8 +211,10 @@ if __name__=='__main__':
 ##    print data_monthly.data
 
     #Daily Data
-    dailyData = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt', startDate = '1990-01-01', endDate = '1990-02-05' )
-    print dailyData.data
+##    dailyData = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt')
+##        , startDate = '1990-01-01', endDate = '2016-05-05' )
+##    print dailyData.data
+##    dailyData.toCSV(filePathAndName = r'data.csv')
 
 
     #Monthly Summary
@@ -220,9 +223,9 @@ if __name__=='__main__':
 ##    print data_monthly
 
 
-
-    #data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
-    #print(data.metadata)
+    #Annual Summary
+##    data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
+##    print(data_annual.metadata)
 ##    print(data.getStationData(stationID))
 ##    print(data.keys())
 ##    print(data_annual)
