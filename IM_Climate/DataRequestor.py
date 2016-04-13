@@ -36,7 +36,7 @@ class DataRequestor(ACIS):
         self.reduceCode = None
 
         return self._iterateOverStationIDs(sdate = startDate,
-            edate = endDate,  add = ['f','t'], meta = 'uid',  elems = self.parameter)
+            edate = endDate,  add = 'f,t,n', meta = 'uid',  elems = self.parameter)
 
 
     def monthySummaryByYear(self, stationIDs, parameter, reduceCode, startDate = 'por',
@@ -140,6 +140,7 @@ class DataRequestor(ACIS):
 
         elems =  [{
             'name': parameter,
+            'add': 'n',
             'interval': self.duration,
             'duration': self.duration,
             'reduce': {
@@ -211,10 +212,10 @@ if __name__=='__main__':
 ##    print data_monthly.data
 
     #Daily Data
-##    dailyData = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt')
-##        , startDate = '1990-01-01', endDate = '2016-05-05' )
-##    print dailyData.data
-##    dailyData.toCSV(filePathAndName = r'data.csv')
+    dailyData = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt'
+        , startDate = '2012-01-01', endDate = '2012-01-05' )
+    print dailyData.data
+    dailyData.toCSV(filePathAndName = r'data.csv')
 
 
     #Monthly Summary

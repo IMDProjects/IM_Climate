@@ -77,8 +77,7 @@ class WxData(dataObjects):
         for station in self.stationIDs:
             for parameter in self.getStationParameters(station):
                 for data in self.getStationData(stationID = station, parameter = parameter):
-                    for line in data:
-                        self.outFile.writelines(str(station) + self._sp + parameter
+                    self.outFile.writelines(str(station) + self._sp + parameter
                         + self._sp + self._sp.join(data) + '\n')
         self.outFile.close()
 
@@ -135,4 +134,4 @@ if __name__ == '__main__':
     s.add(moreWxObs, 'Maxt')
     print (s.getStationData(3941, 'mint'))
     print (s.stationIDs)
-    s.toCSV(filePathAndName = r'C:\temp\data.csv')
+    s.toCSV(filePathAndName = r'test.csv')
