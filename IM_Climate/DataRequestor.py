@@ -31,7 +31,7 @@ class DataRequestor(ACIS):
 
         '''
         self.duration = 'dly'
-        self.stationIDs = stationIDs
+        self.stationIDs = self._extractStationList(stationIDs)
         self.parameter = parameter
         self.reduceCode = None
 
@@ -76,7 +76,7 @@ class DataRequestor(ACIS):
         self.reduceCode = reduceCode
         self.parameter = parameter
         elems = self.duration + '_' + reduceCode +'_' + parameter
-        self.stationIDs = stationIDs
+        self.stationIDs = self._extractStationList(stationIDs)
 
         return self._iterateOverStationIDs(sdate = startDate, edate = endDate, elems = elems
              ,maxmissing = maxMissing)
@@ -134,7 +134,7 @@ class DataRequestor(ACIS):
         self.duration = 'yly'
         self.reduceCode = reduceCode
         self.parameter = parameter
-        self.stationIDs = stationIDs
+        self.stationIDs = self._extractStationList(stationIDs)
 
         maxMissing = '12'
 
@@ -206,7 +206,8 @@ if __name__=='__main__':
     #stationIDs = [66180]
 
     #Monthly Summary By Year
-##    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
+##    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt'
+##        , reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
 ##    print data_monthly.stationIDs
 ##    print data_monthly.metadata
 ##    print data_monthly.data
