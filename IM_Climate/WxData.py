@@ -49,19 +49,23 @@ class WxData(dataObjects):
 
     def add(self, newData, parameter):
         '''
-        Appends additional weather data to the wxData object.
-        Add newData has an 'error' tag, the add method is terminated
+        Appends additional weather data to the wxData object unless there is an
+        'error' tag. In that case, no data is appended for the
         '''
 
-        if newData.get('error'):
-            return
+
         #Duck Type - check is parameter dictionary exists
         #If not, then add the parameter dictionary in exception
         try:
             self['data'][newData['meta']['uid']].keys()
         except:
             self['data'][newData['meta']['uid']]={}
-        self['data'][newData['meta']['uid']][parameter] = tuple(newData['data'])
+
+        #return if there isn't any data to append
+        if newData.get('error'):
+            self['data'][newData['meta']['uid']][parameter] = None
+        else:
+            self['data'][newData['meta']['uid']][parameter] = tuple(newData['data'])
 
 
     @property
