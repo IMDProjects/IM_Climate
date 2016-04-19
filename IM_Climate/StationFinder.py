@@ -10,8 +10,9 @@ class StationFinder(ACIS):
     def __init__(self, *args, **kwargs):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
+        self._initParkCodes()
 
-    def find(self, state = None, parameter = None, countyCode = None,
+    def find(self, parkCode = None, state = None, parameter = None, countyCode = None,
         bbox = None, HUC = None, startDate = None, endDate = None, **kwargs):
         '''
         INFO
@@ -24,6 +25,7 @@ class StationFinder(ACIS):
 
         ARGUMENTS
         ---------
+        parkCode - 4-Letter park code (searches for station within buffer)
         state - Two-letter state acronym (e.g., CO)
         parameter - Parameter code for weather element (e.g., tmin)
         countyCode - County fips code (e.g., 08117)
@@ -44,6 +46,9 @@ class StationFinder(ACIS):
         if not parameter:
             parameter = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
 
+        if parkCode:
+            bbox = self.parkCodes[parkCode]
+
         self.input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(state = state, elems = parameter
             ,county = str(countyCode), bbox = bbox, basin = str(HUC) , meta = metadata
@@ -57,6 +62,13 @@ class StationFinder(ACIS):
         '''
         return hucs.hucs
 
+    def _initParkCodes(self):
+        '''
+        Pre-defines set of bounding boxes for all park codes
+        '''
+        self.parkCodes = {}
+        self.parkCodes['NOCA'] = [-122, 48, -120, 49.5, ]
+
 if __name__ == '__main__':
     c = StationFinder()
     print(c.parameters)
@@ -67,3 +79,5 @@ if __name__ == '__main__':
     print(len(stationInfo.stationIDs))
     print(stationInfo.metadata)
     print c.HUCs()[0:5]
+    stationIndo = c.find(parkCode = 'NOCA')
+    print stationIndo.stationIDs
