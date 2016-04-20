@@ -10,7 +10,8 @@ print(sf.parameters)
 
 #Find Stations meeting specified criteria
 #Find all stations in Summit County, CO with average temperature
-stationInfo = sf.find(wxElement = 'avgt', countyCode = '08117')
+stationInfo = sf.find(parkCode = 'NOCA')
+stationInfo = sf.find(parameter = 'avgt', countyCode = '08117')
 
 #The find method returns a stationInfo dictionary object with extended methods
 # and properties
