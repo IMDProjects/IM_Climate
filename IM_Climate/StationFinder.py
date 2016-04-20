@@ -13,7 +13,7 @@ class StationFinder(ACIS):
         self._initParkCodes()
 
     def find(self, parkCode = None, state = None, parameter = None, countyCode = None,
-        bbox = None, HUC = None, startDate = None, endDate = None, **kwargs):
+        bbox = None, HUC = None, startDate = None, endDate = None):
         '''
         INFO
         ----
@@ -51,8 +51,8 @@ class StationFinder(ACIS):
 
         self.input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(state = state, elems = parameter
-            ,county = str(countyCode), bbox = bbox, basin = str(HUC) , meta = metadata
-            , **kwargs)
+            ,county = str(countyCode), bbox = bbox, basin = str(HUC)
+            ,meta = metadata)
 
         return StationInfo(results, queryParams = self.input_dict)
 
@@ -67,7 +67,7 @@ class StationFinder(ACIS):
         Pre-defines set of bounding boxes for all park codes
         '''
         self.parkCodes = {}
-        self.parkCodes['NOCA'] = [-122, 48, -120, 49.5, ]
+        self.parkCodes['NOCA'] = [-122, 48, -120, 49.5 ] #West, South, East, North
 
 if __name__ == '__main__':
     c = StationFinder()
