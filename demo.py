@@ -9,8 +9,9 @@ print(sf.countyCodes(state = 'CO'))
 print(sf.parameters)
 
 #Find Stations meeting specified criteria
-#Find all stations in Summit County, CO with average temperature
+#Find all stations within and around North Cascades NP
 stationInfo = sf.find(parkCode = 'NOCA')
+#Find all stations in Summit County, CO with average temperature
 stationInfo = sf.find(parameter = 'avgt', countyCode = '08117')
 
 #The find method returns a stationInfo dictionary object with extended methods
