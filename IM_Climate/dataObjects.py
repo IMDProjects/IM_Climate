@@ -18,6 +18,8 @@ class dataObjects(dict):
 
 
     def toJSON(self):
+        '''
+        '''
         return json.dumps(self)
 
     def _addStandardMetadataElements(self):
@@ -31,8 +33,6 @@ class dataObjects(dict):
         self.outFile = open(fileNameAndPath,'w')
         self._sp = ', '
 
-    def toGeoJSON(self):
-        pass
 
     def _addMetadata(self, **kwargs):
         for i in kwargs.items():

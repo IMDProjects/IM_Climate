@@ -10,6 +10,11 @@ class DataRequestor(ACIS):
         super(DataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnData'
 
+        self.reduceCodes = {'max': 'Maximum value for the period'
+                , 'min':'Minimum value for the period'
+                , 'sum' : 'Sum of the values for the period'
+                , 'mean': 'Average of the values for the period'}
+
     def dailyWxObservations(self, stationIDs, parameter, startDate = 'por',
             endDate = 'por'):
         '''

@@ -1,5 +1,5 @@
 import json
-#from datetime import date
+
 try:    #python 2.x
     import urllib2, urllib
     pyVersion = 2
@@ -33,16 +33,13 @@ class ACIS(object):
                             #,'climograph': 'Annual Average Temperature and Precipitation'
                             }
 
-        self.reduceCodes = {'max': 'Maximum value for the period'
-                , 'min':'Minimum value for the period'
-                , 'sum' : 'Sum of the values for the period'
-                , 'mean': 'Average of the values for the period'}
+
 
     def _call_ACIS(self, **kwargs):
         '''
-        Common method for calling the ACIS services.
+        Core method for calling the ACIS services.
 
-        Returns python dictionary bu de-serializing json response
+        Returns python dictionary by de-serializing json response
         '''
         self._formatInputDict(**kwargs)
         self.url = self.baseURL + self.webServiceSource
@@ -60,32 +57,18 @@ class ACIS(object):
 
     def _formatInputDict(self,**kwargs):
         '''
-        Method to pack all arguments into a dictionary using to call the web
-            service. Filters out any argument of None.
+        Method to pack all arguments into a dictionary used to call the ACIS web
+            service. Filters out all argument of None.
         '''
         for k in kwargs:
             if kwargs[k] and kwargs[k] <> 'None':
                 self.input_dict[k] = kwargs[k]
 
-    def countyCodes(self, state = None):
-        fipCode = []
-        if pyVersion == 2:
-            data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
-        elif pyVersion == 3:
-            data = urllib.request.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
-        for line in data.readlines():
-            line = str(line).split(',')
-            if state:
-                if line[0] == state:
-                    fipCode.append(line[3] + ', ' + line[0] + ' : ' + line[1] + line[2])
-            else:
-                fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
-        return fipCode
+
 
 if __name__ == '__main__':
     c = ACIS()
-    print (c.countyCodes(state =  'CO'))
-    print (c.countyCodes('CO'))
+
     print (c.parameters)
 
     c.input_dict = {
