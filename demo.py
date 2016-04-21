@@ -40,7 +40,7 @@ wxdataData_daily = dr.dailyWxObservations(stationIDs = stationInfo,
 
 
 #All methods of DataRequestor return a WxData dictionary object with extended
-# methods and preoperties
+# methods and properties
 print(wxdata.metadata)  #All metadata
 print(wxdata.getStationData(wxdata.stationIDs[0], parameter = 'avgt')) #Get data for first station
 print(wxdata.toJSON()) #Export object back to JSON

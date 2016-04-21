@@ -12,6 +12,10 @@ except:     #python 3.x
     pyVersion = 3
 
 class StationFinder(ACIS):
+    '''
+    INFO
+
+    '''
     def __init__(self, *args, **kwargs):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
@@ -24,6 +28,7 @@ class StationFinder(ACIS):
         ----
         Standard method to find all stations and associated metadata
         based on zero or more criteria.
+
         If parameter is not specified, the valid_range will be for all parameters
         collected by the station. Likewise, if parameter(s) are specified,
         valid_range applies to the respective parameters only.
@@ -38,7 +43,8 @@ class StationFinder(ACIS):
             in decimal degrees (West, South, East, North) with negative
             values indicating west longitude and south latitude
             (e.g. -90.7, 40.5, -88.9, 41.5).
-        HUC - One or more 8-digit hydrological units as a text string (e.g., '14010002,14010002')
+        HUC - One or more 8-digit hydrological units as a text string
+            (e.g., '14010002,14010002')
         startDate -
         endDate -
 

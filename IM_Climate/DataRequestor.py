@@ -206,16 +206,15 @@ class DataRequestor(ACIS):
 
 if __name__=='__main__':
     dr = DataRequestor()
-    #print(dr.parameters)
+    print(dr.parameters)
     stationIDs = [66180, 67175]
-    #stationIDs = [66180]
 
     #Monthly Summary By Year
-##    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt'
-##        , reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
-##    print data_monthly.stationIDs
-##    print data_monthly.metadata
-##    print data_monthly.data
+    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt'
+        , reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
+    print data_monthly.stationIDs
+    print data_monthly.metadata
+    print data_monthly.data
 
     #Daily Data
     dailyData = dr.dailyWxObservations(stationIDs = stationIDs, parameter = 'avgt'
@@ -225,14 +224,13 @@ if __name__=='__main__':
 
 
     #Monthly Summary
-##    data_monthly = dr.monthlySummary(stationIDs = stationIDs, parameter = 'avgt'
-##    , reduceCode = 'mean' )
-##    print data_monthly
+    data_monthly = dr.monthlySummary(stationIDs = stationIDs, parameter = 'avgt'
+    , reduceCode = 'mean' )
+    print data_monthly
 
 
     #Annual Summary
-##    data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
-##    print(data_annual.metadata)
-##    print(data.getStationData(stationID))
-##    print(data.keys())
-##    print(data_annual)
+    data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
+    print(data_annual.metadata)
+    print(data_annual.getStationData(stationID = stationIDs[0], parameter =  'avgt'))
+
