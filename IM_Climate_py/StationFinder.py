@@ -14,14 +14,21 @@ except:     #python 3.x
 class StationFinder(ACIS):
     '''
     INFO
+    -------
+    Methods
+    *find
+    *filterCountyCodes
+    *filterHUCs
 
+    Properties
+    *parameters
     '''
     def __init__(self, *args, **kwargs):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
         self._initParkCodes()
 
-    def find(self, parkCode = None, state = None, parameter = None, countyCode = None,
+    def find(self, unitCode = None, state = None, parameter = None, countyCode = None,
         bbox = None, HUC = None, startDate = None, endDate = None):
         '''
         INFO
@@ -35,7 +42,7 @@ class StationFinder(ACIS):
 
         ARGUMENTS
         ---------
-        parkCode - 4-Letter park code (searches for station within buffer)
+        unitCode - 4-Letter park code (searches for station within buffer)
         state - Two-letter state acronym (e.g., CO)
         parameter - Parameter code for weather element (e.g., tmin)
         countyCode - County fips code (e.g., 08117)
