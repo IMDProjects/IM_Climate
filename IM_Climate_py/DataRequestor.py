@@ -6,6 +6,21 @@ except: #python 3.x
     from .WxData import WxData
 
 class DataRequestor(ACIS):
+    '''
+    INFO
+    ----
+    Methods
+    *dailyWxObservations
+    *monthlySummaryByYear
+    *yearlySummary
+    *monthlySummary
+    *climograph
+
+    Properties
+
+
+
+    '''
     def __init__(self, *args, **kwargs):
         super(DataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnData'
