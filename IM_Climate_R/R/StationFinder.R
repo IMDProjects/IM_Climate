@@ -1,10 +1,20 @@
 #' Find stations near a park
 #' 
-#' Takes a sourceURL for ACIS data services, determines the stations near the specified park, and returns the list of station identifiers
-#' @param sourceURL sourceURL for ACIS data services
-#' @param parkCode NPS park code
-#' @return A list of stations near the specified tatpark
+#' Takes one or more park codes, determines the stations near the specified park, and returns the list of station identifiers
+# @param sourceURL sourceURL for ACIS data services
+#' @param parkCodes One or more NPS park codes as a List
+#' @return A list of station identfiers for stations near the specified parks
 #' @export 
-findStation <- function (sourceURL, parkCode) {
+#' 
+
+#install.packages("jsonlite")
+#library(jsonlite)
+
+findStation <- function (parkCodes) {
+  baseURL <- "http://data.rcc-acis.org/"
+  webServiceSource <- "StnMeta"
+  
+  targetURL <- paste(baseURL,webServiceSource)
+  
   return ("stationList")
 }

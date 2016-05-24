@@ -4,17 +4,15 @@
 \alias{findStation}
 \title{Find stations near a park}
 \usage{
-findStation(sourceURL, parkCode)
+findStation(parkCodes)
 }
 \arguments{
-\item{sourceURL}{sourceURL for ACIS data services}
-
-\item{parkCode}{NPS park code}
+\item{parkCodes}{One or more NPS park codes as a List}
 }
 \value{
-A list of stations near the specified tatpark
+A list of station identfiers for stations near the specified parks
 }
 \description{
-Takes a sourceURL for ACIS data services, determines the stations near the specified park, and returns the list of station identifiers
+Takes one or more park codes, determines the stations near the specified park, and returns the list of station identifiers
 }
 
