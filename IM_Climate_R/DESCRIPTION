@@ -2,10 +2,9 @@ Package: IMClimateR
 Title: Station Finder and Date Requestor for ACIS climate data
 Version: 0.1
 Authors: Lisa Nelson <lisa_l_nelson@nps.gov> and Aaron Weed <aaron_weed@nps.gov>
-Maintainer: Lisa Nelson <lisa_l_nelson@nps.gov>
-Description: What the package does (one paragraph)
-Depends:
-    R (>= 3.1.0)
+Maintainer: Lisa Nelson <lisa_l_nelson@nps.gov> and Aaron Weed <aaron_weed@nps.gov>
+Description: Utility package for finding climate stations and downloading climate parameter data for a station or stations.
+Depends: jsonlite, httr
 License: ??
 LazyData: true
 RoxygenNote: 5.0.1
