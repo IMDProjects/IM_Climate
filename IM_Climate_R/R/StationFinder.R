@@ -11,10 +11,10 @@
 #library(jsonlite)
 
 findStation <- function (parkCodes) {
-  # TODO: add expand parameter (buffer distance)
   # URLs and request parameters
   # NPS Park bounding boxes
   bboxURLBase <- "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+  bboxExpand  <- 0.33
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
   webServiceSource <- "StnMeta"
@@ -26,19 +26,41 @@ findStation <- function (parkCodes) {
   
   stationURL <- paste(baseURL,webServiceSource)
   
+  # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279&meta=uid,%20name,%20state,%20ll,%20elev,%20valid_daterange,sids
+  
   # Get bounding box for park(s)
   bboxURL <- gsub("CODE", parkCodes, bboxURLBase)
   # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
-  bboxWKT <- content(GET(bboxURL, confg))
-  #bboxWKT <- strsplit((content(GET(bboxURL, confg))),".")
+  bboxWKT <- strsplit(content(GET(bboxURL, confg))[[1]]$Geography, ",")
   # Extract vertices and 'buffer' by 0.3 degrees (~33 km)
-  #LL <- bboxWKT
-  #RL <- bboxWKT
+  # TODO: add Eastern Hemisphere detection
+  LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
+  LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
+  UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
+  UL  <- strsplit(gsub("))","",substring(bboxWKT[[1]][4], 2)), " ")
   
-  return (bboxWKT)
+  LLX  <- as.numeric(LL[[1]][1]) - bboxExpand
+  LLY  <- as.numeric(LL[[1]][2]) - bboxExpand
+  LRX  <- as.numeric(LR[[1]][1]) + bboxExpand
+  LRY  <- as.numeric(LR[[1]][2]) - bboxExpand
+  URX  <- as.numeric(UR[[1]][1]) + bboxExpand
+  URY  <- as.numeric(UR[[1]][2]) + bboxExpand
+  ULX  <-  as.numeric(UL[[1]][1]) - bboxExpand
+  ULY  <- as.numeric(UL[[1]][2]) + bboxExpand
+  
+  bbox  <- paste(c(LLX, LLY, URX, URY), collapse=", ")
+  
+  body  <- list(bbox = bbox, meta = stationMetadata)
+  #body  <- list(elems = parameters, bbox = bbox, meta = stationMetadata)
+  #bbox  <- c(LLX, LLY, URX, URY)
+  
+  #return (bboxWKT[[1]]$Geography)
+  #return (strsplit(bboxWKT[[1]]$Geography, ","))
+  #return (URX)
+  #return (body)
   
   # Use bounding box to request station list
+  stationList  <- POST(stationURL, body = body, encode = "json")
   
-  
-  #return ("stationList")
+  return (stationList)
 }
