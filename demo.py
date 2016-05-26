@@ -1,6 +1,6 @@
 from IM_Climate_py.StationFinder import StationFinder
 
-localFolder = r'c:\\temp\\'
+localFolder = 'c:\\temp\\'
 sf = StationFinder()
 
 #Case #1: All stations around NOCA
@@ -12,7 +12,7 @@ data = sf.find(unitCode = 'NOCA', parameter = 'mint')
 data.export(localFolder + 'minT_Stations.txt')
 
 
-
+#------------------------------------------------------------------------------
 #COMMENTED OUT CODE FOR FUTURE INTRODUCTION
 ###The find method returns a stationInfo dictionary object with extended methods
 ### and properties
