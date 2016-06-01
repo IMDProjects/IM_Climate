@@ -6,7 +6,7 @@
 #' @param climateStations A list of one or more unique identifiers for climate stations
 #' @param sdate Start date as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range. If period of record is desired, use "por".  
 #' @param edate End date as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range. If period of record is desired, use "por".
-#' @return A JSON object containing the requested data
+#' @return A data frame containing the requested data
 #' @export
 #' 
 # TODO: iterate climateStation list
