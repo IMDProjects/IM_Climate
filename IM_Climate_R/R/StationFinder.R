@@ -1,14 +1,15 @@
 #' Find stations near a park
 #' 
-#' Takes one or more park codes, determines the stations near the specified park, and returns the list of station identifiers
+#' Takes one or more park codes, determines the stations near (within ~30km) the specified park, and returns station information as a data frame with the following items: name, longitude/latitude (ll), station IDs (sids), state code, elevation (feet), and unique ID
 # @param sourceURL sourceURL for ACIS data services
 #' @param parkCodes One or more NPS park codes as a List
-#' @return A list of station identfiers for stations near the specified parks
+#' @return A data frame containing station information for stations near the specified park(s)
 #' @export 
 #' 
 
 #install.packages("jsonlite")
 #library(jsonlite)
+# TODO: iterate parkCodes list
 
 findStation <- function (parkCodes) {
   # URLs and request parameters
@@ -19,14 +20,14 @@ findStation <- function (parkCodes) {
   
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
-  webServiceStation <- "StnMeta"
+  webServiceSource <- "StnMeta"
   
   #stationMetadata <-c('uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids')
   parameters <- c('pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt')
   encode <- c("json")
   config <- add_headers(Accept = "'Accept':'application/json'")
   
-  stationURL <- gsub(" ","",paste(baseURL,webServiceStation))
+  stationURL <- gsub(" ","",paste(baseURL,webServiceSource))
   
   #Example URLS
   # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279&meta=uid,%20name,%20state,%20ll,%20elev,%20valid_daterange,sids
@@ -62,9 +63,11 @@ findStation <- function (parkCodes) {
   stationRequest <- gsub(" ", "%20", paste(stationURL, body, sep="?bbox="))
   
   # Use bounding box to request station list (jsonlite)
-  stationList <- fromJSON(stationRequest) 
+  stationListInit <- fromJSON(stationRequest) 
   # Use bounding box to request station list (httr GET)
   #stationList  <- content(GET(stationURL, query = body, config = config))
   
-  return (stationList$meta)
+  stationList <- stationListInit$meta
+  stationList$unit_code <- parkCodes[1]
+  return (stationList)
 }
