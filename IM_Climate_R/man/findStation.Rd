@@ -4,15 +4,17 @@
 \alias{findStation}
 \title{Find stations near a park}
 \usage{
-findStation(parkCodes)
+findStation(parkCodes, climateParams)
 }
 \arguments{
 \item{parkCodes}{One or more NPS park codes as a List}
+
+\item{climateParams}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
 }
 \value{
-A list of station identfiers for stations near the specified parks
+A data frame containing station information for stations near the specified park(s)
 }
 \description{
-Takes one or more park codes, determines the stations near the specified park, and returns the list of station identifiers
+Takes one or more park codes and one or more climate parameters, determines the stations near (within ~30km) the specified park, and returns station information as a data frame with the following items: name, longitude/latitude (ll), station IDs (sids), state code, elevation (feet), and unique ID
 }
 

@@ -1,8 +1,9 @@
 #' Find stations near a park
 #' 
-#' Takes one or more park codes, determines the stations near (within ~30km) the specified park, and returns station information as a data frame with the following items: name, longitude/latitude (ll), station IDs (sids), state code, elevation (feet), and unique ID
+#' Takes one or more park codes and one or more climate parameters, determines the stations near (within ~30km) the specified park, and returns station information as a data frame with the following items: name, longitude/latitude (ll), station IDs (sids), state code, elevation (feet), and unique ID
 # @param sourceURL sourceURL for ACIS data services
 #' @param parkCodes One or more NPS park codes as a List
+#' @param climateParams A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @return A data frame containing station information for stations near the specified park(s)
 #' @export 
 #' 
@@ -11,7 +12,7 @@
 #library(jsonlite)
 # TODO: iterate parkCodes list
 
-findStation <- function (parkCodes) {
+findStation <- function (parkCodes, climateParams) {
   # URLs and request parameters
   
   # NPS Park bounding boxes
@@ -60,14 +61,14 @@ findStation <- function (parkCodes) {
   #body  <- list(elems = parameters, bbox = bbox, meta = stationMetadata)
   
   # Format GET URL for use in jsonlite request
-  stationRequest <- gsub(" ", "%20", paste(stationURL, body, sep="?bbox="))
+  stationRequest <- gsub(" ", "%20", paste(paste(stationURL, paste(climateParams, collapse = ","), sep="?elems="), body, sep="&bbox="))
   
   # Use bounding box to request station list (jsonlite)
   stationListInit <- fromJSON(stationRequest) 
   # Use bounding box to request station list (httr GET)
   #stationList  <- content(GET(stationURL, query = body, config = config))
   
-  stationList <- stationListInit$meta
+  stationList <- as.data.frame(stationListInit$meta)
   stationList$unit_code <- parkCodes[1]
   return (stationList)
 }
