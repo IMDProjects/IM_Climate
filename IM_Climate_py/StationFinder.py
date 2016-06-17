@@ -1,3 +1,5 @@
+import json
+
 try:    #python 2.x
     import urllib2, urllib
     from StationInfo import StationInfo
@@ -16,44 +18,28 @@ class StationFinder(ACIS):
     INFO
     -------
     Methods
-    *find
-    *filterCountyCodes
-    *filterHUCs
+    *findStation
 
-    Properties
-    *parameters
+
     '''
     def __init__(self, *args, **kwargs):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
-        self._initParkCodes()
 
-    def find(self, unitCode = None, state = None, parameter = None, countyCode = None,
-        bbox = None, HUC = None, startDate = None, endDate = None):
+    def findStation(self, unitCode = None, distance = 30,
+        parameter = None, filePathAndName = None):
         '''
         INFO
         ----
         Standard method to find all stations and associated metadata
         based on zero or more criteria.
 
-        If parameter is not specified, the valid_range will be for all parameters
-        collected by the station. Likewise, if parameter(s) are specified,
-        valid_range applies to the respective parameters only.
 
         ARGUMENTS
         ---------
         unitCode - 4-Letter park code (searches for station within buffer)
-        state - Two-letter state acronym (e.g., CO)
+        distaince -
         parameter - Parameter code for weather element (e.g., tmin)
-        countyCode - County fips code (e.g., 08117)
-        bbox - A latitude/longitude bounding box defined
-            in decimal degrees (West, South, East, North) with negative
-            values indicating west longitude and south latitude
-            (e.g. -90.7, 40.5, -88.9, 41.5).
-        HUC - One or more 8-digit hydrological units as a text string
-            (e.g., '14010002,14010002')
-        startDate -
-        endDate -
 
 
         RETURNS
@@ -65,23 +51,41 @@ class StationFinder(ACIS):
             parameter = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
 
         if unitCode:
-            bbox = self.parkCodes[unitCode]
+            bbox = self._getBoundingBox(unitCode, distance)
 
         self.input_dict = {}    #Clears the input dictionary
-        results =  self._call_ACIS(state = state, elems = parameter
-            ,county = str(countyCode), bbox = bbox, basin = str(HUC)
+        results =  self._call_ACIS(elems = parameter
+            ,bbox = bbox
             ,meta = metadata)
 
-        return StationInfo(results, queryParams = self.input_dict)
+
+        si =  StationInfo(results, queryParams = self.input_dict)
+        if filePathAndName:
+                si.export(filePathAndName)
+        return si
 
 
 
-    def _initParkCodes(self):
+    def _getBoundingBox(self, unitCode, distanceKM = None):
         '''
-        Pre-defines set of bounding boxes for all park codes
+        Calls IRMA Unit Service to get bounding box for NPS unit
+        Converts buffer to KM based on 0.011
+        Formats String to 'West, South, East, North'
         '''
-        self.parkCodes = {}
-        self.parkCodes['NOCA'] = [-122, 48, -120, 49.5 ] #West, South, East, North
+        connection = urllib2.urlopen('http://irmaservices.nps.gov/v2/rest/unit/' + unitCode + '/geography?detail=envelope&dataformat=wkt&format=json')
+        geo = json.loads(connection.read())[0]['Geography'][10:-2].split(',')
+        west = float(geo[0].split()[0])
+        east = float(geo[1].split()[0])
+        north = float(geo[2].split()[1])
+        south = float(geo[0].split()[1])
+
+        if distanceKM:
+            bufr = float(distanceKM)*0.011
+            west+=bufr
+            east-=bufr
+            south-=bufr
+            north+=bufr
+        return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
 
 ##    def HUCs(self):
 ##        '''
@@ -106,14 +110,18 @@ class StationFinder(ACIS):
 
 if __name__ == '__main__':
     c = StationFinder()
-    stationIndo = c.find(unitCode = 'NOCA')
+    print c._getBoundingBox('ACAD', distanceKM = 30)
+    stationInfo = c.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
+
+
+
 ##    print (c.countyCodes(state =  'CO'))
 ##    print (c.countyCodes('CO'))
-    print(c.parameters)
-    stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
+##    print(c.parameters)
+##    stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
     ##print stationInfo.toGeoJSON()
-    stationInfo =  c.find( countyCode = '08117')
-    stationInfo = c.find(HUC = '14010002, 14010002', parameter = 'avgt')
+##    stationInfo =  c.findStation( countyCode = '08117')
+##    stationInfo = c.findStation(HUC = '14010002, 14010002', parameter = 'avgt')
 ##    print(len(stationInfo.stationIDs))
 ##    print(stationInfo.metadata)
 ##    print c.HUCs()[0:5]

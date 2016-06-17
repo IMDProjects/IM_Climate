@@ -10,7 +10,7 @@ class StationInfo(dataObjects):
         self['data'] = self['meta'] #swap keys
         self['meta'] = {} #clear out the existing meta key
 
-        self._tags = ['uid', 'name', 'state', 'elev']
+        self._tags = ['name', 'll', 'sids', 'state', 'elev', 'uid']
 
         self._fillNULLs()
         ##self._addStandardMetadataElements()
@@ -31,7 +31,7 @@ class StationInfo(dataObjects):
         None
         '''
         self._dataAsList = []
-        headers = ['ACIS_StationID', 'StationName', 'StateCode','Elevation_ft']
+        headers = ['name', 'll', 'sids', 'state', 'elev', 'uid']
 
 
         self._dataAsList.append(headers)
