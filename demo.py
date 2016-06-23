@@ -4,8 +4,8 @@ localFolder = 'c:\\temp\\'
 sf = StationFinder()
 
 #Case #1: All stations around NOCA; default to 30km buffer
-data = sf.findStation(unitCode = 'NOCA')
-data.export(localFolder + 'NOCA_Stations.txt')
+data = sf.findStation(unitCode = 'MABI')
+data.export(localFolder + 'MABI_Stations.txt')
 
 #Case #2: All stations around ACAD recording minimum temperature; distance = 10km
 data = sf.findStation(unitCode = 'ACAD', distance = 10, parameter = 'mint')
