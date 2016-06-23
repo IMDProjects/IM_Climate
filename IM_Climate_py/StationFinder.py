@@ -2,7 +2,7 @@ import json
 
 try:    #python 2.x
     import urllib2, urllib
-    from StationInfo import StationInfo
+    from StationDict import StationDict
     from ACIS import ACIS
     import hucs
     pyVersion = 2
@@ -10,7 +10,7 @@ except:     #python 3.x
     import urllib.request
     import urllib.parse
     from .ACIS import ACIS
-    from .StationInfo import StationInfo
+    from .StationDict import StationDict
     pyVersion = 3
 
 class StationFinder(ACIS):
@@ -60,7 +60,7 @@ class StationFinder(ACIS):
             ,unitCode = unitCode)
 
 
-        si =  StationInfo(results, queryParams = self.input_dict)
+        si =  StationDict(results, queryParams = self.input_dict)
         if filePathAndName:
                 si.export(filePathAndName)
         return si
