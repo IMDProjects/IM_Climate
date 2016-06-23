@@ -62,7 +62,7 @@ class dataObjects(dict):
         '''
         self._filePathAndName = filePathAndName
         if format == 'csv':
-            self._toText()
+            self._dumpToList()
             self._writeToCSV()
 
 

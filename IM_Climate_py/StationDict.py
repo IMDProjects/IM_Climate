@@ -11,19 +11,18 @@ class StationDict(dataObjects):
         self['data'] = self['meta'] #swap keys
         self['meta'] = {} #clear out the existing meta key
 
-        self._tags = ['name', 'll', 'sids', 'state', 'elev', 'uid']
+        self._tags = ['name', 'latitude', 'longitude', 'sids', 'stateCode', 'elev', 'uid']
 
         self._setStation()
         self._addStandardMetadataElements()
         self._addMetadata(kwargs)
 
 
-    def _toText(self):
+    def _dumpToList(self):
         '''
         INFO
         ----
-        Method to format the station list to csv
-
+        Method to format the station to a list
 
         ARGUMENTS
         ---------
@@ -34,12 +33,10 @@ class StationDict(dataObjects):
         None
         '''
         self._dataAsList = []
-        headers = ['name', 'll', 'sids', 'state', 'elev', 'uid']
 
-
-        self._dataAsList.append(headers)
+        self._dataAsList.append(self._tags)
         for station in self:
-            info = [station[t] for t in self._tags]
+            info = [station.__dict__[t] for t in self._tags]
             self._dataAsList.append(info)
 
     def _setStation(self):
@@ -112,9 +109,7 @@ if __name__ == '__main__':
     print(sl.stationIDs)
     print(sl.stationNames)
     print(sl.metadata)
-    #print(sl.getStationMetadata(stationID = 67175))
     sl.export(r'C:\TEMP\test.csv')
     for station in sl:
         print station.latitude
-##    print(s.toJSON())
 
