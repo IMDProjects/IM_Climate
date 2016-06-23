@@ -56,7 +56,8 @@ class StationFinder(ACIS):
         self.input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(elems = parameter
             ,bbox = bbox
-            ,meta = metadata)
+            ,meta = metadata
+            ,unitCode = unitCode)
 
 
         si =  StationInfo(results, queryParams = self.input_dict)
@@ -112,6 +113,7 @@ if __name__ == '__main__':
     c = StationFinder()
     print c._getBoundingBox('ACAD', distanceKM = 30)
     stationInfo = c.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
+    print stationInfo.metadata
 
 
 

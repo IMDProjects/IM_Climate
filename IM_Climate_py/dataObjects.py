@@ -19,7 +19,7 @@ class dataObjects(dict):
 
 
         #Hidden properties
-        self._tags = []  #common tag elements associated with object
+        self._tags = []  #common tag elements associated with object - for the purpose of export to csv
 
     def _writeToCSV(self):
         '''
@@ -66,18 +66,18 @@ class dataObjects(dict):
             self._writeToCSV()
 
 
-##    def _addStandardMetadataElements(self):
-##        self._addMetadata(dateRequested = date.today().isoformat())
-##
-##    @property
-##    def metadata(self):
-##        return self['meta']
-##
-##
-##    def _addMetadata(self, **kwargs):
-##        for i in kwargs.items():
-##            self['meta'][i[0]] = i[1]
-##
+    def _addStandardMetadataElements(self):
+        self._addMetadata({'dateRequested' : date.today().isoformat()})
+
+    @property
+    def metadata(self):
+        return self['meta']
+
+
+    def _addMetadata(self, kwargs):
+        for i in kwargs.items():
+            self['meta'][i[0]] = i[1]
+
 ##    def _parseDate(self, d):
 ##        if d:
 ##            d = d.split('-')
@@ -93,4 +93,6 @@ if __name__=='__main__':
     ##d._addStandardMetadataElements()
     ##d._addMetadata(elk = 5)
     ##print(d.metadata)
-    print (d.keys())
+    ##print (d.keys())
+    ##print d.metadata
+    print d

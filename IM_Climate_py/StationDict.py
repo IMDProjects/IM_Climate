@@ -1,26 +1,29 @@
 import json
-try:    #python 2.x
-    from dataObjects import dataObjects
-except: #python 3.x
-    from .dataObjects import dataObjects
+##try:    #python 2.x
+from dataObjects import dataObjects
+from Station import Station
+##except: #python 3.x
+##    from .dataObjects import dataObjects
 
-class StationInfo(dataObjects):
+class StationDict(dataObjects):
     def __init__(self, info, *args, **kwargs):
-        super(StationInfo, self).__init__(info, **kwargs)
+        super(StationDict, self).__init__(info, *args, **kwargs)
         self['data'] = self['meta'] #swap keys
         self['meta'] = {} #clear out the existing meta key
 
         self._tags = ['name', 'll', 'sids', 'state', 'elev', 'uid']
 
-        self._fillNULLs()
-        ##self._addStandardMetadataElements()
+        self._setStation()
+        self._addStandardMetadataElements()
+        self._addMetadata(kwargs)
+
 
     def _toText(self):
         '''
         INFO
         ----
         Method to format the station list to csv
-        Blank values are converted to 'NA'
+
 
         ARGUMENTS
         ---------
@@ -35,54 +38,39 @@ class StationInfo(dataObjects):
 
 
         self._dataAsList.append(headers)
-        for station in self['data']:
+        for station in self:
             info = [station[t] for t in self._tags]
             self._dataAsList.append(info)
 
-    def _fillNULLs(self):
+    def _setStation(self):
         '''
         Fills all cases where an attribute is not returned in the JSON file with
         an 'NA'
         '''
+        for x in range(0,len(self['data'])):
+            self['data'][x] = Station(self['data'][x])
+
+    @property
+    def stationIDs(self):
+        '''
+        Returns a list of all station IDs
+        '''
+        return [z.uid for z in self]
+
+    @property
+    def stationNames(self):
+        '''
+        Returns a list of all station IDs
+        '''
+        return [str(z.name) for z in self]
+
+
+    def __iter__(self):
+        '''
+        Allows one to iterate over the station list as a dictionary
+        '''
         for station in self['data']:
-            for t in self._tags:
-                try:
-                    station[t]
-                except:
-                    station[t] = 'NA'
-
-
-##    @property
-##    def stationIDs(self):
-##        '''
-##        Returns a list of all station IDs
-##        '''
-##        return [z['uid'] for z in self['data']]
-
-##    @property
-##    def stationNames(self):
-##        '''
-##        Returns a list of all station IDs
-##        '''
-##        return [str(z['name']) for z in self['data']]
-##
-##
-##    def match(self, string):
-##        '''Matches provided string to full station metadata.
-##            Returns list of matched station metadata'''
-##        matches = []
-##        for meta in self['data']:
-##            if str(meta).lower().find(string.lower()) >= 0:
-##                matches.append(meta)
-##        return matches
-
-##    def getStationMetadata(self, stationID):
-##        '''
-##        Returns all station metadata
-##        '''
-##        for station in self['data']:
-##            if stationID == station['uid']:
-##                return station
+            yield station
 
 ##    def _toGeoJSON(self):
 ##
@@ -119,12 +107,14 @@ if __name__ == '__main__':
             'sids': ['USS0006K29S 6'],
             'state': 'CO',
             'uid': 77459}]}
-    queryParams = {'Example':'Example'}
-    s = StationInfo(stations, queryParams = queryParams)
-##    print(s.stationIDs)
-##    print(s.stationNames)
+    queryParams = {'Example':'ExampleData'}
+    sl = StationDict(info = stations, queryParams = queryParams)
+    print(sl.stationIDs)
+    print(sl.stationNames)
+    print(sl.metadata)
+    #print(sl.getStationMetadata(stationID = 67175))
+    sl.export(r'C:\TEMP\test.csv')
+    for station in sl:
+        print station.latitude
 ##    print(s.toJSON())
-##    print(s.metadata)
-##    print s.match('ell')
-##    print(s.getStationMetadata(stationID = 67175))
-    s.export(r'C:\TEMP\test.csv')
+
