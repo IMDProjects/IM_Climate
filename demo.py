@@ -16,6 +16,18 @@ data.export(localFolder + 'ACAD_minT_Stations.txt')
 data = sf.findStation(unitCode = 'ROMO', distance = 40, parameter = 'maxt'
         ,filePathAndName = localFolder + 'ROMO_maxT_Stations.txt')
 
+#Case #4: View Station Properties for station uid=4211
+station = data[4211]
+print station.name
+print station.latitude
+print station.longitude
+print station.sids
+print station.stateCode
+print station.elev
+print station.uid
+
+#Case #5: View UnitCode Query Parameter
+print data.metadata.queryParameters['unitCode']
 
 
 

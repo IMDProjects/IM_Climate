@@ -1,17 +1,11 @@
 import json
 
-try:    #python 2.x
-    import urllib2, urllib
-    from StationDict import StationDict
-    from ACIS import ACIS
-    import hucs
-    pyVersion = 2
-except:     #python 3.x
-    import urllib.request
-    import urllib.parse
-    from .ACIS import ACIS
-    from .StationDict import StationDict
-    pyVersion = 3
+
+import urllib2, urllib
+from StationDict import StationDict
+from ACIS import ACIS
+import hucs
+
 
 class StationFinder(ACIS):
     '''
@@ -60,7 +54,8 @@ class StationFinder(ACIS):
             ,unitCode = unitCode)
 
 
-        si =  StationDict(results, queryParams = self.input_dict)
+        #si =  StationDict(results, queryParams = self.input_dict)
+        si =  StationDict(results, queryParameters = self.input_dict)
         if filePathAndName:
                 si.export(filePathAndName)
         return si
@@ -112,20 +107,8 @@ class StationFinder(ACIS):
 if __name__ == '__main__':
     c = StationFinder()
     print c._getBoundingBox('ACAD', distanceKM = 30)
+
     stationInfo = c.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
-    print stationInfo.metadata
+    #print stationInfo.metadata
 
 
-
-##    print (c.countyCodes(state =  'CO'))
-##    print (c.countyCodes('CO'))
-##    print(c.parameters)
-##    stationInfo =  c.find(parameter = 'avgt', countyCode = '08117', startDate = '1980-01-01', endDate = '1981-12-31')
-    ##print stationInfo.toGeoJSON()
-##    stationInfo =  c.findStation( countyCode = '08117')
-##    stationInfo = c.findStation(HUC = '14010002, 14010002', parameter = 'avgt')
-##    print(len(stationInfo.stationIDs))
-##    print(stationInfo.metadata)
-##    print c.HUCs()[0:5]
-
-##    print stationIndo.stationIDs

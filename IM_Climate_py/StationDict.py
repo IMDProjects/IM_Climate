@@ -1,22 +1,13 @@
-import json
-##try:    #python 2.x
 from dataObjects import dataObjects
 from Station import Station
-##except: #python 3.x
-##    from .dataObjects import dataObjects
+from RequestMetadata import RequestMetadata
 
-class StationDict(dataObjects):
-    def __init__(self, info, *args, **kwargs):
-        super(StationDict, self).__init__(info, *args, **kwargs)
-        self['data'] = self['meta'] #swap keys
-        self['meta'] = {} #clear out the existing meta key
 
+class StationDict(dict, dataObjects):
+    def __init__(self, info, queryParameters, *args, **kwargs):
         self._tags = ['name', 'latitude', 'longitude', 'sids', 'stateCode', 'elev', 'uid']
-
-        self._setStation()
-        self._addStandardMetadataElements()
-        self._addMetadata(kwargs)
-
+        self.metadata = RequestMetadata(queryParameters, **kwargs)
+        self._setStation(info)
 
     def _dumpToList(self):
         '''
@@ -39,20 +30,20 @@ class StationDict(dataObjects):
             info = [station.__dict__[t] for t in self._tags]
             self._dataAsList.append(info)
 
-    def _setStation(self):
+    def _setStation(self, info):
         '''
         Fills all cases where an attribute is not returned in the JSON file with
         an 'NA'
         '''
-        for x in range(0,len(self['data'])):
-            self['data'][x] = Station(self['data'][x])
+        for x in range(0,len(info['meta'])):
+            self[info['meta'][x]['uid']] = Station(info['meta'][x])
 
     @property
     def stationIDs(self):
         '''
         Returns a list of all station IDs
         '''
-        return [z.uid for z in self]
+        return self.keys()
 
     @property
     def stationNames(self):
@@ -66,26 +57,8 @@ class StationDict(dataObjects):
         '''
         Allows one to iterate over the station list as a dictionary
         '''
-        for station in self['data']:
-            yield station
-
-##    def _toGeoJSON(self):
-##
-##        '''
-##        Provides a list of stations in GeoJSON format
-##        '''
-##
-##        geometeries= []
-##        for station in self.stationIDs:
-##            stationMetadata = self.getStationMetadata(stationID = station)
-##            st = {'type':'Feature', 'id':station, 'properties':stationMetadata,
-##                    'geometry': {'type': 'Point',
-##                    'coordinates': [stationMetadata['ll'][0],stationMetadata['ll'][1]] }}
-##            geometeries.append(st)
-##        data = {
-##        	"type": "FeatureCollection",
-##        	"features": geometeries}
-##        return json.dumps(data)
+        for station in self.keys():
+            yield self[station]
 
 
 
@@ -105,11 +78,14 @@ if __name__ == '__main__':
             'state': 'CO',
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
-    sl = StationDict(info = stations, queryParams = queryParams)
+    sl = StationDict(info = stations, queryParameters = queryParams, moose='elk')
+    #print sl.metadata
     print(sl.stationIDs)
     print(sl.stationNames)
-    print(sl.metadata)
+    print(sl.metadata.queryParameters)
+    print sl.metadata.moose
     sl.export(r'C:\TEMP\test.csv')
     for station in sl:
         print station.latitude
+    print sl[77459].name
 
