@@ -20,7 +20,7 @@ class ACIS(object):
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
 
 
-        self.parameters = {'maxt':	'Maximum temperature (?F)'
+        self.supportedParameters = {'maxt':	'Maximum temperature (?F)'
                             ,'mint':'Minimum temperature (?F)'
                             ,'avgt':'Average temperature (?F)'
                             ,'obst':'Obs time temperature (?F)'
