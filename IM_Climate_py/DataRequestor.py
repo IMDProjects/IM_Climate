@@ -7,15 +7,7 @@ class DataRequestor(ACIS):
     INFO
     ----
     Methods
-    *dailyWxObservations
-    *monthlySummaryByYear
-    *yearlySummary
-    *monthlySummary
-    *climograph
-
-    Properties
-
-
+    *getDailyWxObservations
 
     '''
     def __init__(self, *args, **kwargs):
@@ -42,6 +34,9 @@ class DataRequestor(ACIS):
         parameters - The weather parameters to summarize. Valid parameters
             can be found by accesssing the supportedParamters property.
             Note that ACIS vernacular for parameter is element.
+
+        StartDate - YYYY-MM-DD (default is period of record)
+        EndDate - YYYY-MM-DD (default is period of record)
 
         RETURNS
         -------
@@ -226,7 +221,7 @@ if __name__=='__main__':
 
     #Daily Data
     dailyData = dr.getDailyWxObservations(stationIDs = stationIDs, parameters = 'avgt, mint'
-        , startDate = '2012-01-01', endDate = '2012-01-05' )
+        , startDate = '20120101', endDate = '2012-01-05' )
     dailyData.export(filePathAndName = r'C:\TEST\dailyData.csv')
 
 

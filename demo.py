@@ -32,8 +32,28 @@ print station.uid
 #Case #5: View UnitCode Query Parameter
 print data.metadata.queryParameters['unitCode']
 
+#Case #6: Print first five station IDs
+print data.stationIDs[0:5]
+
+
 #******************************************************************************
 
 # DATA REQUESTER
 
+#Case #1: Get daily data for two station IDs (from list) and two parameters
+# and save locally
+stationIDs = [66176, 31746]
+parameters = 'mint, maxt'
+startDate = '2012-01-01'
+endDate = '2012-02-01'
+dr = DataRequestor()
+wxData = dr.getDailyWxObservations(data, parameters
+                            ,startDate= startDate, endDate = endDate)
+wxData.export(filePathAndName = localFolder + 'Case02_dailyData.csv')
 
+
+#Case #2: Get daily data using stationFinder object and one parameter
+# and save locally
+parameters = 'avgt'
+wxData = dr.getDailyWxObservations(stationIDs, parameters
+                            ,startDate= startDate, endDate = endDate)
