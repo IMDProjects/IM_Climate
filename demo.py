@@ -1,5 +1,8 @@
 from IM_Climate_py.StationFinder import StationFinder
+from IM_Climate_py.DataRequestor import DataRequestor
 
+
+# STATION FINDER
 localFolder = 'c:\\temp\\'
 sf = StationFinder()
 
@@ -29,5 +32,8 @@ print station.uid
 #Case #5: View UnitCode Query Parameter
 print data.metadata.queryParameters['unitCode']
 
+#******************************************************************************
+
+# DATA REQUESTER
 
 
