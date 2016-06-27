@@ -4,17 +4,24 @@
 \alias{findStation}
 \title{Find stations near a park}
 \usage{
-findStation(parkCodes, climateParams)
+findStation(parkCodes, distance = NULL, climateParams,
+  filePathAndName = NULL)
 }
 \arguments{
-\item{parkCodes}{One or more NPS park codes as a List}
+\item{parkCodes}{One NPS park code as a string}
+
+\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box}
 
 \item{climateParams}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
+
+\item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }
 \value{
-A data frame containing station information for stations near the specified park(s)
+A data frame containing station information for stations near the specified park
 }
 \description{
-Takes one or more park codes and one or more climate parameters, determines the stations near (within ~30km) the specified park, and returns station information as a data frame with the following items: name, longitude/latitude (ll), station IDs (sids), state code, elevation (feet), and unique ID
+Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box (from the IRMA Unit Service). 
+If distance parameter is specified, bounding box will be buffered by that distance. 
+Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 }
 

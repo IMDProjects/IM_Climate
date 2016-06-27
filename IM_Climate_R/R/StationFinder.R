@@ -1,23 +1,30 @@
 #' Find stations near a park
 #' 
-#' Takes one or more park codes and one or more climate parameters, determines the stations near (within ~30km) the specified park, and returns station information as a data frame with the following items: name, longitude/latitude (ll), station IDs (sids), state code, elevation (feet), and unique ID
+#' Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box (from the IRMA Unit Service). 
+#' If distance parameter is specified, bounding box will be buffered by that distance. 
+#' Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 # @param sourceURL sourceURL for ACIS data services
-#' @param parkCodes One or more NPS park codes as a List
+#' @param parkCodes One NPS park code as a string
+#' @param distance (optional) Distance (in kilometers) to buffer park bounding box
 #' @param climateParams A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
-#' @return A data frame containing station information for stations near the specified park(s)
+#' @param filePathAndName (optional) File path and name including extension for output CSV file
+#' @return A data frame containing station information for stations near the specified park
 #' @export 
 #' 
 
-#install.packages("jsonlite")
-#library(jsonlite)
-# TODO: iterate parkCodes list
+# TODO: iterate parkCodes list; add either/or capability for park code/bbox
 
-findStation <- function (parkCodes, climateParams) {
+findStation <- function (parkCodes, distance=NULL, climateParams, filePathAndName=NULL) {
   # URLs and request parameters
   
   # NPS Park bounding boxes
   bboxURLBase <- "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
-  bboxExpand  <- 0.33
+  if (is.null(distance)) {
+    bboxExpand  = 0
+  }
+  else {
+    bboxExpand = distance*0.011
+  }
   
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
@@ -55,20 +62,33 @@ findStation <- function (parkCodes, climateParams) {
   ULY  <- as.numeric(UL[[1]][2]) + bboxExpand
   
   bbox  <- paste(c(LLX, LLY, URX, URY), collapse=", ")
-  
+ 
   body  <- list(bbox = bbox)
-  #body  <- list(bbox = bbox, meta = stationMetadata)
-  #body  <- list(elems = parameters, bbox = bbox, meta = stationMetadata)
-  
+
   # Format GET URL for use in jsonlite request
   stationRequest <- gsub(" ", "%20", paste(paste(stationURL, paste(climateParams, collapse = ","), sep="?elems="), body, sep="&bbox="))
   
   # Use bounding box to request station list (jsonlite)
   stationListInit <- fromJSON(stationRequest) 
   # Use bounding box to request station list (httr GET)
-  #stationList  <- content(GET(stationURL, query = body, config = config))
-  
-  stationList <- as.data.frame(stationListInit$meta)
-  stationList$unit_code <- parkCodes[1]
-  return (stationList)
+  if (length(stationListInit$meta) > 0) {
+    longitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta[,2], function(x) unlist(as.numeric(x[1])))))),"longitude")
+    latitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta[,2], function(x) unlist(as.numeric(x[2])))))),"latitude")
+    sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
+    sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
+    #stationListTemp <- as.data.frame(lapply(unlist(stationListInit$meta[,2][1],function(x) as.numeric(as.character(x)))))
+    #stationList <- as.data.frame(stationListInit$meta)
+    stationList <- cbind(name=stationListInit$meta[,1], longitude, latitude, sid1, sid2, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], uid=stationListInit$meta[,6])
+    stationList$unit_code <- parkCodes[1]
+  }
+  else {
+    stationList <- cat("No stations for ", parkCodes, "using distance ", distance) 
+  }
+  # Output file
+  if (!is.null(filePathAndName)) {
+    write.table(stationList, file=filePathAndName, sep=",", row.names=FALSE, qmethod="double")
+  }
+  else {
+    return (stationList)
+  }
 }
