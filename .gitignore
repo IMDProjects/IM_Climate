@@ -132,3 +132,7 @@ vignettes/*.pdf
 /IM_Climate_py/dataObjects.pyc
 /IM_Climate_py/DataRequestor.pyc
 /IM_Climate_py/__init__.pyc
+/IM_Climate_py/ACIS.pyc
+/IM_Climate_py/GUI/NPS_root.pyc
+/IM_Climate_py/GUI/__init__.pyc
+/IM_Climate_py/StationInfo.pyc
