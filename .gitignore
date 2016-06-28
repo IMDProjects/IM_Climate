@@ -126,3 +126,9 @@ vignettes/*.pdf
 *.pyc
 /IM_Climate_py/WxData.pyc
 /IM_Climate_py/*.pyc
+/IM_Climate_py/StationDict.pyc
+/IM_Climate_py/StationFinder.pyc
+/IM_Climate_py/RequestMetadata.pyc
+/IM_Climate_py/dataObjects.pyc
+/IM_Climate_py/DataRequestor.pyc
+/IM_Climate_py/__init__.pyc
