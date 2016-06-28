@@ -1,18 +1,13 @@
 import json
 
-
-import urllib2, urllib
 from StationDict import StationDict
 from ACIS import ACIS
-import hucs
-
 
 class StationFinder(ACIS):
     '''
     INFO
     -------
-    Methods
-    *findStation
+    Object to find weather stations.
 
 
     '''
@@ -32,13 +27,14 @@ class StationFinder(ACIS):
         ARGUMENTS
         ---------
         unitCode - 4-Letter park code (searches for station within buffer)
-        distaince -
+        distance - buffer distance around the provided unitCode (if provided).
+                    Default is 30 km.
         parameter - Parameter code for weather element (e.g., tmin)
-
+        filePathAndName - If provided, a csv text file is saved to specific location.
 
         RETURNS
         -------
-        A station info object of station metadata
+        An object of station metadata (See StationDict.py)
         '''
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
         if not parameter:
@@ -53,20 +49,24 @@ class StationFinder(ACIS):
             ,meta = metadata
             ,unitCode = unitCode)
 
-
-        #si =  StationDict(results, queryParams = self.input_dict)
         si =  StationDict(results, queryParameters = self.input_dict)
         if filePathAndName:
                 si.export(filePathAndName)
         return si
 
 
-
     def _getBoundingBox(self, unitCode, distanceKM = None):
         '''
-        Calls IRMA Unit Service to get bounding box for NPS unit
+        INFO
+        ----
+        Calls NPS IRMA Unit Service to get bounding box for respective NPS unit
         Converts buffer to KM based on 0.011
         Formats String to 'West, South, East, North'
+
+        ARGUMENTS
+        ---------
+        unitCode - 4-letter park code
+        distanceKM - distance to buffer park boundary
         '''
         connection = urllib2.urlopen('http://irmaservices.nps.gov/v2/rest/unit/' + unitCode + '/geography?detail=envelope&dataformat=wkt&format=json')
         geo = json.loads(connection.read())[0]['Geography'][10:-2].split(',')
@@ -83,32 +83,11 @@ class StationFinder(ACIS):
             north+=bufr
         return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
 
-##    def HUCs(self):
-##        '''
-##        Returns all of the HUC Codes
-##        '''
-##        return hucs.hucs
-##
-##    def countyCodes(self, state = None):
-##        fipCode = []
-##        if pyVersion == 2:
-##            data = urllib2.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
-##        elif pyVersion == 3:
-##            data = urllib.request.urlopen('http://www2.census.gov/geo/docs/reference/codes/files/national_county.txt')
-##        for line in data.readlines():
-##            line = str(line).split(',')
-##            if state:
-##                if line[0] == state:
-##                    fipCode.append(line[3] + ', ' + line[0] + ' : ' + line[1] + line[2])
-##            else:
-##                fipCode.append(line[0] + ',' + line[3] + ' : ' + line[1] + line[2])
-##        return fipCode
 
 if __name__ == '__main__':
     c = StationFinder()
     print c._getBoundingBox('ACAD', distanceKM = 30)
-
     stationInfo = c.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
-    #print stationInfo.metadata
+    print stationInfo.metadata.queryParameters
 
 

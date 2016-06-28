@@ -6,8 +6,7 @@ class DataRequestor(ACIS):
     '''
     INFO
     ----
-    Methods
-    *getDailyWxObservations
+    Object to request weather data using ACIS web services
 
     '''
     def __init__(self, *args, **kwargs):
@@ -24,19 +23,22 @@ class DataRequestor(ACIS):
         '''
         INFO
         -----
-        Returns the daily weather element observations for a single station.
+        Returns the daily weather observations for one or more stations.
         Flags and time of observation, if they exist, are also returned.
 
         ARGUMENTS
         ---------
-        stationID - The ACIS uid
+        stationIDs - The ACIS uids. These can either be in list form or the
+                      StationDict object returned from the StationFinder.FindStation
+                      method.
 
-        parameters - The weather parameters to summarize. Valid parameters
+        parameters - The weather parameters to fetch. Valid parameters
             can be found by accesssing the supportedParamters property.
             Note that ACIS vernacular for parameter is element.
 
         StartDate - YYYY-MM-DD (default is period of record)
         EndDate - YYYY-MM-DD (default is period of record)
+        filePathAndName - (optional) - Location and name of CSV text file to save
 
         RETURNS
         -------
@@ -53,6 +55,8 @@ class DataRequestor(ACIS):
 
     def _extractStationList(self, stations):
         '''
+        INFO
+        ----
         If stations is a stationList object, extracts list of stationIDs.
         Otherwise, assumes stationIDs to be a list.
         '''
@@ -227,21 +231,4 @@ if __name__=='__main__':
 
     print(dr.supportedParameters)
 
-##    #Monthly Summary
-##    data_monthly = dr.monthlySummary(stationIDs = stationIDs, parameter = 'avgt'
-##    , reduceCode = 'mean' )
-##    print data_monthly
-##
-##
-##    #Annual Summary
-##    data_annual = dr.yearlySummary(stationIDs = stationIDs, parameter = 'avgt', reduceCode = 'mean')
-##    print(data_annual.metadata)
-##    print(data_annual.getStationData(stationID = stationIDs[0], parameter =  'avgt'))
-##
-##    #Monthly Summary By Year
-##    data_monthly = dr.monthySummaryByYear(stationIDs = stationIDs, parameter = 'avgt'
-##        , reduceCode = 'mean', startDate = '1990-01', endDate = '1991-12' )
-##    print data_monthly.stationIDs
-##    print data_monthly.metadata
-##    print data_monthly.data
 
