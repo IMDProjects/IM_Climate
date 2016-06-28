@@ -123,3 +123,6 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+*.pyc
+/IM_Climate_py/WxData.pyc
+/IM_Climate_py/*.pyc
