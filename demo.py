@@ -4,9 +4,11 @@ from IM_Climate_py.DataRequestor import DataRequestor
 '''
 This demo script showcases the utility of the IM_Climate.py package
 '''
-
-# STATION FINDER
+#specify local folder where demo files will be saved
 localFolder = 'c:\\temp\\'
+
+#***************
+# STATION FINDER
 sf = StationFinder()
 
 #Case #1: All stations around NOCA; default to 30km buffer
@@ -44,19 +46,19 @@ print wxStations.stationIDs[0:5]
 # DATA REQUESTER
 
 #Case #1: Get daily data for two station IDs (from list) and two parameters
-# and save locally
+# and automatically save locally
 stationIDs = [66176, 31746]
 parameters = 'mint, maxt'
 startDate = '2012-01-01'
 endDate = '2012-02-01'
 dr = DataRequestor()
 wxData = dr.getDailyWxObservations(stationIDs, parameters
-                            ,startDate= startDate, endDate = endDate)
-wxData.export(filePathAndName = localFolder + 'Case02_dailyData.csv')
+                            ,startDate= startDate, endDate = endDate
+                            ,filePathAndName = localFolder + 'Case01_dailyData.csv')
 
 
 #Case #2: Get daily data using wxStations object and one parameter
-# and save locally
 parameters = 'avgt'
 wxData = dr.getDailyWxObservations(wxStations, parameters
                             ,startDate= startDate, endDate = endDate)
+wxData.export(filePathAndName = localFolder + 'Case02_dailyData.csv')

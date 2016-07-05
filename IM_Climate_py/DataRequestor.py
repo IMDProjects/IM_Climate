@@ -19,7 +19,7 @@ class DataRequestor(ACIS):
                 , 'mean': 'Average of the values for the period'}
 
     def getDailyWxObservations(self, stationIDs, parameters, startDate = 'por',
-            endDate = 'por'):
+            endDate = 'por', filePathAndName = None):
         '''
         INFO
         -----
@@ -49,8 +49,12 @@ class DataRequestor(ACIS):
         self.parameters = parameters.replace(' ','').split(',')
         self.reduceCode = None
 
-        return self._callStationParameters(sdate = startDate,
+        results =  self._callStationParameters(sdate = startDate,
             edate = endDate,  add = 'f,t,n', meta = 'uid')
+
+        if filePathAndName:
+            results.export(filePathAndName = filePathAndName)
+        return results
 
 
     def _extractStationList(self, stations):
