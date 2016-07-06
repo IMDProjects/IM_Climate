@@ -10,28 +10,17 @@ class WxData(dict, dataObjects):
         Data object that holds and organizes all weather data returned by ACIS
         using the StnData request.
 
-        This object differs from the ACIS data structure
-
-        Meta: {dateInterval, Aggregation, PeriodOfRecord, DateRequested}
-        Data: Station:Parameter:({date,value,flags}
         '''
-        self.queryParameters= queryParameters
+        self.queryParameters = queryParameters
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.wxParameters = wxParameters
         if data:
             self.add(data)
 
-
-    def getStationData(self, stationID, parameter):
-        '''
-        Returns time series of data for a specied station and parameter
-        '''
-        return self[stationID]['data']
-
     def add(self, newData):
         '''
-        Appends additional weather data to the wxData object unless there is an
+        Adds additional weather data to the wxData object unless there is an
         'error' tag. In that case, no data is appended for the
         '''
         #Duck Type - check is data dictionary exists
@@ -50,8 +39,6 @@ class WxData(dict, dataObjects):
                     stationData = tuple(newData['data']))
         self.stationIDs = self.keys() #Update metadata to reflect all stationIDs
 
-    def getStationParameters(self, stationID):
-        return self[stationID].keys()
 
     def _dumpToList(self):
         '''

@@ -13,16 +13,16 @@ sf = StationFinder()
 
 #Test #1: All stations around NOCA; default to 30km buffer
 wxStations = sf.findStation(unitCode = 'MABI')
-wxStations.export(localFolder + 'SF1.txt')
+wxStations.export(localFolder + 'SF01.csv')
 
 #Test #2: All stations around ACAD recording minimum temperature; distance = 10km
 wxStations = sf.findStation(unitCode = 'ACAD', distance = 10, parameter = 'mint')
-wxStations.export(localFolder + 'SF2.txt')
+wxStations.export(localFolder + 'SF02.csv')
 
 #Test 3: All stations around ROMO recording maximum temperature; distance = 40km
         #with option to save file
 wxStations = sf.findStation(unitCode = 'ROMO', distance = 40, parameter = 'maxt'
-        ,filePathAndName = localFolder + 'SF3.txt')
+        ,filePathAndName = localFolder + 'SF03.csv')
 
 #Test #4: View Station Properties for station uid=4211
 station = wxStations[4211]
@@ -54,11 +54,11 @@ endDate = '2012-02-01'
 dr = DataRequestor()
 wxData = dr.getDailyWxObservations(stationIDs, parameters
                             ,startDate= startDate, endDate = endDate
-                            ,filePathAndName = localFolder + 'Case01_dailyData.csv')
+                            ,filePathAndName = localFolder + 'DR01.csv')
 
 
 #Case #2: Get daily data using wxStations object and one parameter
 parameters = 'avgt'
 wxData = dr.getDailyWxObservations(wxStations, parameters
                             ,startDate= startDate, endDate = endDate)
-wxData.export(filePathAndName = localFolder + 'Case02_dailyData.csv')
+wxData.export(filePathAndName = localFolder + 'DR02.csv')
