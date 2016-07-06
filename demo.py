@@ -11,20 +11,20 @@ localFolder = 'c:\\temp\\'
 # STATION FINDER
 sf = StationFinder()
 
-#Case #1: All stations around NOCA; default to 30km buffer
+#Test #1: All stations around NOCA; default to 30km buffer
 wxStations = sf.findStation(unitCode = 'MABI')
-wxStations.export(localFolder + 'MABI_Stations.txt')
+wxStations.export(localFolder + 'SF1.txt')
 
-#Case #2: All stations around ACAD recording minimum temperature; distance = 10km
+#Test #2: All stations around ACAD recording minimum temperature; distance = 10km
 wxStations = sf.findStation(unitCode = 'ACAD', distance = 10, parameter = 'mint')
-wxStations.export(localFolder + 'ACAD_minT_Stations.txt')
+wxStations.export(localFolder + 'SF2.txt')
 
-#Case 3: All stations around ROMO recording maximum temperature; distance = 40km
+#Test 3: All stations around ROMO recording maximum temperature; distance = 40km
         #with option to save file
 wxStations = sf.findStation(unitCode = 'ROMO', distance = 40, parameter = 'maxt'
-        ,filePathAndName = localFolder + 'ROMO_maxT_Stations.txt')
+        ,filePathAndName = localFolder + 'SF3.txt')
 
-#Case #4: View Station Properties for station uid=4211
+#Test #4: View Station Properties for station uid=4211
 station = wxStations[4211]
 print station.name
 print station.latitude
@@ -34,10 +34,10 @@ print station.stateCode
 print station.elev
 print station.uid
 
-#Case #5: Acccess/View UnitCode Query Parameter
-print wxStations.metadata.queryParameters['unitCode']
+#Test #5: Acccess/View UnitCode Query Parameter
+print wxStations.queryParameters['unitCode']
 
-#Case #6: Print first five station IDs
+#TEst #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
 

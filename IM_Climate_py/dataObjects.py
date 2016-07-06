@@ -1,6 +1,6 @@
 import json
 import csv
-
+from datetime import date
 
 
 class dataObjects(object):
@@ -8,6 +8,9 @@ class dataObjects(object):
     '''
     Base class for all data objects
     '''
+
+    def __init__(self):
+        self.dateRequested = date.today().isoformat()
 
     def _writeToCSV(self):
         '''

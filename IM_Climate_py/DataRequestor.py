@@ -49,8 +49,8 @@ class DataRequestor(ACIS):
         self.parameters = parameters.replace(' ','').split(',')
         self.reduceCode = None
 
-        results =  self._callStationParameters(sdate = startDate,
-            edate = endDate,  add = 'f,t,n', meta = 'uid')
+        results =  self._fetchStationDataFromACIS(sdate = startDate,
+            edate = endDate,  add = 'f,t,n', meta = ['uid','ll', 'name', 'elev', 'sids'])
 
         if filePathAndName:
             results.export(filePathAndName = filePathAndName)
@@ -69,7 +69,7 @@ class DataRequestor(ACIS):
         except:
             return stations
 
-    def _callStationParameters(self, **kwargs):
+    def _fetchStationDataFromACIS(self, **kwargs):
         '''
         INFO
         ----
@@ -79,16 +79,13 @@ class DataRequestor(ACIS):
 
         '''
         wd = WxData(queryParameters = None, dateInterval = self.duration,
-            aggregation = self.reduceCode)
+            aggregation = self.reduceCode, wxParameters = self.parameters)
 
         for uid in self.stationIDs:
-            for parameter in self.parameters:
-                response = self._call_ACIS(uid = uid, elems = parameter, **kwargs)
-                wd.add(response, parameter = parameter)
+            response = self._call_ACIS(uid = uid, elems = self.parameters, **kwargs)
+            wd.add(response)
 
         return wd
-
-
 
 ##    def monthySummaryByYear(self, stationIDs, parameter, reduceCode, startDate = 'por',
 ##         endDate = 'por', maxMissing = 1):
@@ -226,13 +223,11 @@ if __name__=='__main__':
     dr = DataRequestor()
     stationIDs = [66180, 67175]
 
-
     #Daily Data
     dailyData = dr.getDailyWxObservations(stationIDs = stationIDs, parameters = 'avgt, mint'
         , startDate = '20120101', endDate = '2012-01-05' )
-    dailyData.export(filePathAndName = r'C:\TEST\dailyData.csv')
+    dailyData.export(filePathAndName = r'dailyData.csv')
 
 
-    print(dr.supportedParameters)
 
 

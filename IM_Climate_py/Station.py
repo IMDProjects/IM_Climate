@@ -1,18 +1,41 @@
+
 class Station(object):
     '''
     Blank values are converted to 'NA'
     '''
-    def __init__(self, stationInfo):
+    def __init__(self, stationMetadata = None, stationData = None):
+        if stationMetadata:
+            self.setStationMetadata(stationMetadata)
+        if stationData:
+            self.setStationData(stationData)
+
+    def setStationData(self, stationData):
+        self.data = stationData
+
+    def setStationMetadata(self, stationInfo):
         default = 'NA'
         self.name = stationInfo.get('name', default)
-        self.sids = map(str, stationInfo.get('sids', default))
+        try:
+            self.sid1 = stationInfo['sids'][0]
+        except:
+            self.sid1 = default
+        try:
+            self.sid2 = stationInfo['sids'][1]
+        except:
+            self.sid2 = default
+        try:
+            self.sid3 = stationInfo['sids'][2]
+        except:
+            self.sid3 = default
         self.latitude = stationInfo.get('ll', default)[1]
         self.longitude = stationInfo.get('ll', default)[0]
         self.stateCode = stationInfo.get('state', default)
         self.elev = stationInfo.get('elev', default)
         self.dateRange = stationInfo.get('valid_daterange', default)
         self.uid = stationInfo.get('uid', default)
+        self.sids = stationInfo.get('sids', default)
         self._setStationSource()
+
 
     def _setStationSource(self):
         for sid in self.sids:

@@ -1,12 +1,11 @@
 from dataObjects import dataObjects
 from Station import Station
-from RequestMetadata import RequestMetadata
-
 
 class StationDict(dict, dataObjects):
-    def __init__(self, info, queryParameters, *args, **kwargs):
+    def __init__(self, info, queryParameters):
+        super(StationDict, self).__init__()
         self._tags = ['name', 'latitude', 'longitude', 'sids', 'stateCode', 'elev', 'uid']
-        self.metadata = RequestMetadata(queryParameters, **kwargs)
+        self.queryParameters= queryParameters
         self._setStation(info)
 
     def _dumpToList(self):
@@ -78,12 +77,11 @@ if __name__ == '__main__':
             'state': 'CO',
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
-    sl = StationDict(info = stations, queryParameters = queryParams, moose='elk')
+    sl = StationDict(stations, queryParameters = queryParams)
     #print sl.metadata
     print(sl.stationIDs)
     print(sl.stationNames)
-    print(sl.metadata.queryParameters)
-    print sl.metadata.moose
+    print(sl.queryParameters)
     sl.export(r'C:\TEMP\test.csv')
     for station in sl:
         print station.latitude

@@ -89,6 +89,6 @@ if __name__ == '__main__':
     c = StationFinder()
     print c._getBoundingBox('ACAD', distanceKM = 30)
     stationInfo = c.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
-    print stationInfo.metadata.queryParameters
+    print stationInfo.queryParameters
 
 
