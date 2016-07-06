@@ -2,11 +2,12 @@ from dataObjects import dataObjects
 from Station import Station
 
 class StationDict(dict, dataObjects):
-    def __init__(self, info, queryParameters):
+    def __init__(self, ACIS_Data, queryParameters):
         super(StationDict, self).__init__()
         self._tags = ['name', 'latitude', 'longitude', 'sids', 'stateCode', 'elev', 'uid']
         self.queryParameters= queryParameters
-        self._setStation(info)
+        self._setStation(ACIS_Data)
+        self.originalData = ACIS_Data
 
     def _dumpToList(self):
         '''

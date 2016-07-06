@@ -39,6 +39,8 @@ class Station(object):
 
     def _setStationSource(self):
         for sid in self.sids:
+            if sid[0:3] == 'USC':
+                self.stationSource = 'COOP'
             if sid[0:3] == 'USR':
                 self.stationSource = 'RAWS'
             elif sid[0:3] == 'USS':
