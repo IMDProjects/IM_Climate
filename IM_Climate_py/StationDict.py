@@ -4,7 +4,7 @@ from Station import Station
 class StationDict(dict, dataObjects):
     def __init__(self, ACIS_Data, queryParameters):
         super(StationDict, self).__init__()
-        self._tags = ['name', 'latitude', 'longitude', 'sids', 'stateCode', 'elev', 'uid']
+
         self.queryParameters= queryParameters
         self._setStation(ACIS_Data)
         self.originalData = ACIS_Data
@@ -23,11 +23,12 @@ class StationDict(dict, dataObjects):
         --------
         None
         '''
+        tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid']
         self._dataAsList = []
 
-        self._dataAsList.append(self._tags)
+        self._dataAsList.append(tags)
         for station in self:
-            info = [station.__dict__[t] for t in self._tags]
+            info = [station.__dict__[t] for t in tags]
             self._dataAsList.append(info)
 
     def _setStation(self, info):
