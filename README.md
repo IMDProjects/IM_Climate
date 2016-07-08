@@ -16,7 +16,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
 #### R - Installing the IM_Climate Package ####
 
-The package can be installed from this GitHub repository by first installing and loading the devtools library from CRAN. Then, run the
+The package can be installed from this GitHub repository by first installing and loading the [devtools](https://github.com/hadley/devtools) library from CRAN. Then, run the
 
 ```R
 install_github("IMDProjects/IM_Climate/IM_Climate_R")
