@@ -33,12 +33,20 @@ print station.sids
 print station.stateCode
 print station.elev
 print station.uid
+print station
 
 #Test #5: Acccess/View UnitCode Query Parameter
 print wxStations.queryParameters['unitCode']
 
-#TEst #6: Print first five station IDs
+#Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
+
+#Test #7: MABI AvgT
+wxStations = sf.findStation(unitCode = 'MABI', parameter = 'avgt')
+for station in wxStations:
+    print station
+print(len(wxStations))
+
 
 
 #******************************************************************************
