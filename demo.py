@@ -41,12 +41,10 @@ print wxStations.queryParameters['unitCode']
 #Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
-#Test #7: MABI AvgT
+#Test #7: MABI AvgT - Iterate through list of stations
 wxStations = sf.findStation(unitCode = 'MABI', parameter = 'avgt')
 for station in wxStations:
     print station
-print(len(wxStations))
-
 
 
 #******************************************************************************
