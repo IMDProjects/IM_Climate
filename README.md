@@ -14,11 +14,3 @@ To serve the broadest user community, it is implemented in both Python and R. Re
   * Limits alteration to data returned from ACIS web services
 
 
-#### R - Installing the IM_Climate Package ####
-
-The package can be installed from this GitHub repository by first installing and loading the [devtools](https://github.com/hadley/devtools) library from CRAN. Then, run the
-
-```R
-install_github("IMDProjects/IM_Climate/IM_Climate_R")
-```
-operation to grab the package code and install it locally. 
