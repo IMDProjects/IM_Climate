@@ -60,6 +60,9 @@ class StationDict(dict, dataObjects):
         '''
         for station in self.keys():
             yield self[station]
+    def __repr__(self):
+        return str([station for station in self])
+
 
 
 
@@ -88,4 +91,5 @@ if __name__ == '__main__':
     for station in sl:
         print station.latitude
     print sl[77459].name
+    print sl
 
