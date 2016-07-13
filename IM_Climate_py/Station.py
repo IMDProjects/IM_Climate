@@ -46,10 +46,10 @@ class Station(object):
             elif sid[0:3] == 'USS':
                 self.stationSource = 'SNOTEL'
             else:
-                self.stationSource = 'UKNOWN'
+                self.stationSource = 'UNKNOWN'
 
     def __repr__(self):
-        return self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
+        return str(self.uid) + ' : ' +  self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
 
 if __name__=='__main__':
     stationInfo = {'name': 'Elliot Ridge', 'll': [-106.42, 39.86], 'sids': [u'USS0006K29S 6'], 'state': 'CO', 'valid_daterange': [['1983-01-12', '2016-04-05']], 'uid': 77459}

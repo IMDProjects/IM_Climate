@@ -28,9 +28,9 @@ class DataRequestor(ACIS):
 
         ARGUMENTS
         ---------
-        stationIDs - The ACIS uids. These can either be in list form or the
-                      StationDict object returned from the StationFinder.FindStation
-                      method.
+        stationIDs - The ACIS uids. These can either be a single station (int or string),
+                     a list of stationIDs, or the StationDict object returned
+                     from the StationFinder.FindStation method.
 
         parameters - The weather parameters to fetch. Valid parameters
             can be found by accesssing the supportedParamters property.
@@ -42,22 +42,24 @@ class DataRequestor(ACIS):
 
         RETURNS
         -------
+        Returns WxData object that contains the daily weather observations and
+        and all associated flags
 
         '''
         self.duration = 'dly'
-        self.stationIDs = self._extractStationList(stationIDs)
+        self.stationIDs = self._extractStationIDs(stationIDs)
         self.parameters = parameters.replace(' ','').split(',')
         self.reduceCode = None
 
         results =  self._fetchStationDataFromACIS(sdate = startDate,
-            edate = endDate,  add = 'f,t,n', meta = ['uid','ll', 'name', 'elev', 'sids'])
+            edate = endDate,  add = 'f,t,n,s,i', meta = ['uid','ll', 'name', 'elev', 'sids'])
 
         if filePathAndName:
             results.export(filePathAndName = filePathAndName)
         return results
 
 
-    def _extractStationList(self, stations):
+    def _extractStationIDs(self, stations):
         '''
         INFO
         ----
@@ -67,7 +69,10 @@ class DataRequestor(ACIS):
         try:
             return stations.stationIDs
         except:
-            return stations
+            if type(stations) == list:
+                return stations
+            else:
+                return [stations]
 
     def _fetchStationDataFromACIS(self, **kwargs):
         '''
@@ -82,7 +87,10 @@ class DataRequestor(ACIS):
             aggregation = self.reduceCode, wxParameters = self.parameters)
 
         for uid in self.stationIDs:
-            response = self._call_ACIS(uid = uid, elems = self.parameters, **kwargs)
+            elems = []
+            for p in self.parameters:
+                elems.append({'name':p,'add':'f,s'})
+            response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
             wd.add(response)
 
         return wd
@@ -124,7 +132,7 @@ class DataRequestor(ACIS):
 ##        self.reduceCode = reduceCode
 ##        self.parameter = parameter
 ##        elems = self.duration + '_' + reduceCode +'_' + parameter
-##        self.stationIDs = self._extractStationList(stationIDs)
+##        self.stationIDs = self._extractStationIDs(stationIDs)
 ##
 ##        return self._iterateOverStationIDs(sdate = startDate, edate = endDate, elems = elems
 ##             ,maxmissing = maxMissing)
@@ -166,7 +174,7 @@ class DataRequestor(ACIS):
 ##        self.duration = 'yly'
 ##        self.reduceCode = reduceCode
 ##        self.parameter = parameter
-##        self.stationIDs = self._extractStationList(stationIDs)
+##        self.stationIDs = self._extractStationIDs(stationIDs)
 ##
 ##        maxMissing = '12'
 ##
@@ -218,7 +226,6 @@ class DataRequestor(ACIS):
 ##            elems = elems ,maxmissing = maxMissing)
 
 
-
 if __name__=='__main__':
     dr = DataRequestor()
     stationIDs = [66180, 67175]
@@ -228,6 +235,9 @@ if __name__=='__main__':
         , startDate = '20120101', endDate = '2012-01-05' )
     dailyData.export(filePathAndName = r'dailyData.csv')
 
-
+    #GET DATA WITH FLAGS
+    dailyData = dr.getDailyWxObservations(stationIDs = 77572, parameters = 'mint, maxt'
+        , startDate = '20160101', endDate = '20160101' )
+    print dailyData
 
 

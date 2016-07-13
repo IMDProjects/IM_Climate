@@ -21,7 +21,7 @@ class WxData(dict, dataObjects):
     def add(self, newData):
         '''
         Adds additional weather data to the wxData object unless there is an
-        'error' tag. In that case, no data is appended for the
+        'error' tag. In that case, no data is appended.
         '''
         #Duck Type - check is data dictionary exists
         #If not, then add the data dictionary in exception
@@ -34,7 +34,6 @@ class WxData(dict, dataObjects):
         if newData.get('error'):
             self[newData['meta']['uid']]['data'] = None
         else:
-            #self[newData['meta']['uid']]['data'] = tuple(newData['data'])
             self[newData['meta']['uid']] = Station(stationMetadata = newData['meta'],
                     stationData = tuple(newData['data']))
         self.stationIDs = self.keys() #Update metadata to reflect all stationIDs
@@ -69,6 +68,10 @@ class WxData(dict, dataObjects):
                 for o in ob:
                     a.append(o)
                 self._dataAsList.append(a)
+
+    def __repr__(self):
+        self._dumpToList()
+        return str(self._dataAsList)
 
 if __name__ == '__main__':
     queryParameters = {'elk':'moose'}
@@ -105,3 +108,5 @@ if __name__ == '__main__':
     print s.wxParameters
     print s.stationIDs
     s.export(filePathAndName = r'test.csv')
+    print s
+
