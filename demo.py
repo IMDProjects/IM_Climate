@@ -11,7 +11,8 @@ localFolder = 'c:\\temp\\'
 # STATION FINDER
 sf = StationFinder()
 
-#Test #1: All stations around NOCA; default to 30km buffer
+#Test #1: All stations around NOCA; default to 30km buffer. Save returned results
+    #locally as SF01.csv
 wxStations = sf.findStation(unitCode = 'MABI')
 wxStations.export(localFolder + 'SF01.csv')
 
@@ -19,9 +20,9 @@ wxStations.export(localFolder + 'SF01.csv')
 wxStations = sf.findStation(unitCode = 'ACAD', distance = 10, parameter = 'mint')
 wxStations.export(localFolder + 'SF02.csv')
 
-#Test 3: All stations around ROMO recording maximum temperature; distance = 40km
+#Test 3: All stations around ROMO recording maximum OR minimum temperature; distance = 40km
         #with option to save file
-wxStations = sf.findStation(unitCode = 'ROMO', distance = 40, parameter = 'maxt'
+wxStations = sf.findStation(unitCode = 'ROMO', distance = 40, parameter = 'maxt, mint'
         ,filePathAndName = localFolder + 'SF03.csv')
 
 #Test #4: View Station Properties for station uid=4211
@@ -41,7 +42,7 @@ print wxStations.queryParameters['unitCode']
 #Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
-#Test #7: MABI AvgT - Iterate through list of stations
+#Test #7: MABI AvgT - Iterate through list of stations having avg temperature at MABI
 wxStations = sf.findStation(unitCode = 'MABI', parameter = 'avgt')
 for station in wxStations:
     print station

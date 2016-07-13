@@ -36,8 +36,8 @@ class DataRequestor(ACIS):
             can be found by accesssing the supportedParamters property.
             Note that ACIS vernacular for parameter is element.
 
-        StartDate - YYYY-MM-DD (default is period of record)
-        EndDate - YYYY-MM-DD (default is period of record)
+        StartDate (optional) - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+        EndDate (optional) - YYYY-MM-DD OR YYYYMMDD (default is period of record)
         filePathAndName - (optional) - Location and name of CSV text file to save
 
         RETURNS
@@ -51,8 +51,8 @@ class DataRequestor(ACIS):
         self.parameters = parameters.replace(' ','').split(',')
         self.reduceCode = None
 
-        results =  self._fetchStationDataFromACIS(sdate = startDate,
-            edate = endDate,  add = 'f,t,n,s,i', meta = ['uid','ll', 'name', 'elev', 'sids'])
+        results =  self._fetchStationDataFromACIS(sdate = str(startDate),
+            edate = str(endDate),  add = 'f,t,n,s,i', meta = ['uid','ll', 'name', 'elev', 'sids'])
 
         if filePathAndName:
             results.export(filePathAndName = filePathAndName)
@@ -237,7 +237,7 @@ if __name__=='__main__':
 
     #GET DATA WITH FLAGS
     dailyData = dr.getDailyWxObservations(stationIDs = 77572, parameters = 'mint, maxt'
-        , startDate = '20160101', endDate = '20160101' )
+        , startDate = 20160101, endDate = '20160101' )
     print dailyData
 
 

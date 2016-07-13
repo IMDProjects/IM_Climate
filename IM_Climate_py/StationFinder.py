@@ -40,6 +40,8 @@ class StationFinder(ACIS):
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
         if not parameter:
             parameter = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
+        else:
+            parameter = parameter.replace(' ','')
 
         if unitCode:
             bbox = self._getBoundingBox(unitCode, distance)
