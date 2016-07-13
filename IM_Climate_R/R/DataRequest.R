@@ -5,7 +5,7 @@
 #' @param climateParams A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @param climateStations A list of one or more unique identifiers for climate stations
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.   
-#' @param edate (optioanl) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range. 
+#' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range. 
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data
 #' @export

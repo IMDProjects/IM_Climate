@@ -14,7 +14,7 @@ getDailyWxObservations(climateParams, climateStations, sdate = "por",
 
 \item{sdate}{(optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.}
 
-\item{edate}{(optioanl) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.}
+\item{edate}{(optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.}
 
 \item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }

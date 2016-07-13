@@ -1,14 +1,23 @@
 #' Find stations near a park
 #' 
-#' Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box (from the IRMA Unit Service). 
-#' If distance parameter is specified, bounding box will be buffered by that distance. 
+#' Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box from the IRMA Unit Service (\url{http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json}). 
+#' If distance parameter is specified, bounding box will be buffered by that distance. If no distance is provided, park bounding box is used. 
+#' Station location must intersect park bounding box (unbuffered or buffered).
 #' Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 # @param sourceURL sourceURL for ACIS data services
 #' @param parkCodes One NPS park code as a string
-#' @param distance (optional) Distance (in kilometers) to buffer park bounding box
+#' @param distance (optional) Distance (in kilometers) to buffer park bounding box.
 #' @param climateParams A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing station information for stations near the specified park
+#' @examples 
+#' Find stations collecting average temperature within 10km of Marsh-Billings:
+#' 
+#' findStation(parkCodes = "MABI", distance=10, climateParams=list('avgt'))
+#' 
+#' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
+#' 
+#' findStation(parkCodes = "AGFO", distance=10, climateParams=list('pcpn'), filePathAndName = "agfo_stations.csv")
 #' @export 
 #' 
 
@@ -20,7 +29,7 @@ findStation <- function (parkCodes, distance=NULL, climateParams, filePathAndNam
   # NPS Park bounding boxes
   bboxURLBase <- "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
   if (is.null(distance)) {
-    bboxExpand  = 0
+    bboxExpand  = 0.0
   }
   else {
     bboxExpand = distance*0.011
@@ -75,7 +84,7 @@ findStation <- function (parkCodes, distance=NULL, climateParams, filePathAndNam
     longitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta[,2], function(x) unlist(as.numeric(x[1])))))),"longitude")
     latitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta[,2], function(x) unlist(as.numeric(x[2])))))),"latitude")
     sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
-    sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
+    sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid2")
     #stationListTemp <- as.data.frame(lapply(unlist(stationListInit$meta[,2][1],function(x) as.numeric(as.character(x)))))
     #stationList <- as.data.frame(stationListInit$meta)
     stationList <- cbind(name=stationListInit$meta[,1], longitude, latitude, sid1, sid2, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], uid=stationListInit$meta[,6])
@@ -91,4 +100,5 @@ findStation <- function (parkCodes, distance=NULL, climateParams, filePathAndNam
   else {
     return (stationList)
   }
+  return (stationList)
 }
