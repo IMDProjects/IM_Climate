@@ -50,6 +50,13 @@ class WxData(dict, dataObjects):
         Method currently assumes that each station has the same set of parameters
         for the same date range.
         '''
+
+        try:
+            self.stationIDs
+        except:
+            self._dataAsList = 'NO DATA'
+            return
+
         header = ['UID','Longitude', 'Latitude', 'Sids1', 'Sids2','Sids3', 'Name', 'Elevation', 'Date']
         params = self.wxParameters
         for p in params:

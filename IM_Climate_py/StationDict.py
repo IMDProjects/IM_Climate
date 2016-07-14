@@ -62,11 +62,9 @@ class StationDict(dict, dataObjects):
         for station in self.keys():
             yield self[station]
     def __repr__(self):
-        #return str([station for station in self])
-        return str(self._dumpToList())
-
-
-
+        a = self._dumpToList()
+        a = map(str,a)
+        return '\n'.join(a)
 
 if __name__ == '__main__':
     stations =  {'meta': [{'elev': 10549.9,

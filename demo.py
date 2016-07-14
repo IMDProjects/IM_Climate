@@ -42,11 +42,12 @@ print wxStations.queryParameters['parkCodes']
 #Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
-#Test #7: MABI AvgT - Iterate through list of stations having avg temperature at MABI
-wxStations = sf.findStation(parkCodes = 'MABI', climateParameters = 'avgt')
+#Test #7: MABI AvgT - Iterate through list of stations having avg temperature at MABI + 30km
+wxStations = sf.findStation(parkCodes = 'MABI', distance = 30, climateParameters = 'avgt')
 for station in wxStations:
     print station
-
+#print all stations to screen
+print wxStations
 
 #******************************************************************************
 
@@ -54,17 +55,18 @@ for station in wxStations:
 
 #Case #1: Get daily data for two station IDs (from list) and two parameters
 # and automatically save locally
-stationIDs = [66176, 31746]
-parameters = 'mint, maxt'
+climateStations = [66176, 31746]
+climateParameters = 'mint, maxt'
 startDate = '2012-01-01'
 endDate = '2012-02-01'
 dr = DataRequestor()
-wxData = dr.getDailyWxObservations(stationIDs, parameters
+wxData = dr.getDailyWxObservations(climateParameters = climateParameters
+                            ,climateStations = climateStations
                             ,startDate= startDate, endDate = endDate
                             ,filePathAndName = localFolder + 'DR01.csv')
 
 #Case #2: Get daily data using wxStations object and one parameter
 parameters = 'avgt'
-wxData = dr.getDailyWxObservations(wxStations, parameters
+wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters =  climateParameters
                             ,startDate= startDate, endDate = endDate)
 wxData.export(filePathAndName = localFolder + 'DR02.csv')

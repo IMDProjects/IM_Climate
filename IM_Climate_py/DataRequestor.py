@@ -18,7 +18,7 @@ class DataRequestor(ACIS):
                 , 'sum' : 'Sum of the values for the period'
                 , 'mean': 'Average of the values for the period'}
 
-    def getDailyWxObservations(self, stationIDs, parameters, startDate = 'por',
+    def getDailyWxObservations(self, climateParameters, climateStations, startDate = 'por',
             endDate = 'por', filePathAndName = None):
         '''
         INFO
@@ -28,17 +28,18 @@ class DataRequestor(ACIS):
 
         ARGUMENTS
         ---------
-        stationIDs - The ACIS uids. These can either be a single station (int or string),
+
+        climateParameters   The weather parameters to fetch. Valid parameters
+                            can be found by accesssing the supportedParamters property.
+                            Note that ACIS vernacular for parameter is element.
+
+        climateStations - The ACIS uids. These can either be a single station (int or string),
                      a list of stationIDs, or the StationDict object returned
                      from the StationFinder.FindStation method.
 
-        parameters - The weather parameters to fetch. Valid parameters
-            can be found by accesssing the supportedParamters property.
-            Note that ACIS vernacular for parameter is element.
-
-        StartDate (optional) - YYYY-MM-DD OR YYYYMMDD (default is period of record)
-        EndDate (optional) - YYYY-MM-DD OR YYYYMMDD (default is period of record)
-        filePathAndName - (optional) - Location and name of CSV text file to save
+        sdate (optional) - Start Date -  YYYY-MM-DD OR YYYYMMDD (default is period of record)
+        edate (optional) - End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+        filePathAndName (optional) - Location and name of CSV text file to save
 
         RETURNS
         -------
@@ -47,12 +48,12 @@ class DataRequestor(ACIS):
 
         '''
         self.duration = 'dly'
-        self.stationIDs = self._extractStationIDs(stationIDs)
-        self.parameters = parameters.replace(' ','').split(',')
+        self.stationIDs = self._extractStationIDs(climateStations)
+        self.climateParameters = climateParameters.replace(' ','').split(',')
         self.reduceCode = None
 
         results =  self._fetchStationDataFromACIS(sdate = str(startDate),
-            edate = str(endDate),  add = 'f,t,n,s,i', meta = ['uid','ll', 'name', 'elev', 'sids'])
+            edate = str(endDate), meta = ['uid','ll', 'name', 'elev', 'sids'])
 
         if filePathAndName:
             results.export(filePathAndName = filePathAndName)
@@ -84,11 +85,11 @@ class DataRequestor(ACIS):
 
         '''
         wd = WxData(queryParameters = None, dateInterval = self.duration,
-            aggregation = self.reduceCode, wxParameters = self.parameters)
+            aggregation = self.reduceCode, wxParameters = self.climateParameters)
 
         for uid in self.stationIDs:
             elems = []
-            for p in self.parameters:
+            for p in self.climateParameters:
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
             wd.add(response)
@@ -231,12 +232,12 @@ if __name__=='__main__':
     stationIDs = [66180, 67175]
 
     #Daily Data
-    dailyData = dr.getDailyWxObservations(stationIDs = stationIDs, parameters = 'avgt, mint'
+    dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
         , startDate = '20120101', endDate = '2012-01-05' )
     dailyData.export(filePathAndName = r'dailyData.csv')
 
     #GET DATA WITH FLAGS
-    dailyData = dr.getDailyWxObservations(stationIDs = 77572, parameters = 'mint, maxt'
+    dailyData = dr.getDailyWxObservations(climateStations = 77572, climateParameters = 'mint, maxt'
         , startDate = 20160101, endDate = '20160101' )
     print dailyData
 

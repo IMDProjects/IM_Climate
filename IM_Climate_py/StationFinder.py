@@ -16,7 +16,7 @@ class StationFinder(ACIS):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
-    def findStation(self, parkCodes = None, distance = 30,
+    def findStation(self, parkCodes = None, distance = 0,
         climateParameters = None, filePathAndName = None):
         '''
         INFO
@@ -30,9 +30,9 @@ class StationFinder(ACIS):
         parkCodes           4-Letter park code (searches for station within buffer)
 
         distance            buffer distance around the provided unitCode (if provided).
-                            Default is 30 km.
+                            Default is 0 km.
 
-        climateParameter    Parameter code for climate/weather element (e.g., mint, avgt, pcpn)
+        climateParameters    Parameter code for climate/weather element (e.g., mint, avgt, pcpn)
 
         filePathAndName    If provided, a csv text file is saved to specific location.
 
