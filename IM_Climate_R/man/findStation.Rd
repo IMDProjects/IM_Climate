@@ -10,7 +10,7 @@ findStation(parkCodes, distance = NULL, climateParams,
 \arguments{
 \item{parkCodes}{One NPS park code as a string}
 
-\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box}
+\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box.}
 
 \item{climateParams}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
 
@@ -20,8 +20,18 @@ findStation(parkCodes, distance = NULL, climateParams,
 A data frame containing station information for stations near the specified park
 }
 \description{
-Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box (from the IRMA Unit Service). 
-If distance parameter is specified, bounding box will be buffered by that distance. 
+Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box from the IRMA Unit Service (\url{http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json}). 
+If distance parameter is specified, bounding box will be buffered by that distance. If no distance is provided, park bounding box is used. 
+Station location must intersect park bounding box (unbuffered or buffered).
 Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
+}
+\examples{
+Find stations collecting average temperature within 10km of Marsh-Billings:
+
+findStation(parkCodes = "MABI", distance=10, climateParams=list('avgt'))
+
+Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
+
+findStation(parkCodes = "AGFO", distance=10, climateParams=list('pcpn'), filePathAndName = "agfo_stations.csv")
 }
 
