@@ -42,8 +42,9 @@ print wxStations.queryParameters['parkCodes']
 #Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
-#Test #7: MABI AvgT - Iterate through list of stations having avg temperature at MABI + 30km
-wxStations = sf.findStation(parkCodes = 'MABI', distance = 30, climateParameters = 'avgt')
+#Test #7: MABI AvgT - Iterate through list of stations having avg temperature at MABI + 10km
+wxStations = sf.findStation(parkCodes = 'MABI', distance = 10, climateParameters = 'avgt')
+wxStations.export(localFolder + 'SF07.csv')
 for station in wxStations:
     print station
 #print all stations to screen
