@@ -42,13 +42,12 @@ print wxStations.queryParameters['parkCodes']
 #Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
-#Test #7: MABI AvgT - Iterate through list of stations having avg temperature at MABI + 10km
+#Test #7: MABI AvgT -  MABI + 10km
 wxStations = sf.findStation(parkCodes = 'MABI', distance = 10, climateParameters = 'avgt')
-wxStations.export(localFolder + 'SF07.csv')
-for station in wxStations:
-    print station
-#print all stations to screen
-print wxStations
+wxStations.export(localFolder + 'SF07.csv') #save to file
+for station in wxStations: #Iterate through list of stations and print to screen
+    print(station)
+print (wxStations)    #print all stations to screen
 
 #******************************************************************************
 
@@ -68,6 +67,7 @@ wxData = dr.getDailyWxObservations(climateParameters = climateParameters
 
 #Case #2: Get daily data using wxStations object and one parameter
 parameters = 'avgt'
-wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters =  climateParameters
-                            ,startDate= startDate, endDate = endDate)
+wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = climateParameters
+                            ,startDate = startDate, endDate = endDate)
 wxData.export(filePathAndName = localFolder + 'DR02.csv')
+
