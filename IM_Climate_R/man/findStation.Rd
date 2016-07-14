@@ -4,17 +4,17 @@
 \alias{findStation}
 \title{Find stations near a park}
 \usage{
-findStation(parkCodes, distance = NULL, climateParams,
+findStation(parkCode, distance = NULL, climateParams,
   filePathAndName = NULL)
 }
 \arguments{
-\item{parkCodes}{One NPS park code as a string}
+\item{parkCode}{One NPS park code as a string}
 
 \item{distance}{(optional) Distance (in kilometers) to buffer park bounding box.}
 
-\item{climateParams}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
-
 \item{filePathAndName}{(optional) File path and name including extension for output CSV file}
+
+\item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}}
 }
 \value{
 A data frame containing station information for stations near the specified park
@@ -28,10 +28,10 @@ Returns station information as a data frame with the following items: name, long
 \examples{
 Find stations collecting average temperature within 10km of Marsh-Billings:
 
-findStation(parkCodes = "MABI", distance=10, climateParams=list('avgt'))
+findStation(parkCode = "MABI", distance=10, climateParameters=list('avgt'))
 
 Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
 
-findStation(parkCodes = "AGFO", distance=10, climateParams=list('pcpn'), filePathAndName = "agfo_stations.csv")
+findStation(parkCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
 }
 
