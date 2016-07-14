@@ -30,6 +30,7 @@ class StationDict(dict, dataObjects):
         for station in self:
             info = [station.__dict__[t] for t in tags]
             self._dataAsList.append(info)
+        return self._dataAsList
 
     def _setStation(self, info):
         '''
@@ -61,10 +62,9 @@ class StationDict(dict, dataObjects):
         for station in self.keys():
             yield self[station]
     def __repr__(self):
-        return str([station for station in self])
-
-
-
+        a = self._dumpToList()
+        a = map(str,a)
+        return '\n'.join(a)
 
 if __name__ == '__main__':
     stations =  {'meta': [{'elev': 10549.9,

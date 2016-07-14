@@ -16,8 +16,8 @@ class StationFinder(ACIS):
         super(StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
-    def findStation(self, unitCode = None, distance = 30,
-        parameter = None, filePathAndName = None):
+    def findStation(self, parkCodes = None, distance = 0,
+        climateParameters = None, filePathAndName = None):
         '''
         INFO
         ----
@@ -27,30 +27,36 @@ class StationFinder(ACIS):
 
         ARGUMENTS
         ---------
-        unitCode - 4-Letter park code (searches for station within buffer)
-        distance - buffer distance around the provided unitCode (if provided).
-                    Default is 30 km.
-        parameter - Parameter code for weather element (e.g., tmin)
-        filePathAndName - If provided, a csv text file is saved to specific location.
+        parkCodes           4-Letter park code (searches for station within buffer)
+
+        distance            buffer distance around the provided unitCode (if provided).
+                            Default is 0 km.
+
+        climateParameters    Parameter code for climate/weather element (e.g., mint, avgt, pcpn)
+
+        filePathAndName    If provided, a csv text file is saved to specific location.
 
         RETURNS
         -------
         An object of station metadata (See StationDict.py)
         '''
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
-        if not parameter:
-            parameter = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
+        if not climateParameters:
+            climateParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
         else:
-            parameter = parameter.replace(' ','')
+            climateParameters = climateParameters.replace(' ','')
 
-        if unitCode:
-            bbox = self._getBoundingBox(unitCode, distance)
+        if parkCodes:
+            bbox = self._getBoundingBox(parkCodes, distance)
 
         self.input_dict = {}    #Clears the input dictionary
-        results =  self._call_ACIS(elems = parameter
+        results =  self._call_ACIS(elems = climateParameters
             ,bbox = bbox
-            ,meta = metadata
-            ,unitCode = unitCode)
+            ,meta = metadata)
+
+        #adds parkCodes to input_dict following the call to ACIS
+        if parkCodes:
+            self.input_dict['parkCodes'] = parkCodes
 
         si =  StationDict(results, queryParameters = self.input_dict)
         if filePathAndName:
@@ -89,8 +95,7 @@ class StationFinder(ACIS):
 
 if __name__ == '__main__':
     c = StationFinder()
-    print c._getBoundingBox('ACAD', distanceKM = 30)
-    stationInfo = c.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
+    stationInfo = c.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
     print stationInfo.queryParameters
     print stationInfo
 
