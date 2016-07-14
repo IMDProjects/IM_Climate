@@ -57,7 +57,7 @@ class ACIS(object):
 
     def _formatInputDict(self,**kwargs):
         '''
-        Method to pack all arguments into a dictionary used to call the ACIS web
+        Method to pack all arguments into input_dict which used to call the ACIS web
             service. Filters out all argument of None.
         '''
         for k in kwargs:
