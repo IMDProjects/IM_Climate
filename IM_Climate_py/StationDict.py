@@ -1,13 +1,62 @@
-from dataObjects import dataObjects
+import csv
+from datetime import date
+
 from Station import Station
 
-class StationDict(dict, dataObjects):
-    def __init__(self, ACIS_Data, queryParameters):
-        super(StationDict, self).__init__()
 
-        self.queryParameters= queryParameters
-        self._setStation(ACIS_Data)
-        self.originalData = ACIS_Data
+
+class StationDict(dict):
+    def __init__(self, ACIS_Data = None, queryParameters = None):
+        self.dateRequested = date.today().isoformat()
+        if queryParameters:
+            self.queryParameters = queryParameters
+        if ACIS_Data:
+            self._setStationFromStationFinder(ACIS_Data)
+
+    def _writeToCSV(self):
+        '''
+        INFO
+        ----
+        Writes a 2-dimensional list to a CSV text file
+        Comma-delimits values.
+
+        ARGUMENTS
+        ---------
+        filePathAndName - file name and path
+        dataAsList - 2-dimensional list
+
+        RETURNS
+        -------
+        None
+
+        '''
+        with open(self._filePathAndName,'w') as csvFile:
+            writer = csv.writer(csvFile, lineterminator='\n' )
+            writer.writerows(self._dataAsList)
+        csvFile.close()
+
+
+    def export(self, filePathAndName, format='csv'):
+        '''
+        INFO
+        ----
+        Method providing option to export data into various formats
+
+        ARGUMENTS
+        ---------
+        filePathAndName - Destination where file is to be saved
+        format  = Export format. Default = csv
+
+
+        RETURNS
+        --------
+        None
+        '''
+        self._filePathAndName = filePathAndName
+        if format == 'csv':
+            self._dumpToList()
+            self._writeToCSV()
+
 
     def _dumpToList(self):
         '''
@@ -32,7 +81,7 @@ class StationDict(dict, dataObjects):
             self._dataAsList.append(info)
         return self._dataAsList
 
-    def _setStation(self, info):
+    def _setStationFromStationFinder(self, info):
         '''
         Fills all cases where an attribute is not returned in the JSON file with
         an 'NA'
@@ -66,6 +115,7 @@ class StationDict(dict, dataObjects):
         a = map(str,a)
         return '\n'.join(a)
 
+
 if __name__ == '__main__':
     stations =  {'meta': [{'elev': 10549.9,
             'll': [-106.17, 39.49],
@@ -92,4 +142,5 @@ if __name__ == '__main__':
         print station.latitude
     print sl[77459].name
     print sl
+
 
