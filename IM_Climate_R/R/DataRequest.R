@@ -2,17 +2,25 @@
 #' 
 #' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
 # @param dataURL URL for ACIS data service vending station data
-#' @param climateParams A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
+#' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @param climateStations A list of one or more unique identifiers for climate stations
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.   
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range. 
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data
+#' @examples 
+#' Precipitation, temperature weather observations for a station for a specifc date range:
+#' 
+#' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 25056, "20150801", "20150831")
+#' 
+#' All weather observations for a station for its period of record
+#' 
+#' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 60903)
 #' @export
 #' 
 # TODO: iterate climateStation list
 
-getDailyWxObservations <- function(climateParams, climateStations, sdate="por", edate="por", filePathAndName=NULL) {
+getDailyWxObservations <- function(climateParameters, climateStations, sdate="por", edate="por", filePathAndName=NULL) {
   # URLs and request parameters
   
   # ACIS data services
@@ -23,19 +31,19 @@ getDailyWxObservations <- function(climateParams, climateStations, sdate="por", 
   parameters <- c('pcpn', 'avgt', 'obst', 'mint', 'maxt')
   
   dataURL <-  gsub(" ","", paste(baseURL,webServiceSource))
-  climateElems <- paste(climateParams, collapse = ",")
-  paramCount <- length(climateParams)
+  climateElems <- paste(climateParameters, collapse = ",")
+  paramCount <- length(climateParameters)
   dateRange <- paste(paste("&sdate=", sdate, sep=""), edate, sep="&edate=")
   
   # Format GET URL for use in jsonlite request
-  stationRequest <- gsub(" ", "%20", (paste(paste(paste(dataURL, paste(climateParams, collapse = ","), sep="?elems="), climateStations, sep="&uid="), dateRange, sep = "")))
+  stationRequest <- gsub(" ", "%20", (paste(paste(paste(dataURL, paste(climateParameters, collapse = ","), sep="?elems="), climateStations, sep="&uid="), dateRange, sep = "")))
   
   # Format climate data object
   dataResponseInit <- fromJSON(stationRequest)
   #dataResponseMeta <- as.data.frame(dataResponseInit$meta)
   dataResponse <- as.data.frame(dataResponseInit$data)
   colnames(dataResponse)[1] <- c("date")
-  colnames(dataResponse)[2:(paramCount+1)]  <- climateParams
+  colnames(dataResponse)[2:(paramCount+1)]  <- climateParameters
   
   date<-as.Date(dataResponse$date, "%Y-%m-%d")# convert date to vector of date-time class
   
@@ -57,6 +65,13 @@ getDailyWxObservations <- function(climateParams, climateStations, sdate="por", 
   #rename some columns
   colnames(dataResponse)[2]<-"longitude"
   colnames(dataResponse)[3]<-"latitude"
+  llong <- as.numeric(as.vector(dataResponse$longitude))
+  llat <- as.numeric(as.vector(dataResponse$latitude))
+  
+  dataResponse <- dataResponse[ , -which(names(dataResponse) %in% c("longitude","latitude"))]
+  dataResponse["longitude"] <- llong
+  dataResponse["latitude"] <- llat
+  dataResponse <- dataResponse[c("uid","longitude","latitude","sids1","sids2","state","elev","name",as.character(climateParameters))]
   
   # Output file
   if (!is.null(filePathAndName)) {

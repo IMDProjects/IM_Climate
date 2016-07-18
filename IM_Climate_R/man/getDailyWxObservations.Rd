@@ -4,11 +4,11 @@
 \alias{getDailyWxObservations}
 \title{Get station data for specified parameter(s) and station(s)}
 \usage{
-getDailyWxObservations(climateParams, climateStations, sdate = "por",
+getDailyWxObservations(climateParameters, climateStations, sdate = "por",
   edate = "por", filePathAndName = NULL)
 }
 \arguments{
-\item{climateParams}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
+\item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
 
 \item{climateStations}{A list of one or more unique identifiers for climate stations}
 
@@ -23,5 +23,14 @@ A data frame containing the requested data
 }
 \description{
 Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
+}
+\examples{
+Precipitation, temperature weather observations for a station for a specifc date range:
+
+getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 25056, "20150801", "20150831")
+
+All weather observations for a station for its period of record
+
+getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 60903)
 }
 
