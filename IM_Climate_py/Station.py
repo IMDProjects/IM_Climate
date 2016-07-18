@@ -36,6 +36,9 @@ class StationData(dict):
         self.observationDates = tuple([d[0] for d in stationData])
         for index, p in enumerate(climateParameters):
             self[p] = ParameterSeries(([d[index+1] for d in stationData]), dates = self.observationDates)
+    @property
+    def climateParameters(self):
+        return self.keys()
 
 
 class Station(object):

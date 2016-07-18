@@ -1,6 +1,6 @@
 try:    #python 2.x
-##    import StationDict
-##    reload(StationDict)
+    import StationDict
+    reload(StationDict)
     from StationDict import StationDict
     from Station import Station
 
@@ -46,7 +46,7 @@ class WxData(StationDict):
         '''
         INFO
         ----
-        Dumps all info to a list
+        Dumps all info to a very flat list/matric
 
         NOTE:
         ----
@@ -74,11 +74,10 @@ class WxData(StationDict):
             sid1 = station.sid1
             sid2 = station.sid2
             sid3 = station.sid3
-            a = [str(station.uid), lon, lat,sid1,sid2,sid3,name,elev]
-            for param in self.wxParameters:
-                for date in station.data.observationDates:
-                    for o in self[station].data[param]:
-                        a.append(o)
+            for index, date in enumerate(station.data.observationDates):
+                a = [str(station.uid), lon, lat,sid1,sid2,sid3,name,elev, date]
+                for param in self.wxParameters:
+                    a.extend([station.data[param][index].wxOb, station.data[param][index].ACIS_Flag, station.data[param][index].sourceFlag])
                     self._dataAsList.append(a)
         return self._dataAsList
 
@@ -116,9 +115,9 @@ if __name__ == '__main__':
     #s._add(moreWxObs)
     print s.wxParameters
     print s.stationIDs
-    #s.export(filePathAndName = r'test.csv')
+    s.export(filePathAndName = r'test.csv')
     print s
-    #print s[66180].data['maxt']
+    print s[66180].data['maxt']
     for station in s:
         print station.data['mint']
 
