@@ -138,3 +138,4 @@ vignettes/*.pdf
 /IM_Climate_py/StationInfo.pyc
 /IM_Climate_py/Metadata.py
 /AdditionDemo.py
+/IM_Climate_py/dataObjects.py
