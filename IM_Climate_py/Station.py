@@ -2,7 +2,14 @@ import weakref
 
 class wxOb(object):
     ''''
-    A specific weather object
+    A tuple containing a weather observation for a specific station, parameter and date
+    This tuple has the following properties:
+    -date
+    -wxOb
+    -ACIS_Flag
+    -sourceFlag
+
+
     '''
     def __init__(self, values):
         self.date = values[0]
@@ -14,23 +21,27 @@ class wxOb(object):
     def toTuple(self):
         return (self.date, self.wxOb, self.ACIS_Flag, self.sourceFlag)
 
-class ParameterSeries(list):
+
+class ParameterSeries(dict):
     '''
-    All of the data for a particular climate parameter
+    Iterable dictionary of all weather observations for a particular climate parameter
+    A particular observations is indexable by date
     '''
 
     def __init__(self, pData, dates):
-        data = []
         for index, value in enumerate(pData):
-            da = [dates[index]]
+            date = [dates[index]]
+            da = date
             da.extend(value)
-            data.append(wxOb(da))
-        super(ParameterSeries,self).__init__(data)
+            self[date[0]] = wxOb(da)
 
+    def __iter__(self):
+        for k in sorted(self.keys()):
+            yield self[k]
 
 class StationData(dict):
     '''
-    Object containing all climate parameters for a specific station
+    Dictionary containing all climate parameters for a specific station
     '''
     def __init__(self, stationData, climateParameters):
         self.observationDates = tuple([d[0] for d in stationData])
@@ -40,11 +51,16 @@ class StationData(dict):
     def climateParameters(self):
         return self.keys()
 
+    def __iter__(self):
+        for param in self.keys():
+            yield self[param]
+
 
 class Station(object):
     '''
     Object containing all station information and data
     Blank values are converted to 'NA'
+    Each station has metadata properties (e.g., uid, elev, sids, etc) and data
     '''
     def __init__(self, stationMetadata = None):
         if stationMetadata:
@@ -105,13 +121,15 @@ if __name__=='__main__':
 
     s = Station(stationMetadata = meta)
     s._setStationData(data, climateParams)
-##    print s.name
-##    print s.longitude
-##    print s.elev
-##    print s.sids
-##    print s.stationSource
+    print s.name
+    print s.longitude
+    print s.elev
+    print s.sids
+    print s.stationSource
     print s.data['mint']
     for w in s.data['mint']:
         print w.date
-    print s
+    for param in s.data:
+        for wxOs in param:
+            print wxOs.wxOb
 
