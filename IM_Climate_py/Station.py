@@ -25,7 +25,8 @@ class WxOb(object):
 class ParameterSeries(dict):
     '''
     Iterable dictionary of all weather observations for a particular climate parameter
-    A particular observation is indexable by date and is also iterable
+    A particular observation is indexable by date.
+    ParameterSeries has been extended to be iterable
     '''
 
     def __init__(self, pData, dates, parameter):

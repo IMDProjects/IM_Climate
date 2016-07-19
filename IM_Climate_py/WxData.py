@@ -1,6 +1,8 @@
 try:    #python 2.x
     import StationDict
     reload(StationDict)
+    import Station
+    reload(Station)
     from StationDict import StationDict
     from Station import Station
 
@@ -74,10 +76,10 @@ class WxData(StationDict):
             sid1 = station.sid1
             sid2 = station.sid2
             sid3 = station.sid3
-            for index, date in enumerate(station.data.observationDates):
+            for date in station.data.observationDates:
                 a = [str(station.uid), lon, lat,sid1,sid2,sid3,name,elev, date]
                 for param in self.wxParameters:
-                    a.extend([station.data[param][index].wxOb, station.data[param][index].ACIS_Flag, station.data[param][index].sourceFlag])
+                    a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
                     self._dataAsList.append(a)
         return self._dataAsList
 
