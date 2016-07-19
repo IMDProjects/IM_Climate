@@ -1,9 +1,7 @@
-import weakref
-
-class wxOb(object):
+class WxOb(object):
     ''''
-    A tuple containing a weather observation for a specific station, parameter and date
-    This tuple has the following properties:
+    A tuple(-like) object containing a weather observation for a specific station, parameter and date
+    WxOb  has the following properties:
     -date
     -wxOb
     -ACIS_Flag
@@ -16,8 +14,10 @@ class wxOb(object):
         self.wxOb  = values[1]
         self.ACIS_Flag = values[2]
         self.sourceFlag = values[3]
+
     def __repr__(self):
         return str(self.toTuple())
+
     def toTuple(self):
         return (self.date, self.wxOb, self.ACIS_Flag, self.sourceFlag)
 
@@ -25,28 +25,33 @@ class wxOb(object):
 class ParameterSeries(dict):
     '''
     Iterable dictionary of all weather observations for a particular climate parameter
-    A particular observations is indexable by date
+    A particular observation is indexable by date and is also iterable
     '''
 
-    def __init__(self, pData, dates):
+    def __init__(self, pData, dates, parameter):
+        self.parameter = parameter
         for index, value in enumerate(pData):
             date = [dates[index]]
-            da = date
-            da.extend(value)
-            self[date[0]] = wxOb(da)
+            wo = date
+            wo.extend(value)
+            self[date[0]] = WxOb(wo)
 
     def __iter__(self):
         for k in sorted(self.keys()):
             yield self[k]
 
+    def __repr__(self):
+        return str(self.parameter)
+
 class StationData(dict):
     '''
-    Dictionary containing all climate parameters for a specific station
+    Dictionary(-like) object containing all climate parameters for a specific station.
+    StationData has been extended to include the ability to iterate like a list
     '''
     def __init__(self, stationData, climateParameters):
         self.observationDates = tuple([d[0] for d in stationData])
         for index, p in enumerate(climateParameters):
-            self[p] = ParameterSeries(([d[index+1] for d in stationData]), dates = self.observationDates)
+            self[p] = ParameterSeries(([d[index+1] for d in stationData]), dates = self.observationDates, parameter = p)
     @property
     def climateParameters(self):
         return self.keys()
@@ -131,5 +136,5 @@ if __name__=='__main__':
         print w.date
     for param in s.data:
         for wxOs in param:
-            print wxOs.wxOb
+            wxOs.date
 
