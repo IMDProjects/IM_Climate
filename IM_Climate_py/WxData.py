@@ -10,7 +10,7 @@ except: #python 3.x
     from .dataObjects import dataObjects
 
 class WxData(StationDict):
-    def __init__(self, queryParameters, dateInterval, aggregation, wxParameters, data = None):
+    def __init__(self, queryParameters, dateInterval, aggregation, wxParameters):
         '''
         Data object that holds and organizes all weather data returned by ACIS
         using the StnData request.
@@ -20,12 +20,10 @@ class WxData(StationDict):
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.wxParameters = wxParameters
-        if data:
-            self._add(data)
 
-    def _add(self, newData):
+    def _addStation(self, newData):
         '''
-        Adds additional weather data to the wxData object unless there is an
+        Adds additional station/weather data to the wxData object unless there is an
         'error' tag. In that case, no data is appended.
         '''
         #Duck Type - check is data dictionary exists
@@ -108,13 +106,13 @@ if __name__ == '__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
  u'meta': {u'elev': 9600.1,
            u'll': [-105.9864, 39.56],
-           u'name': u'SODA CREEK COLORADO',
+           u'name': u'ILL CREEK COLORADO',
            u'sids': [u'USR0000CSOD 6'],
            u'uid': 1233}}
 
     s = WxData(queryParameters, dateInterval = 'mly', aggregation = 'avg', wxParameters = ['mint','maxt'])
-    s._add(wxObs)
-    s._add(moreWxObs)
+    s._addStation(wxObs)
+    s._addStation(moreWxObs)
     print s.wxParameters
     print s.stationIDs
     s.export(filePathAndName = r'test.csv')
@@ -129,4 +127,4 @@ if __name__ == '__main__':
             print p
             for ob in p:
                 print ob
-
+    print s.stationNames

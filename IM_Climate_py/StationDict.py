@@ -6,12 +6,13 @@ from Station import Station
 
 
 class StationDict(dict):
-    def __init__(self, ACIS_Data = None, queryParameters = None):
+    def __init__(self, data = None, queryParameters = None):
         self.dateRequested = date.today().isoformat()
         if queryParameters:
             self.queryParameters = queryParameters
-        if ACIS_Data:
-            self._setStationFromStationFinder(ACIS_Data)
+        if data:
+            for x in range(0,len(data['meta'])):
+                self._addStation(data['meta'][x])
 
     def _writeToCSV(self):
         '''
@@ -81,13 +82,16 @@ class StationDict(dict):
             self._dataAsList.append(info)
         return self._dataAsList
 
-    def _setStationFromStationFinder(self, info):
-        '''
-        Fills all cases where an attribute is not returned in the JSON file with
-        an 'NA'
-        '''
-        for x in range(0,len(info['meta'])):
-            self[info['meta'][x]['uid']] = Station(info['meta'][x])
+##    def _addStations(self, info):
+##        '''
+##        Adds all station objects
+##        '''
+##        for x in range(0,len(info['meta'])):
+##            self._addStation(info['meta'][x])
+
+
+    def _addStation(self, info):
+        self[info['uid']] = Station(info)
 
     @property
     def stationIDs(self):

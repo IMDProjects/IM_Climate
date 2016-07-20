@@ -92,7 +92,7 @@ class DataRequestor(ACIS):
             for p in self.climateParameters:
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
-            wd._add(response)
+            wd._addStation(response)
 
         return wd
 
