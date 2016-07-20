@@ -114,12 +114,19 @@ if __name__ == '__main__':
 
     s = WxData(queryParameters, dateInterval = 'mly', aggregation = 'avg', wxParameters = ['mint','maxt'])
     s._add(wxObs)
-    #s._add(moreWxObs)
+    s._add(moreWxObs)
     print s.wxParameters
     print s.stationIDs
     s.export(filePathAndName = r'test.csv')
     print s
-    print s[66180].data['maxt']
+
+    #WxData is indexable
+    print s[66180].data['maxt']['2012-01-01'].wxOb
+
+    #Iterate through each station, parameter and weather observation
     for station in s:
-        print station.data['mint']
+        for p in station.data:
+            print p
+            for ob in p:
+                print ob
 
