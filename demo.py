@@ -11,9 +11,9 @@ localFolder = 'c:\\temp\\'
 # STATION FINDER
 sf = StationFinder()
 
-#Test #1: All stations around NOCA; default to 30km buffer. Save returned results
+#Test #1: All stations around NOCA within a 30km buffer. Save returned results
     #locally as SF01.csv
-wxStations = sf.findStation(parkCodes = 'MABI')
+wxStations = sf.findStation(parkCodes = 'MABI', distance = 30)
 wxStations.export(localFolder + 'SF01.csv')
 
 #Test #2: All stations around ACAD recording minimum temperature; distance = 10km

@@ -66,13 +66,15 @@ class Station(object):
     Blank values are converted to 'NA'
     Each station has metadata properties (e.g., uid, elev, sids, etc) and data
     '''
-    def __init__(self, stationMetadata = None):
+    def __init__(self, stationMetadata = None, stationData = None):
         if stationMetadata:
             self.setStationMetadata(stationMetadata)
+        if stationData:
+            self._setStationData(stationData)
 
 
-    def _setStationData(self, stationData, climateParameters):
-        self.data = StationData(stationData, climateParameters)
+    def _setStationData(self, stationData):
+        self.data = StationData(stationData['data'], stationData['climateParameters'])
 
 
     def setStationMetadata(self, stationInfo):
@@ -124,7 +126,7 @@ if __name__=='__main__':
     climateParams = ['maxt', 'mint' ]
 
     s = Station(stationMetadata = meta)
-    s._setStationData(data, climateParams)
+    s._setStationData({'data':data, 'climateParameters': climateParams})
     print s.name
     print s.longitude
     print s.elev

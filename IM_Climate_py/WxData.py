@@ -26,20 +26,12 @@ class WxData(StationDict):
         Adds additional station/weather data to the wxData object unless there is an
         'error' tag. In that case, no data is appended.
         '''
-        #Duck Type - check is data dictionary exists
-        #If not, then add the data dictionary in exception
-        try:
-            self[newData['meta']['uid']].keys()
-        except:
-            self[newData['meta']['uid']]={}
-
         #If no data, then set to None. Otherwise, add the station data and station metadata
         if newData.get('error'):
             self[newData['meta']['uid']]['data'] = None
         else:
-            self[newData['meta']['uid']] = Station(stationMetadata = newData['meta'])
-            self[newData['meta']['uid']]._setStationData(
-                    stationData = newData['data'], climateParameters = self.wxParameters)
+            self[newData['meta']['uid']] = Station(stationMetadata = newData['meta']
+                ,stationData = {'data': newData['data'], 'climateParameters': self.wxParameters})
 
 
     def _dumpToList(self):
