@@ -1,6 +1,6 @@
 class WxOb(object):
     ''''
-    A tuple(-like) object containing a weather observation for a specific station, parameter and date
+    A dictionary(-like) object containing a weather observation for a specific station, parameter and date
     WxOb  has the following properties:
     -date
     -wxOb
@@ -14,10 +14,10 @@ class WxOb(object):
         self.sourceFlag = values[3]
 
     def __repr__(self):
-        return str(self.toTuple())
+        return str(self.toDict())
 
-    def toTuple(self):
-        return (self.date, self.wxOb, self.ACIS_Flag, self.sourceFlag)
+    def toDict(self):
+        return {'date':self.date, 'wxOb':self.wxOb, 'ACIS_Flag': self.ACIS_Flag, 'sourceFlag':self.sourceFlag}
 
 
 class ParameterSeries(dict):

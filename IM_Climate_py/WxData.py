@@ -21,17 +21,12 @@ class WxData(StationDict):
         self.aggregation = aggregation
         self.wxParameters = wxParameters
 
-    def _addStation(self, newData):
+    def _addStation(self, newStation):
         '''
-        Adds additional station/weather data to the wxData object unless there is an
-        'error' tag. In that case, no data is appended.
+        Adds additional station/weather data to the wxData object
         '''
-        #If no data, then set to None. Otherwise, add the station data and station metadata
-        if newData.get('error'):
-            self[newData['meta']['uid']]['data'] = None
-        else:
-            self[newData['meta']['uid']] = Station(stationMetadata = newData['meta']
-                ,stationData = {'data': newData['data'], 'climateParameters': self.wxParameters})
+        self[newStation['meta']['uid']] = Station(stationMetadata = newStation['meta']
+                ,stationData = {'data': newStation['data'], 'climateParameters': self.wxParameters})
 
 
     def _dumpToList(self):

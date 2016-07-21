@@ -82,14 +82,6 @@ class StationDict(dict):
             self._dataAsList.append(info)
         return self._dataAsList
 
-##    def _addStations(self, info):
-##        '''
-##        Adds all station objects
-##        '''
-##        for x in range(0,len(info['meta'])):
-##            self._addStation(info['meta'][x])
-
-
     def _addStation(self, info):
         self[info['uid']] = Station(info)
 
@@ -114,7 +106,11 @@ class StationDict(dict):
         '''
         for station in self.keys():
             yield self[station]
+
     def __repr__(self):
+        '''
+        Pretty formatting of the StationDict object
+        '''
         a = self._dumpToList()
         a = map(str,a)
         return '\n'.join(a)
