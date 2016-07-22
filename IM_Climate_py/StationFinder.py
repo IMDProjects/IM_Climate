@@ -49,16 +49,16 @@ class StationFinder(ACIS):
         if parkCodes:
             bbox = self._getBoundingBox(parkCodes, distance)
 
-        self.input_dict = {}    #Clears the input dictionary
+        self._input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(elems = climateParameters
             ,bbox = bbox
             ,meta = metadata)
 
         #adds parkCodes to input_dict following the call to ACIS
         if parkCodes:
-            self.input_dict['parkCodes'] = parkCodes
+            self._input_dict['parkCodes'] = parkCodes
 
-        si =  StationDict(results, queryParameters = self.input_dict)
+        si =  StationDict(results, queryParameters = self._input_dict)
         if filePathAndName:
                 si.export(filePathAndName)
         return si

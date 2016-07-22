@@ -16,7 +16,7 @@ class ACIS(object):
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
         self.baseURL = 'http://data.rcc-acis.org/'
-        self.input_dict = {}
+        self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
 
 
@@ -44,12 +44,12 @@ class ACIS(object):
         self._formatInputDict(**kwargs)
         self.url = self.baseURL + self.webServiceSource
         if pyVersion == 2:      #python 2.x
-            params = urllib.urlencode({'params':json.dumps(self.input_dict)})
+            params = urllib.urlencode({'params':json.dumps(self._input_dict)})
             request = urllib2.Request(self.url, params, {'Accept':'application/json'})
             response = urllib2.urlopen(request)
             jsonData = response.read()
         elif pyVersion == 3:    #python 3.x
-            params = urllib.parse.urlencode({'params':json.dumps(self.input_dict)})
+            params = urllib.parse.urlencode({'params':json.dumps(self._input_dict)})
             params = params.encode('utf-8')
             req = urllib.request.urlopen(self.url, data = params)
             jsonData = req.read().decode()
@@ -62,7 +62,7 @@ class ACIS(object):
         '''
         for k in kwargs:
             if kwargs[k] and kwargs[k] <> 'None':
-                self.input_dict[k] = kwargs[k]
+                self._input_dict[k] = kwargs[k]
 
 
 
