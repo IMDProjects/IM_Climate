@@ -45,10 +45,10 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   colnames(dataResponse)[1] <- c("date")
   colnames(dataResponse)[2:(paramCount+1)]  <- climateParameters
   
-  date<-as.Date(dataResponse$date, "%Y-%m-%d")# convert date to vector of date-time class
-  
   # convert climate date to numeric and make data.frame
   temp<-as.data.frame(lapply(dataResponse[,2:ncol(dataResponse)], function(x) as.numeric(as.character(x))))
+  
+  date<-as.Date(dataResponse$date, "%Y-%m-%d")# convert date to vector of date-time class
   
   ## bind date and data vectors
   temp1<-cbind(date,temp)
@@ -71,7 +71,7 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   dataResponse <- dataResponse[ , -which(names(dataResponse) %in% c("longitude","latitude"))]
   dataResponse["longitude"] <- llong
   dataResponse["latitude"] <- llat
-  dataResponse <- dataResponse[c("uid","longitude","latitude","sids1","sids2","state","elev","name",as.character(climateParameters))]
+  dataResponse <- dataResponse[c("uid","longitude","latitude","sids1","sids2","sids3","state","elev","name","date",as.character(climateParameters))]
   
   # Output file
   if (!is.null(filePathAndName)) {
