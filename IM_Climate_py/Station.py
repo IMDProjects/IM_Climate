@@ -1,24 +1,31 @@
-class WxOb(object):
+class WxOb(dict):
     ''''
-    A dictionary(-like) object containing a weather observation for a specific station, parameter and date
-    WxOb  has the following properties:
-    -date
-    -wxOb
-    -ACIS_Flag
-    -sourceFlag
+    A dictionary containing a weather observation for a specific station, parameter and date
+    WxOb is indexable like a standard dictionary although values can also
+    be accessed as properties:
+        -WxOb.date
+        -WxOb.wxOb, etc).
+        -WxOb.ACIS_Flag
+        -WxOb.sourceFlag
     '''
     def __init__(self, values):
-        self.date = values[0]
-        self.wxOb  = values[1]
-        self.ACIS_Flag = values[2]
-        self.sourceFlag = values[3]
+        self['date'] = values[0]
+        self['wxOb']  = values[1]
+        self['ACIS_Flag'] = values[2]
+        self['sourceFlag'] = values[3]
 
-    def __repr__(self):
-        return str(self.toDict())
-
-    def toDict(self):
-        return {'date':self.date, 'wxOb':self.wxOb, 'ACIS_Flag': self.ACIS_Flag, 'sourceFlag':self.sourceFlag}
-
+    @property
+    def date(self):
+        return self['date']
+    @property
+    def wxOb(self):
+        return self['wxOb']
+    @property
+    def ACIS_Flag(self):
+        return self['ACIS_Flag']
+    @property
+    def sourceFlag(self):
+        return self['sourceFlag']
 
 class ParameterSeries(dict):
     '''
@@ -39,8 +46,6 @@ class ParameterSeries(dict):
         for k in sorted(self.keys()):
             yield self[k]
 
-    def __repr__(self):
-        return str(self.parameter)
 
 class StationData(dict):
     '''
@@ -68,7 +73,7 @@ class Station(object):
     '''
     def __init__(self, stationMetadata = None, stationData = None):
         if stationMetadata:
-            self.setStationMetadata(stationMetadata)
+            self._setStationMetadata(stationMetadata)
         if stationData:
             self._setStationData(stationData)
 
@@ -77,7 +82,11 @@ class Station(object):
         self.data = StationData(stationData['data'], stationData['climateParameters'])
 
 
-    def setStationMetadata(self, stationInfo):
+    def _setStationMetadata(self, stationInfo):
+        '''
+        Sets the station metadata. Values that are not present are set to 'NA'
+        '''
+
         default = 'NA'
         self.name = stationInfo.get('name', default)
         try:
