@@ -64,8 +64,8 @@ class DataRequestor(ACIS):
         '''
         INFO
         ----
-        If stations is a stationList object, extracts list of stationIDs.
-        Otherwise, assumes stationIDs to be a list.
+        If stations is a StationDict object, extracts list of stationIDs.
+        Otherwise, assumes stationIDs to be a list or a single stationID as a string.
         '''
         try:
             return stations.stationIDs
@@ -79,9 +79,12 @@ class DataRequestor(ACIS):
         '''
         INFO
         ----
-        Makes data requests for one or more stationIDs. Appends data to wxData
+        Makes data requests for one or more stationIDs. Adds stations to the WxData
         object.
 
+        RETURNS
+        -------
+        WxData object
 
         '''
         wd = WxData(queryParameters = None, dateInterval = self.duration,
@@ -228,17 +231,20 @@ class DataRequestor(ACIS):
 
 
 if __name__=='__main__':
-    dr = DataRequestor()
     stationIDs = [66180, 67175]
+
+    dr = DataRequestor()
 
     #Daily Data
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
         , startDate = '20120101', endDate = '2012-01-05' )
     dailyData.export(filePathAndName = r'dailyData.csv')
 
-    #GET DATA WITH FLAGS
+    #GET DATA for a single station
     dailyData = dr.getDailyWxObservations(climateStations = 77572, climateParameters = 'mint, maxt'
-        , startDate = 20160101, endDate = '20160101' )
+        , startDate = 20160101, endDate = '20160105' )
+
+    #Print the station data to the screen
     print dailyData
 
 

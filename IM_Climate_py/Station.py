@@ -76,6 +76,7 @@ class Station(object):
             self._setStationMetadata(stationMetadata)
         if stationData:
             self._setStationData(stationData)
+        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid', 'dateRange']
 
 
     def _setStationData(self, stationData):
@@ -106,6 +107,12 @@ class Station(object):
         self.stateCode = stationInfo.get('state', default)
         self.elev = stationInfo.get('elev', default)
         self.dateRange = stationInfo.get('valid_daterange', default)
+        if self.dateRange <> default:
+            self.beginDate = self.dateRange[0][0]
+            self.endDate = self.dateRange[0][1]
+        else:
+            self.beginDate = default
+            self.endDate = default
         self.uid = stationInfo.get('uid', default)
         self.sids = stationInfo.get('sids', default)
         self._setStationSource()
@@ -125,6 +132,13 @@ class Station(object):
     def __repr__(self):
         return str(self.uid) + ' : ' +  self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
 
+##    def __repr__(self):
+##        '''
+##        '''
+##
+##        z =  str([self.__dict__[t] for t in self._tags])
+##        return z
+
 if __name__=='__main__':
     meta= {'name': 'Elliot Ridge', 'll': [-106.42, 39.86], 'sids': [u'USS0006K29S 6'], 'state': 'CO', 'valid_daterange': [['1983-01-12', '2016-04-05']], 'uid': 77459}
     data =  [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
@@ -142,6 +156,8 @@ if __name__=='__main__':
     print s.sids
     print s.stationSource
     print s.data['mint']
+    print s
+    print s._tags
     for w in s.data['mint']:
         print w.date
     for param in s.data:

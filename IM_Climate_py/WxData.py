@@ -5,6 +5,7 @@ try:    #python 2.x
     reload(Station)
     from StationDict import StationDict
     from Station import Station
+    from ACIS import supportedParameters
 
 except: #python 3.x
     from .dataObjects import dataObjects
@@ -50,7 +51,8 @@ class WxData(StationDict):
         #Create header row
         header = ['UID','Longitude', 'Latitude', 'Sids1', 'Sids2','Sids3', 'Name', 'Elevation', 'Date']
         for p in self.wxParameters:
-            header.extend([p + '_value', p+'_ACISFlag',p+'_SourceFlags'])
+            #header.extend([p + '_value', p+'_ACISFlag',p+'_SourceFlags'])
+            header.extend([supportedParameters[p]['label'], p+'_ACISFlag',p+'_SourceFlags'])
 
         self._dataAsList = [header]
         for station in self:

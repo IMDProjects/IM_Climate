@@ -1,6 +1,7 @@
 import csv
 from datetime import date
-
+import Station
+reload(Station)
 from Station import Station
 
 
@@ -21,11 +22,6 @@ class StationDict(dict):
         Writes a 2-dimensional list to a CSV text file
         Comma-delimits values.
 
-        ARGUMENTS
-        ---------
-        filePathAndName - file name and path
-        dataAsList - 2-dimensional list
-
         RETURNS
         -------
         None
@@ -35,6 +31,7 @@ class StationDict(dict):
             writer = csv.writer(csvFile, lineterminator='\n' )
             writer.writerows(self._dataAsList)
         csvFile.close()
+
 
 
     def export(self, filePathAndName, format='csv'):
@@ -63,24 +60,23 @@ class StationDict(dict):
         '''
         INFO
         ----
-        Method to format the station to a list
+        Re-formats the station information to a list
 
-        ARGUMENTS
-        ---------
-        filePathAndName
 
         RETURNS
         --------
         None
         '''
-        tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid']
-        self._dataAsList = []
+        tags = self[self.stationIDs[0]]._tags
+        #self._dataAsList = []
 
-        self._dataAsList.append(tags)
+        #self._dataAsList.append(tags)
+        self._dataAsList = [tags]
         for station in self:
             info = [station.__dict__[t] for t in tags]
             self._dataAsList.append(info)
         return self._dataAsList
+
 
     def _addStation(self, info):
         self[info['uid']] = Station(info)
@@ -133,11 +129,10 @@ if __name__ == '__main__':
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
     sl = StationDict(stations, queryParameters = queryParams)
-    #print sl.metadata
     print(sl.stationIDs)
     print(sl.stationNames)
     print(sl.queryParameters)
-    sl.export(r'C:\TEMP\test.csv')
+    sl.export(r'C:\TEMP\test2.csv')
     for station in sl:
         print station.latitude
     print sl[77459].name
