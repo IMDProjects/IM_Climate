@@ -1,7 +1,7 @@
 from ACIS import ACIS
-import WxData
-reload (WxData)
-from WxData import WxData
+import StationDict
+reload (StationDict)
+from StationDict import StationDict
 
 
 class DataRequestor(ACIS):
@@ -89,7 +89,7 @@ class DataRequestor(ACIS):
         WxData object
 
         '''
-        wd = WxData(queryParameters = None, dateInterval = self.duration,
+        wd = StationDict(queryParameters = None, dateInterval = self.duration,
             aggregation = self.reduceCode, wxParameters = self.climateParameters)
 
         for uid in self.stationIDs:

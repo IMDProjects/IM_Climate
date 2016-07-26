@@ -8,15 +8,17 @@ from ACIS import supportedParameters
 
 
 class StationDict(dict):
-    def __init__(self, queryParameters = None):
-        '''
-        TO DO: MAKE THIS OBJECT GENERIC. FORCE StationFinder and DataREquestor
-        conform a bit more to push data to one StationDict Object so there is
-        only one addStation object
-        '''
+
+    '''
+    Object containing all station metadata and associated data
+    '''
+    def __init__(self, queryParameters = None, dateInterval = None, aggregation = None, wxParameters = None):
+
         self.dateRequested = date.today().isoformat()
-        if queryParameters:
-            self.queryParameters = queryParameters
+        self.queryParameters = queryParameters
+        self.dateInterval = dateInterval
+        self.aggregation = aggregation
+        self.wxParameters = wxParameters
 
     def _writeToCSV(self):
         '''
@@ -202,4 +204,52 @@ if __name__ == '__main__':
     print sl[77459].name
     print sl
 
+    #################################
 
+    climateParams = ['mint', 'maxt']
+    queryParameters = {'query':'params'}
+    dateInterval = 'mly'
+    aggregation = 'avg'
+
+    #Station #1
+    wxObs = {u'data': [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
+           [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
+           [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
+ u'meta': {u'elev': 9600.1,
+           u'll': [-105.9864, 39.56],
+           u'name': u'SODA CREEK COLORADO',
+           u'sids': [u'USR0000CSOD 6'],
+           u'uid': 66180}}
+
+    #Station #2,
+    moreWxObs = {u'data': [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
+           [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
+           [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
+ u'meta': {u'elev': 9600.1,
+           u'll': [-105.9864, 39.56],
+           u'name': u'ILL CREEK COLORADO',
+           u'sids': [u'USR0000CSOD 6'],
+           u'uid': 1233}}
+
+    wx = StationDict(queryParameters, dateInterval = 'mly', aggregation = 'avg', wxParameters = ['mint','maxt'])
+    wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData =  {'stationData' : wxObs['data'], 'climateParameters' : climateParams})
+    wx._addStation(stationID = wxObs['meta']['uid'],stationMeta =  moreWxObs['meta'], stationData =  {'stationData' : moreWxObs['data'], 'climateParameters' : climateParams})
+    print wx.wxParameters
+    print wx.stationIDs
+    wx.exportData(filePathAndName = r'test.csv')
+    print wx
+
+    #StationDict is indexable
+    print wx[66180].data['maxt']['2012-01-01'].wxOb
+
+    #Iterate through each station, parameter and weather observation
+    for station in wx:
+        for p in station.data:
+            print p
+            for ob in p:
+                print ob
+    print wx.stationNames
