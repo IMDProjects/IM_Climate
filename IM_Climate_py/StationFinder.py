@@ -1,6 +1,8 @@
 import json
 import urllib2
 
+import StationDict
+reload(StationDict)
 from StationDict import StationDict
 from ACIS import ACIS
 
@@ -58,9 +60,11 @@ class StationFinder(ACIS):
         if parkCodes:
             self._input_dict['parkCodes'] = parkCodes
 
-        si =  StationDict(results, queryParameters = self._input_dict)
+        si =  StationDict(queryParameters = self._input_dict)
+        for station in results['meta']:
+            si._addStation(stationID = station['uid'], stationMeta = station)
         if filePathAndName:
-                si.export(filePathAndName)
+                si.exportMeta(filePathAndName)
         return si
 
 

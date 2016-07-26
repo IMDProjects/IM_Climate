@@ -1,4 +1,6 @@
 from ACIS import ACIS
+import WxData
+reload (WxData)
 from WxData import WxData
 
 
@@ -56,7 +58,7 @@ class DataRequestor(ACIS):
             edate = str(endDate), meta = ['uid','ll', 'name', 'elev', 'sids'])
 
         if filePathAndName:
-            results.export(filePathAndName = filePathAndName)
+            results.exportData(filePathAndName = filePathAndName)
         return results
 
 
@@ -95,7 +97,8 @@ class DataRequestor(ACIS):
             for p in self.climateParameters:
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
-            wd._addStation(response)
+            wd._addStation(stationID = uid, stationMeta = response['meta']
+                , stationData = {'stationData': response['data'], 'climateParameters': self.climateParameters})
 
         return wd
 
@@ -238,7 +241,7 @@ if __name__=='__main__':
     #Daily Data
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
         , startDate = '20120101', endDate = '2012-01-05' )
-    dailyData.export(filePathAndName = r'dailyData.csv')
+    dailyData.exportData(filePathAndName = r'dailyData.csv')
 
     #GET DATA for a single station
     dailyData = dr.getDailyWxObservations(climateStations = 77572, climateParameters = 'mint, maxt'

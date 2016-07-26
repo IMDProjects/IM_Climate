@@ -3,17 +3,20 @@ from datetime import date
 import Station
 reload(Station)
 from Station import Station
+from ACIS import supportedParameters
 
 
 
 class StationDict(dict):
-    def __init__(self, data = None, queryParameters = None):
+    def __init__(self, queryParameters = None):
+        '''
+        TO DO: MAKE THIS OBJECT GENERIC. FORCE StationFinder and DataREquestor
+        conform a bit more to push data to one StationDict Object so there is
+        only one addStation object
+        '''
         self.dateRequested = date.today().isoformat()
         if queryParameters:
             self.queryParameters = queryParameters
-        if data:
-            for x in range(0,len(data['meta'])):
-                self._addStation(data['meta'][x])
 
     def _writeToCSV(self):
         '''
@@ -34,17 +37,17 @@ class StationDict(dict):
 
 
 
-    def export(self, filePathAndName, format='csv'):
+    def exportMeta(self, filePathAndName, format='csv'):
         '''
         INFO
         ----
-        Method providing option to export data into various formats
+        Method providing option to export data into various formats.
+        Currently only supports csv
 
         ARGUMENTS
         ---------
         filePathAndName - Destination where file is to be saved
         format  = Export format. Default = csv
-
 
         RETURNS
         --------
@@ -52,25 +55,42 @@ class StationDict(dict):
         '''
         self._filePathAndName = filePathAndName
         if format == 'csv':
-            self._dumpToList()
+            self._dumpMetaToList()
+            self._writeToCSV()
+
+    def exportData(self, filePathAndName, format='csv'):
+        '''
+        INFO
+        ----
+        Method providing option to export data into various formats.
+        Currently only supports csv
+
+        ARGUMENTS
+        ---------
+        filePathAndName - Destination where file is to be saved
+        format  = Export format. Default = csv
+
+        RETURNS
+        --------
+        None
+        '''
+        self._filePathAndName = filePathAndName
+        if format == 'csv':
+            self._dumpDataToList()
             self._writeToCSV()
 
 
-    def _dumpToList(self):
+    def _dumpMetaToList(self):
         '''
         INFO
         ----
         Re-formats the station information to a list
-
 
         RETURNS
         --------
         None
         '''
         tags = self[self.stationIDs[0]]._tags
-        #self._dataAsList = []
-
-        #self._dataAsList.append(tags)
         self._dataAsList = [tags]
         for station in self:
             info = [station.__dict__[t] for t in tags]
@@ -78,8 +98,50 @@ class StationDict(dict):
         return self._dataAsList
 
 
-    def _addStation(self, info):
-        self[info['uid']] = Station(info)
+    def _dumpDataToList(self):
+        '''
+        INFO
+        ----
+        Dumps all wxData to a very flat list/matric
+
+        NOTE:
+        ----
+        Method currently assumes that each station has the same set of parameters
+        for the same date range.
+        '''
+
+        try:
+            self.stationIDs
+        except:
+            self._dataAsList = 'NO DATA'
+            return
+
+        #Create header row
+        header = ['UID','Longitude', 'Latitude', 'Sids1', 'Sids2','Sids3', 'Name', 'Elevation', 'Date']
+        for p in self.wxParameters:
+            #header.extend([p + '_value', p+'_ACISFlag',p+'_SourceFlags'])
+            header.extend([supportedParameters[p]['label'], p+'_ACISFlag',p+'_SourceFlags'])
+
+        self._dataAsList = [header]
+        for station in self:
+            lat = station.latitude
+            lon = station.longitude
+            name = station.name
+            elev = station.elev
+            sid1 = station.sid1
+            sid2 = station.sid2
+            sid3 = station.sid3
+            for date in station.data.observationDates:
+                a = [str(station.uid), lon, lat,sid1,sid2,sid3,name,elev, date]
+                for param in self.wxParameters:
+                    a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
+                    self._dataAsList.append(a)
+        return self._dataAsList
+
+
+
+    def _addStation(self, stationID, stationMeta, stationData = None):
+        self[stationID] = Station(stationMeta, stationData)
 
     @property
     def stationIDs(self):
@@ -107,7 +169,7 @@ class StationDict(dict):
         '''
         Pretty formatting of the StationDict object
         '''
-        a = self._dumpToList()
+        a = self._dumpMetaToList()
         a = map(str,a)
         return '\n'.join(a)
 
@@ -128,11 +190,13 @@ if __name__ == '__main__':
             'state': 'CO',
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
-    sl = StationDict(stations, queryParameters = queryParams)
+    sl = StationDict(queryParameters = queryParams)
+    for s in stations['meta']:
+        sl._addStation(stationID = s['uid'], stationMeta =  s)
     print(sl.stationIDs)
     print(sl.stationNames)
     print(sl.queryParameters)
-    sl.export(r'C:\TEMP\test2.csv')
+    sl.exportMeta(r'C:\TEMP\test2.csv')
     for station in sl:
         print station.latitude
     print sl[77459].name

@@ -49,7 +49,8 @@ class ParameterSeries(dict):
 
 class StationData(dict):
     '''
-    Dictionary(-like) object containing all climate parameters for a specific station.
+    Dictionary(-like) object containing all climate parameter data (i.e., one or more
+    parameter series) for a specific station.
     StationData has been extended to include the ability to iterate like a list
     '''
     def __init__(self, stationData, climateParameters):
@@ -71,19 +72,17 @@ class Station(object):
     Blank values are converted to 'NA'
     Each station has metadata properties (e.g., uid, elev, sids, etc) and data
     '''
-    def __init__(self, stationMetadata = None, stationData = None):
-        if stationMetadata:
-            self._setStationMetadata(stationMetadata)
-        if stationData:
-            self._setStationData(stationData)
+    def __init__(self, stationMeta, stationData = None):
+        self._setStationMetadata(stationMeta)
         self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid', 'dateRange']
+        if stationData:
+            self._setStationData(stationData['stationData'], stationData['climateParameters'] )
+
+    def _setStationData(self, stationData, climateParameters):
+        self.data = StationData(stationData, climateParameters)
 
 
-    def _setStationData(self, stationData):
-        self.data = StationData(stationData['data'], stationData['climateParameters'])
-
-
-    def _setStationMetadata(self, stationInfo):
+    def _setStationMetadata(self, stationInfo, climateParameters = None):
         '''
         Sets the station metadata. Values that are not present are set to 'NA'
         '''
@@ -107,12 +106,6 @@ class Station(object):
         self.stateCode = stationInfo.get('state', default)
         self.elev = stationInfo.get('elev', default)
         self.dateRange = stationInfo.get('valid_daterange', default)
-        if self.dateRange <> default:
-            self.beginDate = self.dateRange[0][0]
-            self.endDate = self.dateRange[0][1]
-        else:
-            self.beginDate = default
-            self.endDate = default
         self.uid = stationInfo.get('uid', default)
         self.sids = stationInfo.get('sids', default)
         self._setStationSource()
@@ -140,6 +133,38 @@ class Station(object):
 ##        return z
 
 if __name__=='__main__':
+
+    #WxOb
+    data = ['2012-02-01',u'32.0', u' ', u'U']
+    wx = WxOb(data)
+    print wx
+    ##############################
+
+    #ParameterSeries
+    data = [[u'21.5', u' ', u'U'],
+         [u'29.5', u' ', u'U'],
+         [u'32.0', u' ', u'U'],
+         [u'27.5', u' ', u'U'],
+         [u'35.5', u' ', u'U']]
+    dates = (u'2012-01-01', u'2012-01-02', u'2012-01-03', u'2012-01-04', u'2012-01-05')
+    parameter = 'maxt'
+    ps = ParameterSeries(data,dates,parameter)
+    print ps
+
+    #################################
+
+    #StationData
+    data = [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
+         [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
+         [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
+         [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
+         [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
+    parameters = ['maxt', 'mint']
+    sd = StationData(data,parameters)
+    print sd
+    ####################
+
+    #Station
     meta= {'name': 'Elliot Ridge', 'll': [-106.42, 39.86], 'sids': [u'USS0006K29S 6'], 'state': 'CO', 'valid_daterange': [['1983-01-12', '2016-04-05']], 'uid': 77459}
     data =  [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
            [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
@@ -148,8 +173,8 @@ if __name__=='__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     climateParams = ['maxt', 'mint' ]
 
-    s = Station(stationMetadata = meta)
-    s._setStationData({'data':data, 'climateParameters': climateParams})
+    s = Station(stationMeta = meta)
+    s._setStationData(data, climateParams)
     print s.name
     print s.longitude
     print s.elev
