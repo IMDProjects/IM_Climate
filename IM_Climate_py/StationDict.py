@@ -43,7 +43,7 @@ class StationDict(dict):
         '''
         INFO
         ----
-        Method providing option to export data into various formats.
+        Method providing option to export station metadata into various formats.
         Currently only supports csv
 
         ARGUMENTS
@@ -61,7 +61,7 @@ class StationDict(dict):
         '''
         INFO
         ----
-        Method providing option to export data into various formats.
+        Method providing option to export station data into various formats.
         Currently only supports csv
 
         ARGUMENTS
@@ -78,7 +78,9 @@ class StationDict(dict):
 
     def export(self, filePathAndName, format='csv'):
         '''
-        Smart export. If data exists, then export data. Otherwise, export station meta
+        This is a "smart" export. If data exists for at least one station, then
+            then the export is of the station data. Otherwise, export is of the
+            station metadata
         '''
         for station in self:
             try:
@@ -90,6 +92,10 @@ class StationDict(dict):
                 return
 
     def _export(self, dumpMethod, filePathAndName, format):
+        '''
+        Generlized method to export station meta or station data to a fille.
+
+        '''
         self._filePathAndName = filePathAndName
         dumpMethod()
         self._writeToCSV()
@@ -116,7 +122,7 @@ class StationDict(dict):
         '''
         INFO
         ----
-        Dumps all wxData to a very flat list/matric
+        Dumps station data to a very flat list/matrix
 
         NOTE:
         ----
@@ -155,6 +161,9 @@ class StationDict(dict):
 
 
     def _addStation(self, stationID, stationMeta, stationData = None):
+        '''
+        Hidden method to add a station to the StationDict object.
+        '''
         self[stationID] = Station(stationMeta, stationData)
 
     @property
