@@ -55,10 +55,7 @@ class StationDict(dict):
         --------
         None
         '''
-        self._filePathAndName = filePathAndName
-        if format == 'csv':
-            self._dumpMetaToList()
-            self._writeToCSV()
+        self._export(dumpMethod = self._dumpMetaToList, filePathAndName = filePathAndName, format = format)
 
     def exportData(self, filePathAndName, format='csv'):
         '''
@@ -76,11 +73,26 @@ class StationDict(dict):
         --------
         None
         '''
-        self._filePathAndName = filePathAndName
-        if format == 'csv':
-            self._dumpDataToList()
-            self._writeToCSV()
+        self._export(dumpMethod = self._dumpDataToList, filePathAndName = filePathAndName, format = format)
 
+
+    def export(self, filePathAndName, format='csv'):
+        '''
+        Smart export. If data exists, then export data. Otherwise, export station meta
+        '''
+        for station in self:
+            try:
+                if station.data:
+                    self._export(dumpMethod = self._dumpDataToList, filePathAndName = filePathAndName, format = format)
+                    return
+            except:
+                self._export(dumpMethod = self._dumpMetaToList, filePathAndName = filePathAndName, format = format)
+                return
+
+    def _export(self, dumpMethod, filePathAndName, format):
+        self._filePathAndName = filePathAndName
+        dumpMethod()
+        self._writeToCSV()
 
     def _dumpMetaToList(self):
         '''
@@ -198,7 +210,7 @@ if __name__ == '__main__':
     print(sl.stationIDs)
     print(sl.stationNames)
     print(sl.queryParameters)
-    sl.exportMeta(r'C:\TEMP\test2.csv')
+    sl.export(r'C:\TEMP\test2.csv')
     for station in sl:
         print station.latitude
     print sl[77459].name
@@ -240,7 +252,7 @@ if __name__ == '__main__':
     wx._addStation(stationID = wxObs['meta']['uid'],stationMeta =  moreWxObs['meta'], stationData =  {'stationData' : moreWxObs['data'], 'climateParameters' : climateParams})
     print wx.wxParameters
     print wx.stationIDs
-    wx.exportData(filePathAndName = r'test.csv')
+    wx.export(filePathAndName = r'test.csv')
     print wx
 
     #StationDict is indexable

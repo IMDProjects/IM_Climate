@@ -14,11 +14,11 @@ sf = StationFinder()
 #Test #1: All stations around NOCA within a 30km buffer. Save returned results
     #locally as SF01.csv
 wxStations = sf.findStation(parkCodes = 'MABI', distance = 30)
-wxStations.exportMeta(localFolder + 'SF01.csv')
+wxStations.export(localFolder + 'SF01.csv')
 
 #Test #2: All stations around ACAD recording minimum temperature; distance = 10km
 wxStations = sf.findStation(parkCodes = 'ACAD', distance = 10, climateParameters = 'mint')
-wxStations.exportMeta(localFolder + 'SF02.csv')
+wxStations.export(localFolder + 'SF02.csv')
 
 #Test 3: All stations around ROMO recording maximum OR minimum temperature; distance = 40km
         #with option to save file
@@ -44,7 +44,7 @@ print wxStations.stationIDs[0:5]
 
 #Test #7: MABI AvgT -  MABI + 10km
 wxStations = sf.findStation(parkCodes = 'MABI', distance = 10, climateParameters = 'avgt')
-wxStations.exportMeta(localFolder + 'SF07.csv') #save to file
+wxStations.export(localFolder + 'SF07.csv') #save to file
 for station in wxStations: #Iterate through list of stations and print to screen
     print(station)
 print (wxStations)    #print all stations to screen
@@ -69,5 +69,5 @@ wxData = dr.getDailyWxObservations(climateParameters = climateParameters
 parameters = 'avgt'
 wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = climateParameters
                             ,startDate = startDate, endDate = endDate)
-wxData.exportData(filePathAndName = localFolder + 'DR02.csv')
+wxData.export(filePathAndName = localFolder + 'DR02.csv')
 
