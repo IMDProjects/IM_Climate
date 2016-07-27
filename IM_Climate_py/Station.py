@@ -62,6 +62,9 @@ class StationData(dict):
         return self.keys()
 
     def __iter__(self):
+        '''
+        Allow iteration over StationData (like a list)
+        '''
         for param in self.keys():
             yield self[param]
 
@@ -75,9 +78,12 @@ class Station(object):
         self._setStationMetadata(stationMeta)
         self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid', 'dateRange']
         if stationData:
-            self._setStationData(stationData['stationData'], stationData['climateParameters'] )
+            self._addStationWxData(stationData['stationData'], stationData['climateParameters'] )
 
-    def _setStationData(self, stationData, climateParameters):
+    def _addStationWxData(self, stationData, climateParameters):
+        '''
+        Method to add weather data to Station object
+        '''
         self.data = StationData(stationData, climateParameters)
 
 
@@ -122,6 +128,9 @@ class Station(object):
                 self.stationSource = 'UNKNOWN'
 
     def __repr__(self):
+        '''
+        Pretty presentation of Station
+        '''
         return str(self.uid) + ' : ' +  self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
 
 
@@ -169,7 +178,7 @@ if __name__=='__main__':
     climateParams = ['maxt', 'mint' ]
 
     s = Station(stationMeta = meta)
-    s._setStationData(data, climateParams)
+    s._addStationWxData(data, climateParams)
     print s.name
     print s.longitude
     print s.elev
