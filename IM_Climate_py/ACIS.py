@@ -32,21 +32,6 @@ class ACIS(object):
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
 
-
-##        self.supportedParameters = {'maxt':	{'info':'Maximum temperature (?F)', 'label':'maxt_F'}
-##                            ,'mint':{'info':'Minimum temperature (?F)', 'label':'mint_F'}
-##                            ,'avgt':{'info':'Average temperature (?F)', 'label':'avgt_F'}
-##                            ,'obst':{'info':'Obs time temperature (?F)', 'label':'obst_F'}
-##                            ,'pcpn':{'info': 'Precipitation (inches)', 'label':'pcpn_In'}
-##                            ,'snow' :{'info': 'Snowfall (inches)', 'label':'snow_In'}
-##                            ,'snwd': {'info':'Snow depth (inches)', 'label':'snwd_In'}
-##                            ,'cddXX': {'info':'Cooling Degree Days; where XX is base temperature', 'label':'cddXX'}
-##                            ,'hddXX': {'info':'Heating Degree Days; where XX is base temperature', 'label':'hddXX'}
-##                            ,'gddXX': {'info':'Growing Degree Days; where XX is base temperature', 'label':'gddXX'}
-##                            }
-
-
-
     def _call_ACIS(self, **kwargs):
         '''
         Core method for calling the ACIS services.
@@ -75,8 +60,6 @@ class ACIS(object):
         for k in kwargs:
             if kwargs[k] and kwargs[k] <> 'None':
                 self._input_dict[k] = kwargs[k]
-
-
 
 if __name__ == '__main__':
     c = ACIS()
