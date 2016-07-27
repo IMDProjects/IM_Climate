@@ -20,7 +20,6 @@ supportedParameters = {'maxt':	{'info':'Maximum temperature (?F)', 'label':'maxt
                         ,'gddXX': {'info':'Growing Degree Days; where XX is base temperature', 'label':'gddXX'}
                         }
 
-
 class ACIS(object):
 
     '''
@@ -50,7 +49,7 @@ class ACIS(object):
             params = params.encode('utf-8')
             req = urllib.request.urlopen(self.url, data = params)
             jsonData = req.read().decode()
-        return json.loads(str(jsonData))
+        return json.loads(jsonData)
 
     def _formatInputDict(self,**kwargs):
         '''
