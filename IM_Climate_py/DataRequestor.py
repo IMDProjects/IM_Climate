@@ -45,7 +45,7 @@ class DataRequestor(ACIS):
 
         RETURNS
         -------
-        Returns WxData object that contains the daily weather observations and
+        Returns object that contains station metadata and the daily weather observations and
         and all associated flags
 
         '''
@@ -81,12 +81,12 @@ class DataRequestor(ACIS):
         '''
         INFO
         ----
-        Makes data requests for one or more stationIDs. Adds stations to the WxData
-        object.
+        Makes data requests using one or more stationIDs. Adds information for
+        each station (i.e., station meta and data) to the StationDict object.
 
         RETURNS
         -------
-        WxData object
+        StationDict object
 
         '''
         wd = StationDict(queryParameters = None, dateInterval = self.duration,

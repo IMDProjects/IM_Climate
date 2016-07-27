@@ -68,9 +68,8 @@ class StationData(dict):
 
 class Station(object):
     '''
-    Object containing all station information and data
-    Blank values are converted to 'NA'
-    Each station has metadata properties (e.g., uid, elev, sids, etc) and data
+    Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data
+    Blank metadata values are converted to 'NA'
     '''
     def __init__(self, stationMeta, stationData = None):
         self._setStationMetadata(stationMeta)

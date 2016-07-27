@@ -1,5 +1,6 @@
 import csv
 from datetime import date
+
 import Station
 reload(Station)
 from Station import Station
@@ -11,6 +12,11 @@ class StationDict(dict):
 
     '''
     Object containing all station metadata and associated data
+    StationDict is composed of the following nested objects:
+        Station
+            StationData
+                ParameterSeries
+                    WxOb
     '''
     def __init__(self, queryParameters = None, dateInterval = None, aggregation = None, wxParameters = None):
 
@@ -78,9 +84,21 @@ class StationDict(dict):
 
     def export(self, filePathAndName, format='csv'):
         '''
-        This is a "smart" export. If data exists for at least one station, then
-            then the export is of the station data. Otherwise, export is of the
-            station metadata
+        INFO
+        ----
+        This is a "smart" export. If weather data exists for at least one station, then
+            then the export is of the weather data (plus limited station metadata fields).
+            If only station metadata exists, then export is of the
+            station metadata only.
+
+        ARGUMENTS
+        ---------
+        filePathAndName - Destination where file is to be saved
+        format  = Export format. Default = csv
+
+        RETURNS
+        --------
+        None
         '''
         for station in self:
             try:
@@ -94,7 +112,6 @@ class StationDict(dict):
     def _export(self, dumpMethod, filePathAndName, format):
         '''
         Generlized method to export station meta or station data to a fille.
-
         '''
         self._filePathAndName = filePathAndName
         dumpMethod()
@@ -139,8 +156,7 @@ class StationDict(dict):
         #Create header row
         header = ['UID','Longitude', 'Latitude', 'Sids1', 'Sids2','Sids3', 'Name', 'Elevation', 'Date']
         for p in self.wxParameters:
-            #header.extend([p + '_value', p+'_ACISFlag',p+'_SourceFlags'])
-            header.extend([supportedParameters[p]['label'], p+'_ACISFlag',p+'_SourceFlags'])
+            header.extend([supportedParameters[p]['label'], p+'_ACISFlag', p+'_SourceFlags'])
 
         self._dataAsList = [header]
         for station in self:
