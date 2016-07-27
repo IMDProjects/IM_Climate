@@ -9,10 +9,10 @@ class WxOb(dict):
         -WxOb.sourceFlag
     '''
     def __init__(self, values):
-        self['date'] = values[0]
-        self['wxOb']  = values[1]
-        self['ACIS_Flag'] = values[2]
-        self['sourceFlag'] = values[3]
+        self['date'] = values[0].encode()
+        self['wxOb']  = values[1].encode()
+        self['ACIS_Flag'] = values[2].encode()
+        self['sourceFlag'] = values[3].encode()
 
     @property
     def date(self):
@@ -93,26 +93,26 @@ class Station(object):
         '''
 
         default = 'NA'
-        self.name = stationInfo.get('name', default)
+        self.name = stationInfo.get('name', default).encode()
         try:
-            self.sid1 = stationInfo['sids'][0]
+            self.sid1 = str(stationInfo['sids'][0]).encode()
         except:
             self.sid1 = default
         try:
-            self.sid2 = stationInfo['sids'][1]
+            self.sid2 = str(stationInfo['sids'][1]).encode()
         except:
             self.sid2 = default
         try:
-            self.sid3 = stationInfo['sids'][2]
+            self.sid3 = str(stationInfo['sids'][2]).encode()
         except:
             self.sid3 = default
         self.latitude = stationInfo.get('ll', default)[1]
         self.longitude = stationInfo.get('ll', default)[0]
-        self.stateCode = stationInfo.get('state', default)
+        self.stateCode = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
         self.dateRange = stationInfo.get('valid_daterange', default)
         self.uid = stationInfo.get('uid', default)
-        self.sids = stationInfo.get('sids', default)
+        self.sids = str(stationInfo.get('sids', default)).encode()
         self._setStationSource()
 
 
