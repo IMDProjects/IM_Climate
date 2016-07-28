@@ -90,7 +90,7 @@ class DataRequestor(ACIS):
 
         '''
         wd = StationDict(queryParameters = None, dateInterval = self.duration,
-            aggregation = self.reduceCode, wxParameters = self.climateParameters)
+            aggregation = self.reduceCode, climateParameters = self.climateParameters)
 
         for uid in self.stationIDs:
             elems = []
@@ -98,7 +98,7 @@ class DataRequestor(ACIS):
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
             wd._addStation(stationID = uid, stationMeta = response['meta']
-                , stationData = {'stationData': response['data'], 'climateParameters': self.climateParameters})
+                , stationData = response['data'])
 
         return wd
 

@@ -1,3 +1,6 @@
+from datetime import date
+import datetime
+
 class WxOb(dict):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
@@ -13,6 +16,7 @@ class WxOb(dict):
         self['wxOb']  = values[1].encode()
         self['ACIS_Flag'] = values[2].encode()
         self['sourceFlag'] = values[3].encode()
+
 
     @property
     def date(self):
@@ -74,20 +78,21 @@ class Station(object):
     Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data
     Blank metadata values are converted to 'NA'
     '''
-    def __init__(self, stationMeta, stationData = None):
+    def __init__(self, stationMeta, climateParameters, stationData = None):
+        self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
         self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid', 'dateRange']
         if stationData:
-            self._addStationWxData(stationData['stationData'], stationData['climateParameters'] )
+            self._addStationWxData(stationData)
 
-    def _addStationWxData(self, stationData, climateParameters):
+    def _addStationWxData(self, stationData):
         '''
         Method to add weather data to Station object
         '''
-        self.data = StationData(stationData, climateParameters)
+        self.data = StationData(stationData, self.climateParameters)
 
 
-    def _setStationMetadata(self, stationInfo, climateParameters = None):
+    def _setStationMetadata(self, stationInfo):
         '''
         Sets the station metadata. Values that are not present are set to 'NA'
         '''
@@ -110,7 +115,8 @@ class Station(object):
         self.longitude = stationInfo.get('ll', default)[0]
         self.stateCode = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
-        self.dateRange = stationInfo.get('valid_daterange', default)
+        #self.dateRange = stationInfo.get('valid_daterange', default)
+        self.dateRange = StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
         self.uid = stationInfo.get('uid', default)
         self.sids = str(stationInfo.get('sids', default)).encode()
         self._setStationSource()
@@ -134,8 +140,63 @@ class Station(object):
         return str(self.uid) + ' : ' +  self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
 
 
+class StationDateRange(dict):
+    '''
+    Dictionary containing the valid date ranges for each weather parameter
+    '''
+    def __init__(self, dateRanges, climateParameters):
+        if not climateParameters:
+            return
+
+        #Assign Begin and End Dates to Each Parameter
+        for index, p in enumerate(climateParameters):
+            try:
+                b =  dateRanges[index][0]
+                e = dateRanges[index][1]
+                self[p] = {'begin': date(int(b[0:4]), int(b[5:7]), int(b[9:10])),
+                    'end': date(int(e[0:4]), int(e[5:7]), int(e[9:10]))}
+            except:
+                self[p] = {'begin': 'NA', 'end': 'NA'}
+
+        #Calculate the range of dates based on all parameters
+
+        self.begin = date(2100,1,1)
+        self.end =  date(1492,1,1)
+
+        for p in self.items():
+            if p[1]['begin'] <> 'NA':
+                if p[1]['begin'] < self.begin:
+                    self.begin = p[1]['begin']
+            if p[1]['end'] <> 'NA':
+                if p[1]['end'] > self.end:
+                    self.end = p[1]['end']
+
+        if self.begin == date(2100,1,1):
+            self.begin = 'NA'
+        if self.end == date(1492,1,1):
+            self.end = 'NA'
+
+    def __repr__(self):
+        try:
+            return str({'begin': self.begin.isoformat(), 'end':  self.end.isoformat()})
+        except:
+            return str({'begin': 'NA', 'end':  'NA'})
 if __name__=='__main__':
 
+    #StationDateRange
+
+    dateRanges = [[u'1999-10-01', u'2016-07-24'],
+                                 [u'1999-10-28', u'2016-07-23'],
+                                 []]
+    parameters = ['mint', 'maxt', 'avgt']
+
+    dr = StationDateRange(dateRanges = dateRanges, climateParameters = parameters)
+    print dr.begin
+    print dr.end
+    print dr
+
+    ############################################################################
+    ############################################################################
     #WxOb
     data = ['2012-02-01',u'32.0', u' ', u'U']
     wx = WxOb(data)
@@ -177,8 +238,8 @@ if __name__=='__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     climateParams = ['maxt', 'mint' ]
 
-    s = Station(stationMeta = meta)
-    s._addStationWxData(data, climateParams)
+    s = Station(stationMeta = meta, climateParameters = climateParams)
+    s._addStationWxData(data)
     print s.name
     print s.longitude
     print s.elev

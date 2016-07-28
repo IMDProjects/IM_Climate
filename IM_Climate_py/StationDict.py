@@ -18,13 +18,13 @@ class StationDict(dict):
                 ParameterSeries
                     WxOb
     '''
-    def __init__(self, queryParameters = None, dateInterval = None, aggregation = None, wxParameters = None):
+    def __init__(self, climateParameters, queryParameters = None, dateInterval = None, aggregation = None):
 
         self.dateRequested = date.today().isoformat()
         self.queryParameters = queryParameters
         self.dateInterval = dateInterval
         self.aggregation = aggregation
-        self.wxParameters = wxParameters
+        self.climateParameters = climateParameters
 
     def _writeToCSV(self):
         '''
@@ -155,7 +155,7 @@ class StationDict(dict):
 
         #Create header row
         header = ['UID','Longitude', 'Latitude', 'Sids1', 'Sids2','Sids3', 'Name', 'Elevation', 'Date']
-        for p in self.wxParameters:
+        for p in self.climateParameters:
             header.extend([supportedParameters[p]['label'], p+'_ACISFlag', p+'_SourceFlags'])
 
         self._dataAsList = [header]
@@ -169,7 +169,7 @@ class StationDict(dict):
             sid3 = station.sid3
             for date in station.data.observationDates:
                 a = [str(station.uid), lon, lat,sid1,sid2,sid3,name,elev, date]
-                for param in self.wxParameters:
+                for param in self.climateParameters:
                     a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
                     self._dataAsList.append(a)
         return self._dataAsList
@@ -180,7 +180,7 @@ class StationDict(dict):
         '''
         Hidden method to add a station to the StationDict object.
         '''
-        self[stationID] = Station(stationMeta, stationData)
+        self[stationID] = Station(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
 
     @property
     def stationIDs(self):
@@ -214,6 +214,7 @@ class StationDict(dict):
 
 
 if __name__ == '__main__':
+    climateParams = ['mint']
     stations =  {'meta': [{'elev': 10549.9,
             'll': [-106.17, 39.49],
             'name': 'Copper Mountain',
@@ -229,9 +230,9 @@ if __name__ == '__main__':
             'state': 'CO',
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
-    sl = StationDict(queryParameters = queryParams)
+    sl = StationDict(queryParameters = queryParams, climateParameters =  climateParams)
     for s in stations['meta']:
-        sl._addStation(stationID = s['uid'], stationMeta =  s)
+        sl._addStation(stationID = s['uid'],  stationMeta =  s)
     print(sl.stationIDs)
     print(sl.stationNames)
     print(sl.queryParameters)
@@ -272,10 +273,10 @@ if __name__ == '__main__':
            u'sids': [u'USR0000CSOD 6'],
            u'uid': 1233}}
 
-    wx = StationDict(queryParameters, dateInterval = 'mly', aggregation = 'avg', wxParameters = ['mint','maxt'])
-    wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData =  {'stationData' : wxObs['data'], 'climateParameters' : climateParams})
-    wx._addStation(stationID = wxObs['meta']['uid'],stationMeta =  moreWxObs['meta'], stationData =  {'stationData' : moreWxObs['data'], 'climateParameters' : climateParams})
-    print wx.wxParameters
+    wx = StationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
+    wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
+    wx._addStation(stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
+    print wx.climateParameters
     print wx.stationIDs
     wx.export(filePathAndName = r'test.csv')
     print wx
