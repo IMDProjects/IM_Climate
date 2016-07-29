@@ -20,6 +20,8 @@ supportedParameters = {'maxt':	{'info':'Maximum temperature (?F)', 'label':'maxt
                         ,'gddXX': {'info':'Growing Degree Days; where XX is base temperature', 'label':'gddXX'}
                         }
 
+missingValue = 'NA'
+
 class ACIS(object):
 
     '''
