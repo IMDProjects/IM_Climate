@@ -178,9 +178,9 @@ class StationDateRange(dict):
 
     def __repr__(self):
         try:
-            return str({'begin': self.begin.isoformat(), 'end':  self.end.isoformat()})
+            return str(self.begin.isoformat()) + ':' + str(self.end.isoformat())
         except:
-            return str({'begin': 'NA', 'end':  'NA'})
+            return 'NA'
 if __name__=='__main__':
 
     #StationDateRange
