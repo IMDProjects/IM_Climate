@@ -1,6 +1,8 @@
 from datetime import date
 import datetime
 
+missingValue = 'NA'
+
 class WxOb(dict):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
@@ -33,7 +35,7 @@ class WxOb(dict):
 
 class ParameterSeries(dict):
     '''
-    Dictionary of all weather observations for a particular climate parameter
+    Dictionary(-like object) of all weather observations for a particular climate parameter
     A particular wx observation is indexable by date.
     ParameterSeries has been extended to be iterable like a list
     '''
@@ -55,7 +57,8 @@ class StationData(dict):
     '''
     Dictionary(-like) object containing all climate parameter data (i.e., one or more
     parameter series) for a specific station.
-    StationData has been extended to include the ability to iterate like a list
+    Station Data is indexable by weather parameter and has been extended to iterate
+    over all parameters like a list
     '''
     def __init__(self, stationData, climateParameters):
         self.observationDates = tuple([d[0] for d in stationData])
@@ -75,7 +78,7 @@ class StationData(dict):
 
 class Station(object):
     '''
-    Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data
+    Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data by parameter
     Blank metadata values are converted to 'NA'
     '''
     def __init__(self, stationMeta, climateParameters, stationData = None):
@@ -97,7 +100,7 @@ class Station(object):
         Sets the station metadata. Values that are not present are set to 'NA'
         '''
 
-        default = 'NA'
+        default = missingValue
         self.name = stationInfo.get('name', default).encode()
         try:
             self.sid1 = str(stationInfo['sids'][0]).encode()
@@ -123,6 +126,10 @@ class Station(object):
 
 
     def _setStationSource(self):
+        '''
+        This method is incomplete at present...not sure of how to determine other
+        sources. Take at face value.
+        '''
         for sid in self.sids:
             if sid[0:3] == 'USC':
                 self.stationSource = 'COOP'
@@ -135,7 +142,7 @@ class Station(object):
 
     def __repr__(self):
         '''
-        Pretty presentation of Station
+        Pretty representation of Station object
         '''
         return str(self.uid) + ' : ' +  self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
 
@@ -143,6 +150,7 @@ class Station(object):
 class StationDateRange(dict):
     '''
     Dictionary containing the valid date ranges for each weather parameter
+    for a specific station
     '''
     def __init__(self, dateRanges, climateParameters):
         if not climateParameters:
@@ -156,7 +164,7 @@ class StationDateRange(dict):
                 self[p] = {'begin': date(int(b[0:4]), int(b[5:7]), int(b[9:10])),
                     'end': date(int(e[0:4]), int(e[5:7]), int(e[9:10]))}
             except:
-                self[p] = {'begin': 'NA', 'end': 'NA'}
+                self[p] = {'begin': missingValue, 'end': missingValue}
 
         #Calculate the range of dates based on all parameters
 
@@ -164,23 +172,23 @@ class StationDateRange(dict):
         self.end =  date(1492,1,1)
 
         for p in self.items():
-            if p[1]['begin'] <> 'NA':
+            if p[1]['begin'] <> missingValue:
                 if p[1]['begin'] < self.begin:
                     self.begin = p[1]['begin']
-            if p[1]['end'] <> 'NA':
+            if p[1]['end'] <> missingValue:
                 if p[1]['end'] > self.end:
                     self.end = p[1]['end']
 
         if self.begin == date(2100,1,1):
-            self.begin = 'NA'
+            self.begin = missingValue
         if self.end == date(1492,1,1):
-            self.end = 'NA'
+            self.end = missingValue
 
     def __repr__(self):
         try:
             return str(self.begin.isoformat()) + ':' + str(self.end.isoformat())
         except:
-            return 'NA'
+            return missingValue
 if __name__=='__main__':
 
     #StationDateRange

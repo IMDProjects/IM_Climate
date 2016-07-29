@@ -10,7 +10,7 @@ class StationFinder(ACIS):
     '''
     INFO
     -------
-    Object to find weather stations.
+    Object to find weather stations using ACIS Web Services.
 
 
     '''
