@@ -16,13 +16,12 @@ class StationDateRange(dict):
             try:
                 b =  dateRanges[index][0]
                 e = dateRanges[index][1]
-                self[p] = {'begin': date(int(b[0:4]), int(b[5:7]), int(b[9:10])),
-                    'end': date(int(e[0:4]), int(e[5:7]), int(e[9:10]))}
+                self[p] = {'begin': date(int(b[0:4]), int(b[5:7]), int(b[8:10])),
+                    'end': date(int(e[0:4]), int(e[5:7]), int(e[8:10]))}
             except:
                 self[p] = {'begin': missingValue, 'end': missingValue}
 
         #Calculate the range of dates based on all parameters
-
         self.begin = date(2100,1,1)
         self.end =  date(1492,1,1)
 
@@ -34,6 +33,7 @@ class StationDateRange(dict):
                 if p[1]['end'] > self.end:
                     self.end = p[1]['end']
 
+        #Prevent non-sensical dates from being returned
         if self.begin == date(2100,1,1):
             self.begin = missingValue
         if self.end == date(1492,1,1):
@@ -48,11 +48,10 @@ if __name__ == '__main__':
 
 
     dateRanges = [[u'1999-10-01', u'2016-07-24'],
-                                 [u'1999-10-28', u'2016-07-23'],
+                                 [u'1999-10-28', u'2016-07-25'],
                                  []]
     parameters = ['mint', 'maxt', 'avgt']
-
     dr = StationDateRange(dateRanges = dateRanges, climateParameters = parameters)
     print dr.begin
     print dr.end
-    print dr
+    print dr['avgt']
