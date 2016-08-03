@@ -146,7 +146,7 @@ class StationDict(dict):
         Method currently assumes that each station has the same set of parameters
         for the same date range.
         '''
-
+        self._dataAsList = None
         try:
             self.stationIDs
         except:
@@ -154,9 +154,9 @@ class StationDict(dict):
             return
 
         #Create header row
-        header = ['UID','Longitude', 'Latitude', 'Sids1', 'Sids2','Sids3', 'Name', 'Elevation', 'Date']
+        header = ['uid','longitude', 'latitude', 'sid1', 'sid2','sid3', 'elev', 'name', 'date']
         for p in self.climateParameters:
-            header.extend([supportedParameters[p]['label'], p+'_ACISFlag', p+'_SourceFlags'])
+            header.extend([supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
 
         self._dataAsList = [header]
         for station in self:
@@ -168,10 +168,10 @@ class StationDict(dict):
             sid2 = station.sid2
             sid3 = station.sid3
             for date in station.data.observationDates:
-                a = [str(station.uid), lon, lat,sid1,sid2,sid3,name,elev, date]
+                a = [str(station.uid), lon, lat, sid1, sid2, sid3,  elev, name, date]
                 for param in self.climateParameters:
                     a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
-                    self._dataAsList.append(a)
+                self._dataAsList.append(a)
         return self._dataAsList
 
 
@@ -276,6 +276,7 @@ if __name__ == '__main__':
     wx = StationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
     wx._addStation(stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
+    print wx._dumpDataToList()
     print wx.climateParameters
     print wx.stationIDs
     wx.export(filePathAndName = r'test.csv')

@@ -12,7 +12,7 @@ class Station(object):
     def __init__(self, stationMeta, climateParameters, stationData = None):
         self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
-        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'stateCode', 'elev', 'uid', 'dateRange']
+        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'validDateRange']
         if stationData:
             self._addStationWxData(stationData)
 
@@ -44,10 +44,9 @@ class Station(object):
             self.sid3 = default
         self.latitude = stationInfo.get('ll', default)[1]
         self.longitude = stationInfo.get('ll', default)[0]
-        self.stateCode = stationInfo.get('state', default).encode()
+        self.state = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
-        #self.dateRange = stationInfo.get('valid_daterange', default)
-        self.dateRange = StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
+        self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
         self.uid = stationInfo.get('uid', default)
         self.sids = str(stationInfo.get('sids', default)).encode()
         self._setStationSource()

@@ -12,8 +12,8 @@ localFolder = 'c:\\temp\\'
 sf = StationFinder()
 
 #Test #1: All stations around NOCA within a 30km buffer. Save returned results
-    #locally as SF01.csv
-wxStations = sf.findStation(parkCodes = 'MABI', distance = 30)
+    #locally as SF01.csv MABI
+wxStations = sf.findStation(parkCodes = 'MABI', distance = 30, sDate = '1940-01-01', eDate = '1940-01-01')
 wxStations.export(localFolder + 'SF01.csv')
 
 #Test #2: All stations around ACAD recording minimum temperature; distance = 10km
@@ -31,7 +31,7 @@ print station.name
 print station.latitude
 print station.longitude
 print station.sids
-print station.stateCode
+print station.state
 print station.elev
 print station.uid
 print station

@@ -8,13 +8,13 @@ except: #python 3.x
     import urllib.parse
     pyVersion = 3
 
-supportedParameters = {'maxt':	{'info':'Maximum temperature (?F)', 'label':'maxt_F'}
-                        ,'mint':{'info':'Minimum temperature (?F)', 'label':'mint_F'}
-                        ,'avgt':{'info':'Average temperature (?F)', 'label':'avgt_F'}
-                        ,'obst':{'info':'Obs time temperature (?F)', 'label':'obst_F'}
-                        ,'pcpn':{'info': 'Precipitation (inches)', 'label':'pcpn_In'}
-                        ,'snow' :{'info': 'Snowfall (inches)', 'label':'snow_In'}
-                        ,'snwd': {'info':'Snow depth (inches)', 'label':'snwd_In'}
+supportedParameters = {'maxt':	{'info':'Maximum temperature (?F)', 'label':'maxt_f'}
+                        ,'mint':{'info':'Minimum temperature (?F)', 'label':'mint_f'}
+                        ,'avgt':{'info':'Average temperature (?F)', 'label':'avgt_f'}
+                        ,'obst':{'info':'Obs time temperature (?F)', 'label':'obst_f'}
+                        ,'pcpn':{'info': 'Precipitation (inches)', 'label':'pcpn_in'}
+                        ,'snow' :{'info': 'Snowfall (inches)', 'label':'snow_in'}
+                        ,'snwd': {'info':'Snow depth (inches)', 'label':'snwd_in'}
                         ,'cddXX': {'info':'Cooling Degree Days; where XX is base temperature', 'label':'cddXX'}
                         ,'hddXX': {'info':'Heating Degree Days; where XX is base temperature', 'label':'hddXX'}
                         ,'gddXX': {'info':'Growing Degree Days; where XX is base temperature', 'label':'gddXX'}

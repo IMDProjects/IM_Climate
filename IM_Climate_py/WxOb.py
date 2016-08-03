@@ -1,3 +1,5 @@
+from ACIS import missingValue
+
 class WxOb(dict):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
@@ -13,6 +15,11 @@ class WxOb(dict):
         self['wxOb']  = values[1].encode()
         self['ACIS_Flag'] = values[2].encode()
         self['sourceFlag'] = values[3].encode()
+
+        #replace blanks with the missing value
+        for index, value in self.items():
+            if len(value.strip()) == 0:
+                self[index] = missingValue
 
 
     @property

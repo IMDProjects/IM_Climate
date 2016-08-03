@@ -19,7 +19,8 @@ class StationFinder(ACIS):
         self.webServiceSource = 'StnMeta'
 
     def findStation(self, parkCodes = None, distance = 0,
-        climateParameters = None, filePathAndName = None):
+        climateParameters = None, sDate = None, eDate = None
+        ,filePathAndName = None):
         '''
         INFO
         ----
@@ -35,6 +36,12 @@ class StationFinder(ACIS):
                             Default is 0 km.
 
         climateParameters    Parameter code for climate/weather element (e.g., mint, avgt, pcpn)
+
+        sDate               (Optional) - Start date as yyyy-mm-dd or yyyymmdd.
+                             If not provided, the default is the period of record.
+
+        eData               (Optional) - End date as yyyy-mm-dd or yyyymmdd.
+                             If not provided, the default is the period of record
 
         filePathAndName    If provided, a csv text file is saved to specific location.
 
@@ -53,7 +60,7 @@ class StationFinder(ACIS):
 
         self._input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(elems = climateParameters
-            ,bbox = bbox
+            ,bbox = bbox, sDate = sDate, eDate = eDate
             ,meta = metadata)
 
         #adds parkCodes to input_dict following the call to ACIS
@@ -99,7 +106,7 @@ class StationFinder(ACIS):
 
 if __name__ == '__main__':
     c = StationFinder()
-    stationInfo = c.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv')
+    stationInfo = c.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
     print stationInfo.queryParameters
     print stationInfo
 
