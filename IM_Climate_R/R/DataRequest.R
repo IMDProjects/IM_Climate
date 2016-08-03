@@ -50,7 +50,8 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   
   # List for SID, sdate, edate
   # TODO: reformat when allow >1 climate station
-  bList <- list(sid = climateStations, sdate = sdate, edate = edate, elems = elems)
+  bList <- list(uid = climateStations, sdate = sdate, edate = edate, elems = elems)
+  #bList <- list(sid = climateStations, sdate = sdate, edate = edate, elems = elems)
   
   # Format and clean up JSON elements
   # Yes, this is crappy code but it works
@@ -85,14 +86,14 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
   for (i in 2:(length(rList$data[[1]]))-1)  { #  == count of parameters
     vName <- paste(climateParameters[i], "value", sep="_")
-    fName <- paste(climateParameters[i], "flag", sep="_")
+    fName <- paste(climateParameters[i], "acis_flag", sep="_")
     sName <- paste(climateParameters[i], "source_flag", sep="_")
     valueArray <-  matrix(unlist(lapply(rList$data, "[", i+1)), ncol=3, byrow=TRUE)[,1]
     flagArray <-  matrix(unlist(lapply(rList$data, "[", i+1)), ncol=3, byrow=TRUE)[,2]
     sourceFlagArray <-  matrix(unlist(lapply(rList$data, "[", i+1)), ncol=3, byrow=TRUE)[,3]
     df[[vName]] <- as.numeric(valueArray)
-    df[[fName]] <- as.character(is.na(flagArray)  <- "NA")
-    df[[sName]] <- as.character(sourceFlagArray)
+    df[[fName]] <- as.character(replace(flagArray, flagArray == " ", NA))
+    df[[sName]] <- as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
   }
   
   dataResponse <- df
