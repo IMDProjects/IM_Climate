@@ -39,11 +39,17 @@ class StationDateRange(dict):
         if self.end == date(1492,1,1):
             self.end = missingValue
 
-    def __repr__(self):
+    @property
+    def validDateRange(self):
         try:
-            return str(self.begin.isoformat()) + ':' + str(self.end.isoformat())
+            return self.begin.strftime('%Y-%m-%d') + ':' + self.end.strftime('%Y-%m-%d')
         except:
             return missingValue
+
+    def __repr__(self):
+        return  self.validDateRange
+
+
 if __name__ == '__main__':
 
 
@@ -55,3 +61,5 @@ if __name__ == '__main__':
     print dr.begin
     print dr.end
     print dr['avgt']
+    print dr
+    print dr.validDateRange

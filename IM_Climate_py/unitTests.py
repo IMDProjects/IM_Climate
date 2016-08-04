@@ -1,4 +1,5 @@
 import unittest
+from sets import Set
 from StationDateRange import StationDateRange
 from StationFinder import StationFinder
 
@@ -19,14 +20,14 @@ class Test_StationDateRanges(unittest.TestCase):
 class Test_StationFinder(unittest.TestCase):
     def test01(self):
         '''
-        List stations IDs for stations around NOCA within a 30km buffer. List only
+        List stations IDs for stations around NOCA within a 20km buffer. List only
         stations collecting data on January 1, 1940.
         '''
-        info = [25057, 25059, 17605, 25033, 17611, 25047, 25051, 25052, 25054]
+        stations = Set([25057, 25054, 25047])
 
         sf = StationFinder()
-        wxStations = sf.findStation(parkCodes = 'MABI', distance = 30, sDate = '1940-01-01', eDate = '1940-01-01')
-        self.assertListEqual(info, wxStations.stationIDs)
+        wxStations = sf.findStation(parkCodes = 'MABI', distance = 20, sDate = '1940-01-01', eDate = '1940-01-01')
+        self.assertSetEqual(stations, Set(wxStations.stationIDs))
 
 
 if __name__ == '__main__':
