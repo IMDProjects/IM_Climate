@@ -31,7 +31,9 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   webServiceSource <- "StnData"
   # Parameter flags: f = ACIS flag, s = source flag
   paramFlags <- c("f,s")
-  
+  lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
+  luElements  <- lookups$element
+
   dataURL <-  gsub(" ","", paste(baseURL,webServiceSource))
   climateElems <- paste(climateParameters, collapse = ",")
   paramCount <- length(climateParameters)
@@ -79,13 +81,58 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   # Get the data source flags (by parameter) lapply(rList$data[[1]], "[", 3)
   
   # Start building the data frame by populating the date vector
-  df <- as.data.frame(cbind(unlist(lapply(rList$data, "[", 1)[][])))
-  colnames(df) <- c("date")
-  df$date <- as.Date(df$date, "%Y-%m-%d")
+  dfDate <- as.data.frame(cbind(unlist(lapply(rList$data, "[", 1)[][])))
+  dfMetaInit <-  t(as.data.frame(rList$meta))
+  colnames(dfDate) <- c("date")
+  dfDate$date <- as.Date(dfDate$date, "%Y-%m-%d")
+  
+  # Populate metadata
+  dfMeta <- as.data.frame(as.character(as.vector(dfMetaInit[1,])))
+  colnames(dfMeta)[1]  <- names(rList$meta)[1]
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[2,]))))
+  colnames(dfMeta)[2]  <- "longitude"
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[3,]))))
+  colnames(dfMeta)[3]  <- "latitude"
+  # Assumes sids element contains 3 members (even if 2 are empty)
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[4,]))))
+  colnames(dfMeta)[4]  <- "sid1"
+  if (!identical(dim(dfMetaInit), as.integer(c(7,1)))) {
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
+    colnames(dfMeta)[5]  <- "sid2"
+    if (identical(dim(dfMetaInit), as.integer(c(9,1)))) { # 3 sid elements
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
+      colnames(dfMeta)[6]  <- "sid3"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[7,]))))
+      colnames(dfMeta)[7]  <- "state"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[8,]))))
+      colnames(dfMeta)[8]  <- "elev"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[9,]))))
+      colnames(dfMeta)[9]  <- "name"
+    }
+    else { # 2 sid elements
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
+      colnames(dfMeta)[6]  <- "state"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[7,]))))
+      colnames(dfMeta)[7]  <- "elev"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[8,]))))
+      colnames(dfMeta)[8]  <- "name"
+    }
+  } else { #sids element has only one member
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
+    colnames(dfMeta)[5]  <- "state"
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[6,]))))
+    colnames(dfMeta)[6]  <- "elev"
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[7,]))))
+    colnames(dfMeta)[7]  <- "name"
+  }
+  
+  df <- cbind(dfMeta, dfDate)
   
   # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
+  # Get parameter units from lookup file
   for (i in 2:(length(rList$data[[1]]))-1)  { #  == count of parameters
-    vName <- paste(climateParameters[i], "value", sep="_")
+    vUnit <- luElements[which(luElements$code==climateParameters[i]),]$unitabbr
+    vName <- paste(climateParameters[i], vUnit, sep="_")
     fName <- paste(climateParameters[i], "acis_flag", sep="_")
     sName <- paste(climateParameters[i], "source_flag", sep="_")
     valueArray <-  matrix(unlist(lapply(rList$data, "[", i+1)), ncol=3, byrow=TRUE)[,1]
@@ -98,38 +145,6 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   
   dataResponse <- df
   
-  # dataResponse <- as.data.frame(dataResponseInit$data)
-  # colnames(dataResponse)[1] <- c("date")
-  # colnames(dataResponse)[2:(paramCount+1)]  <- climateParameters
-  # 
-  # # convert climate date to numeric and make data.frame
-  # temp<-as.data.frame(lapply(dataResponse[,2:ncol(dataResponse)], function(x) as.numeric(as.character(x))))
-  # 
-  # date<-as.Date(dataResponse$date, "%Y-%m-%d")# convert date to vector of date-time class
-  # 
-  # ## bind date and data vectors
-  # temp1<-cbind(date,temp)
-  # 
-  # # format station metadata object
-  # dataResponseMeta <- dataResponseInit$meta
-  # 
-  # ## unlist, transpose metadata, and create into df
-  # metadf<-t(as.data.frame(unlist(dataResponseMeta)))
-  # row.names(metadf)<-NULL# remove rownames
-  # 
-  # dataResponse<-cbind(metadf,temp1)
-  # head(dataResponse)
-  # #rename some columns
-  # colnames(dataResponse)[2]<-"longitude"
-  # colnames(dataResponse)[3]<-"latitude"
-  # llong <- as.numeric(as.vector(dataResponse$longitude))
-  # llat <- as.numeric(as.vector(dataResponse$latitude))
-  # 
-  # dataResponse <- dataResponse[ , -which(names(dataResponse) %in% c("longitude","latitude"))]
-  # dataResponse["longitude"] <- llong
-  # dataResponse["latitude"] <- llat
-  # dataResponse <- dataResponse[c("uid","longitude","latitude","sids1","sids2","sids3","state","elev","name","date",as.character(climateParameters))]
-  # 
   # Output file
   if (!is.null(filePathAndName)) {
     write.table(dataResponse, file=filePathAndName, sep=",", row.names=FALSE, qmethod="double")

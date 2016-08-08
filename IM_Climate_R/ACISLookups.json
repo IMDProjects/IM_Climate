@@ -1,0 +1,119 @@
+{
+	"element": [{
+		"code": "maxt",
+		"description": "Maximum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "mint",
+		"description": "Minimum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "avgt",
+		"description": "Minimum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "obst",
+		"description": "Minimum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "pcpn",
+		"description": "Precipitation",
+		"unit": "inches",
+		"unitabbr": "in"
+	}, {
+		"code": "snwd",
+		"description": "Snow depth",
+		"unit": "inches",
+		"unitabbr": "in"
+	}, {
+		"code": "cdd",
+		"description": "Cooling degree days (default basee 65)",
+		"unit": "",
+		"unitabbr": ""
+	}, {
+		"code": "hdd",
+		"description": "Degree days below base (default basee 65)",
+		"unit": "",
+		"unitabbr": ""
+	}, {
+		"code": "gdd",
+		"description": "Degree days above base (default basee 50)",
+		"unit": "",
+		"unitabbr": ""
+	}],
+	"addCode": [{
+		"code": "f",
+		"description": "Flags"
+	}, {
+		"code": "t",
+		"description": "Time of observation"
+	}, {
+		"code": "i",
+		"description": "Station ID associated with data"
+	}, {
+		"code": "v",
+		"description": "Var minor associated with data"
+	}, {
+		"code": "s",
+		"description": "Source flag"
+	}, {
+		"code": "n",
+		"description": "Network associated with data"
+	}],
+	"acisflag": [{
+		"code": "M",
+		"description": "Missing"
+	}, {
+		"code": "T",
+		"description": "Trace"
+	}, {
+		"code": "A",
+		"description": "Accumulated"
+	}],
+	"sourceFlag": [{
+		"code": "7",
+		"description": "not defined"
+	}],
+	"stationIdType": [{
+		"code": "1",
+		"description": "WBAN"
+	}, {
+		"code": "2",
+		"description": "COOP"
+	}, {
+		"code": "3",
+		"description": "FAA"
+	}, {
+		"code": "4",
+		"description": "WMO"
+	}, {
+		"code": "5",
+		"description": "ICAO"
+	}, {
+		"code": "6",
+		"description": "GHCN"
+	}, {
+		"code": "7",
+		"description": "NWSLI"
+	}, {
+		"code": "8",
+		"description": "RCC"
+	}, {
+		"code": "9",
+		"description": "ThreadEx"
+	}, {
+		"code": "10",
+		"description": "CoCoRaHS"
+	}],
+	"duration": [{
+		"code": "dly",
+		"description": "Daily data"
+	}, {
+		"code": "mly",
+		"description": "Monthly summary; must specify reduce"
+	}]
+}
