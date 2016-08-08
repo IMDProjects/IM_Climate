@@ -154,7 +154,7 @@ class StationDict(dict):
             return
 
         #Create header row
-        header = ['uid','longitude', 'latitude', 'sid1', 'sid2','sid3', 'elev', 'name', 'date']
+        header = ['uid','longitude', 'latitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'name', 'date']
         for p in self.climateParameters:
             header.extend([supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
 
@@ -167,8 +167,9 @@ class StationDict(dict):
             sid1 = station.sid1
             sid2 = station.sid2
             sid3 = station.sid3
+            state = station.state
             for date in station.data.observationDates:
-                a = [str(station.uid), lon, lat, sid1, sid2, sid3,  elev, name, date]
+                a = [str(station.uid), lon, lat, sid1, sid2, sid3, state,  elev, name, date]
                 for param in self.climateParameters:
                     a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
                 self._dataAsList.append(a)

@@ -55,7 +55,7 @@ class DataRequestor(ACIS):
         self.reduceCode = None
 
         results =  self._fetchStationDataFromACIS(sdate = str(startDate),
-            edate = str(endDate), meta = ['uid','ll', 'name', 'elev', 'sids'])
+            edate = str(endDate), meta = ['uid','ll', 'name', 'elev', 'sids', 'state'])
 
         if filePathAndName:
             results.exportData(filePathAndName = filePathAndName)
