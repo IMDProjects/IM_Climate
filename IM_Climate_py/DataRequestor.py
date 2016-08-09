@@ -33,14 +33,14 @@ class DataRequestor(ACIS):
 
         climateParameters   The weather parameters to fetch. Valid parameters
                             can be found by accesssing the supportedParamters property.
-                            Note that ACIS vernacular for parameter is element.
+                            Note that ACIS vernacular for climate parameter is element.
 
-        climateStations - The ACIS uids. These can either be a single station (int or string),
-                     a list of stationIDs, or the StationDict object returned
-                     from the StationFinder.FindStation method.
+        climateStations -   The ACIS uids. These can either be a single station (int or string),
+                            a list of stationIDs, or the StationDict object returned
+                            from the StationFinder.FindStation method.
 
-        sdate (optional) - Start Date -  YYYY-MM-DD OR YYYYMMDD (default is period of record)
-        edate (optional) - End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+        sdate (optional)    Start Date -  YYYY-MM-DD OR YYYYMMDD (default is period of record)
+        edate (optional)    End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
         filePathAndName (optional) - Location and name of CSV text file to save
 
         RETURNS
@@ -49,13 +49,14 @@ class DataRequestor(ACIS):
         and all associated flags
 
         '''
+        metaElements = ['uid', 'll', 'name', 'elev', 'sids', 'state'] #additional metadata elements to request along with the data
         self.duration = 'dly'
         self.stationIDs = self._extractStationIDs(climateStations)
         self.climateParameters = climateParameters.replace(' ','').split(',')
         self.reduceCode = None
 
         results =  self._fetchStationDataFromACIS(sdate = str(startDate),
-            edate = str(endDate), meta = ['uid','ll', 'name', 'elev', 'sids', 'state'])
+            edate = str(endDate), meta = metaElements)
 
         if filePathAndName:
             results.exportData(filePathAndName = filePathAndName)
