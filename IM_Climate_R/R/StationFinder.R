@@ -21,9 +21,9 @@
 #' @export 
 #' 
 
-# TODO: iterate parkCodes list; add either/or capability for park code/bbox
+# TODO: iterate parkCode list; add either/or capability for park code/bbox
 
-findStation <- function (parkCode, distance=NULL, climateParams, filePathAndName=NULL) {
+findStation <- function (parkCode, distance=NULL, climateParameters, filePathAndName=NULL) {
   # URLs and request parameters
   
   # NPS Park bounding boxes
@@ -51,7 +51,7 @@ findStation <- function (parkCode, distance=NULL, climateParams, filePathAndName
   # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279
   
   # Get bounding box for park(s)
-  bboxURL <- gsub("CODE", parkCodes, bboxURLBase)
+  bboxURL <- gsub("CODE", parkCode, bboxURLBase)
   # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
   bboxWKT <- strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
   # Extract vertices and 'buffer' by 0.3 degrees (~33 km)
@@ -75,7 +75,7 @@ findStation <- function (parkCode, distance=NULL, climateParams, filePathAndName
   body  <- list(bbox = bbox)
 
   # Format GET URL for use in jsonlite request
-  stationRequest <- gsub(" ", "%20", paste(paste(stationURL, paste(climateParams, collapse = ","), sep="?elems="), body, sep="&bbox="))
+  stationRequest <- gsub(" ", "%20", paste(paste(stationURL, paste(climateParameters, collapse = ","), sep="?elems="), body, sep="&bbox="))
   
   # Use bounding box to request station list (jsonlite)
   stationListInit <- fromJSON(stationRequest) 
@@ -88,10 +88,10 @@ findStation <- function (parkCode, distance=NULL, climateParams, filePathAndName
     #stationListTemp <- as.data.frame(lapply(unlist(stationListInit$meta[,2][1],function(x) as.numeric(as.character(x)))))
     #stationList <- as.data.frame(stationListInit$meta)
     stationList <- cbind(name=stationListInit$meta[,1], longitude, latitude, sid1, sid2, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], uid=stationListInit$meta[,6])
-    stationList$unit_code <- parkCodes[1]
+    stationList$unit_code <- parkCode[1]
   }
   else {
-    stationList <- cat("No stations for ", parkCodes, "using distance ", distance) 
+    stationList <- cat("No stations for ", parkCode, "using distance ", distance) 
   }
   # Output file
   if (!is.null(filePathAndName)) {
