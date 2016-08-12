@@ -4,21 +4,12 @@ try:    #python 2.x
     import urllib2, urllib
     pyVersion = 2
 except: #python 3.x
-    import urllib.request
-    import urllib.parse
-    pyVersion = 3
-
-supportedParameters = {'maxt':	{'info':'Maximum temperature (?F)', 'label':'maxt_f'}
-                        ,'mint':{'info':'Minimum temperature (?F)', 'label':'mint_f'}
-                        ,'avgt':{'info':'Average temperature (?F)', 'label':'avgt_f'}
-                        ,'obst':{'info':'Obs time temperature (?F)', 'label':'obst_f'}
-                        ,'pcpn':{'info': 'Precipitation (inches)', 'label':'pcpn_in'}
-                        ,'snow' :{'info': 'Snowfall (inches)', 'label':'snow_in'}
-                        ,'snwd': {'info':'Snow depth (inches)', 'label':'snwd_in'}
-                        ,'cddXX': {'info':'Cooling Degree Days; where XX is base temperature', 'label':'cddXX'}
-                        ,'hddXX': {'info':'Heating Degree Days; where XX is base temperature', 'label':'hddXX'}
-                        ,'gddXX': {'info':'Growing Degree Days; where XX is base temperature', 'label':'gddXX'}
-                        }
+    try:
+        import urllib.request
+        import urllib.parse
+        pyVersion = 3
+    except:
+        raise Exception('Libary Import Failure')
 
 missingValue = 'NA'
 
@@ -32,6 +23,18 @@ class ACIS(object):
         self.baseURL = 'http://data.rcc-acis.org/'
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
+        self._getACISLookups()
+
+    def _getACISLookups(self):
+        '''
+        Reads the common lookup tables shared by python and R libraries
+        '''
+        try:
+            lfile = open('./ACISLookups.json', 'r')
+        except:
+            lfile = open('../ACISLookups.json', 'r')
+        info = lfile.read()
+        self._acis_lookups = json.loads(info)
 
     def _call_ACIS(self, **kwargs):
         '''
@@ -62,10 +65,22 @@ class ACIS(object):
             if kwargs[k] and kwargs[k] <> 'None':
                 self._input_dict[k] = kwargs[k]
 
+    @property
+    def supportedParameters(self):
+        return {elem['code'].encode(): {'description': elem['description'].encode(),
+                                        'unit': elem['unit'].encode(),
+                                        'unitabbr': elem['unitabbr'].encode(),
+                                        'label': elem['code'].encode() + '_' + elem['unitabbr'].encode(),
+                                        } for elem in self._acis_lookups['element'] }
+    @property
+    def stationSources(self):
+        return {elem['code'].encode(): {'description': elem['description'].encode(),
+                                        'subtypes': elem['subtypes'],
+                                        } for elem in self._acis_lookups['stationIdType'] }
+
 if __name__ == '__main__':
     c = ACIS()
 
-    print (supportedParameters)
 
     c.input_dict = {
         'uid': 3940,
@@ -85,3 +100,6 @@ if __name__ == '__main__':
         'meta': "name,state,ll"
     }
     c.webServiceSource = 'StnData'
+    print (c._acis_lookups.keys())
+    print (c.supportedParameters)
+    print (c.stationSources)

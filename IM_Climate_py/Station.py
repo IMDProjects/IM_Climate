@@ -1,6 +1,7 @@
 from StationDateRange import StationDateRange
 from StationData import StationData
 from ACIS import missingValue
+from ACIS import ACIS
 
 
 
@@ -49,29 +50,17 @@ class Station(object):
         self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
         self.uid = stationInfo.get('uid', default)
         self.sids = str(stationInfo.get('sids', default)).encode()
-        self._setStationSource()
+        acis = ACIS()
+        self.stationType = acis.stationSources[str(self.sid1.split()[1])]['description']
 
-
-    def _setStationSource(self):
-        '''
-        This method is incomplete at present...not sure of how to determine other
-        sources. Take at face value.
-        '''
-        for sid in self.sids:
-            if sid[0:3] == 'USC':
-                self.stationSource = 'COOP'
-            if sid[0:3] == 'USR':
-                self.stationSource = 'RAWS'
-            elif sid[0:3] == 'USS':
-                self.stationSource = 'SNOTEL'
-            else:
-                self.stationSource = 'UNKNOWN'
+    def _dumpToList(self):
+        return [self.__dict__[t] for t in self._tags]
 
     def __repr__(self):
         '''
         Pretty representation of Station object
         '''
-        return str(self.uid) + ' : ' +  self.stationSource +  ' : ' + self.name + ' : ' + self.sid1
+        return str(self._dumpToList())
 
 
 
@@ -91,13 +80,13 @@ if __name__=='__main__':
     print s.longitude
     print s.elev
     print s.sids
-    print s.stationSource
+    print s.stationType
     print s.data['mint']
     print s
-    print s._tags
-    for w in s.data['mint']:
-        print w.date
-    for param in s.data:
-        for wxOs in param:
-            wxOs.date
+##    print s._tags
+##    for w in s.data['mint']:
+##        print w.date
+##    for param in s.data:
+##        for wxOs in param:
+##            wxOs.date
 

@@ -4,7 +4,7 @@ from datetime import date
 import Station
 reload(Station)
 from Station import Station
-from ACIS import supportedParameters
+from ACIS import ACIS
 
 
 
@@ -130,8 +130,8 @@ class StationDict(dict):
         tags = self[self.stationIDs[0]]._tags
         self._dataAsList = [tags]
         for station in self:
-            info = [station.__dict__[t] for t in tags]
-            self._dataAsList.append(info)
+            #info = [station.__dict__[t] for t in tags]
+            self._dataAsList.append(station._dumpToList())
         return self._dataAsList
 
 
@@ -146,6 +146,7 @@ class StationDict(dict):
         Method currently assumes that each station has the same set of parameters
         for the same date range.
         '''
+        acis = ACIS()
         self._dataAsList = None
         try:
             self.stationIDs
@@ -156,7 +157,7 @@ class StationDict(dict):
         #Create header row
         header = ['uid','longitude', 'latitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'name', 'date']
         for p in self.climateParameters:
-            header.extend([supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
+            header.extend([acis.supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
 
         self._dataAsList = [header]
         for station in self:

@@ -109,6 +109,7 @@ if __name__ == '__main__':
     stationInfo = c.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
     print stationInfo.queryParameters
     print stationInfo
+    print c.supportedParameters
 
 
 
