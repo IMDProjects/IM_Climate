@@ -13,7 +13,7 @@ class Station(object):
     def __init__(self, stationMeta, climateParameters, stationData = None):
         self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
-        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'validDateRange']
+        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'minRange', 'maxRange']
         if stationData:
             self._addStationWxData(stationData)
 
@@ -48,6 +48,8 @@ class Station(object):
         self.state = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
         self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
+        self.maxRange = self.validDateRange.maxRange
+        self.minRange = self.validDateRange.minRange
         self.uid = stationInfo.get('uid', default)
         self.sids = str(stationInfo.get('sids', default)).encode()
         acis = ACIS()
@@ -61,6 +63,7 @@ class Station(object):
         Pretty representation of Station object
         '''
         return str(self._dumpToList())
+
 
 
 
@@ -83,10 +86,5 @@ if __name__=='__main__':
     print s.stationType
     print s.data['mint']
     print s
-##    print s._tags
-##    for w in s.data['mint']:
-##        print w.date
-##    for param in s.data:
-##        for wxOs in param:
-##            wxOs.date
+
 

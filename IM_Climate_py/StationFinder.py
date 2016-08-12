@@ -105,11 +105,19 @@ class StationFinder(ACIS):
 
 
 if __name__ == '__main__':
-    c = StationFinder()
-    stationInfo = c.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
-    print stationInfo.queryParameters
-    print stationInfo
-    print c.supportedParameters
+    sf = StationFinder()
+
+    #wxStations = sf.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
+    #print wxStations.queryParameters
+    #print wxStations
+    #print sf.supportedParameters
+    #print wxStations[26202].validDateRange
+    #print wxStations[26202].validDateRange.keys()
+
+    wxStations = sf.findStation(parkCodes = 'ROMO', climateParameters = 'mint, maxt,pcpn')
+    #print wxStations
+    print wxStations[48106].validDateRange
+    print wxStations[48106].validDateRange['pcpn']
 
 
 
