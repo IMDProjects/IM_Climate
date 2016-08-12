@@ -13,7 +13,7 @@ class Station(object):
     def __init__(self, stationMeta, climateParameters, stationData = None):
         self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
-        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'minRange', 'maxRange']
+        self._tags = ['name', 'latitude', 'longitude', 'stationType', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'minRange', 'maxRange']
         if stationData:
             self._addStationWxData(stationData)
 
@@ -52,8 +52,8 @@ class Station(object):
         self.minRange = self.validDateRange.minRange
         self.uid = stationInfo.get('uid', default)
         self.sids = str(stationInfo.get('sids', default)).encode()
-        acis = ACIS()
-        self.stationType = acis.stationSources[str(self.sid1.split()[1])]['description']
+
+        self._setStationType()
 
     def _dumpToList(self):
         return [self.__dict__[t] for t in self._tags]
@@ -63,6 +63,15 @@ class Station(object):
         Pretty representation of Station object
         '''
         return str(self._dumpToList())
+
+    def _setStationType(self):
+        acis = ACIS()
+        self.stationType = acis.stationSources[str(self.sid1.split()[1])]['description'].encode()
+        if self.stationType == 'GHCN':
+            try:
+                self.stationType = acis.stationSources['6']['subtypes'][self.sid1[0:3]].encode()
+            except:
+                pass # Keep it GHCN
 
 
 
