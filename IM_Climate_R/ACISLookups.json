@@ -80,34 +80,47 @@
 	}],
 	"stationIdType": [{
 		"code": "1",
-		"description": "WBAN"
+		"description": "WBAN",
+		"subtypes":""
 	}, {
 		"code": "2",
-		"description": "COOP"
+		"description": "COOP",
+		"subtypes":""
 	}, {
 		"code": "3",
-		"description": "FAA"
+		"description": "FAA",
+		"subtypes":""
 	}, {
 		"code": "4",
-		"description": "WMO"
+		"description": "WMO",
+		"subtypes":""
 	}, {
 		"code": "5",
-		"description": "ICAO"
+		"description": "ICAO",
+		"subtypes":""
 	}, {
 		"code": "6",
-		"description": "GHCN"
+		"description": "GHCN",
+		"subtypes":
+			{"USC":"COOP",
+			 "USR":"RAWS",
+			 "USS":"SNOTEL"}
 	}, {
 		"code": "7",
-		"description": "NWSLI"
+		"description": "NWSLI",
+		"subtypes":""
 	}, {
 		"code": "8",
-		"description": "RCC"
+		"description": "RCC",
+		"subtypes":""
 	}, {
 		"code": "9",
-		"description": "ThreadEx"
+		"description": "ThreadEx",
+		"subtypes":""
 	}, {
 		"code": "10",
-		"description": "CoCoRaHS"
+		"description": "CoCoRaHS",
+		"subtypes":""
 	}],
 	"duration": [{
 		"code": "dly",
