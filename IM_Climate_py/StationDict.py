@@ -1,6 +1,6 @@
 import csv
 from datetime import date
-from ACIS import ACIS
+from common import Common
 
 
 
@@ -142,7 +142,7 @@ class StationDict(dict):
         Method currently assumes that each station has the same set of parameters
         for the same date range.
         '''
-        acis = ACIS()
+        c = Common()
         self._dataAsList = None
         try:
             self.stationIDs
@@ -153,7 +153,7 @@ class StationDict(dict):
         #Create header row
         header = ['uid','longitude', 'latitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'name', 'date']
         for p in self.climateParameters:
-            header.extend([acis.supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
+            header.extend([c.supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
 
         self._dataAsList = [header]
         for station in self:
