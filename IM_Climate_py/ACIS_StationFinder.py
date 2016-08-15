@@ -5,8 +5,9 @@ import StationDict
 reload(StationDict)
 from StationDict import StationDict
 from ACIS import ACIS
+from ACIS_Station import ACIS_Station
 
-class StationFinder(ACIS):
+class ACIS_StationFinder(ACIS):
     '''
     INFO
     -------
@@ -69,7 +70,7 @@ class StationFinder(ACIS):
 
         si =  StationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
         for station in results['meta']:
-            si._addStation(stationID = station['uid'], stationMeta = station)
+            si._addStation(ACIS_Station, stationID = station['uid'], stationMeta = station)
         if filePathAndName:
                 si.exportMeta(filePathAndName)
         return si
@@ -105,7 +106,7 @@ class StationFinder(ACIS):
 
 
 if __name__ == '__main__':
-    sf = StationFinder()
+    sf = ACIS_StationFinder()
 
     #wxStations = sf.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
     #print wxStations.queryParameters

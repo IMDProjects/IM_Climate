@@ -1,9 +1,8 @@
 import csv
 from datetime import date
-
-import Station
-reload(Station)
-from Station import Station
+##import ACIS_Station
+##reload(ACIS_Station)
+##from ACIS_Station import ACIS_Station as Station
 from ACIS import ACIS
 
 
@@ -178,11 +177,11 @@ class StationDict(dict):
 
 
 
-    def _addStation(self, stationID, stationMeta, stationData = None):
+    def _addStation(self, stationSubClass, stationID, stationMeta, stationData = None):
         '''
         Hidden method to add a station to the StationDict object.
         '''
-        self[stationID] = Station(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
+        self[stationID] = stationSubClass(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
 
     @property
     def stationIDs(self):
@@ -216,33 +215,33 @@ class StationDict(dict):
 
 
 if __name__ == '__main__':
-    climateParams = ['mint']
-    stations =  {'meta': [{'elev': 10549.9,
-            'll': [-106.17, 39.49],
-            'name': 'Copper Mountain',
-            'valid_daterange': [['1983-01-12', '2016-04-05']],
-            'sids': ['USS0006K24S 6'],
-            'state': 'CO',
-            'uid': 67175},
-           {'elev': 10520.0,
-            'll': [-106.42, 39.86],
-            'name': 'Elliot Ridge',
-            'valid_daterange': [['1983-01-12', '2016-04-05']],
-            'sids': ['USS0006K29S 6'],
-            'state': 'CO',
-            'uid': 77459}]}
-    queryParams = {'Example':'ExampleData'}
-    sl = StationDict(queryParameters = queryParams, climateParameters =  climateParams)
-    for s in stations['meta']:
-        sl._addStation(stationID = s['uid'],  stationMeta =  s)
-    print(sl.stationIDs)
-    print(sl.stationNames)
-    print(sl.queryParameters)
-    sl.export(r'C:\TEMP\test2.csv')
-    for station in sl:
-        print station.latitude
-    print sl[77459].name
-    print sl
+##    climateParams = ['mint']
+##    stations =  {'meta': [{'elev': 10549.9,
+##            'll': [-106.17, 39.49],
+##            'name': 'Copper Mountain',
+##            'valid_daterange': [['1983-01-12', '2016-04-05']],
+##            'sids': ['USS0006K24S 6'],
+##            'state': 'CO',
+##            'uid': 67175},
+##           {'elev': 10520.0,
+##            'll': [-106.42, 39.86],
+##            'name': 'Elliot Ridge',
+##            'valid_daterange': [['1983-01-12', '2016-04-05']],
+##            'sids': ['USS0006K29S 6'],
+##            'state': 'CO',
+##            'uid': 77459}]}
+##    queryParams = {'Example':'ExampleData'}
+##    sl = StationDict(queryParameters = queryParams, climateParameters =  climateParams)
+##    for s in stations['meta']:
+##        sl._addStation(stationID = s['uid'],  stationMeta =  s)
+##    print(sl.stationIDs)
+##    print(sl.stationNames)
+##    print(sl.queryParameters)
+##    sl.export(r'C:\TEMP\test2.csv')
+##    for station in sl:
+##        print station.latitude
+##    print sl[77459].name
+##    print sl
 
     #################################
 
@@ -286,11 +285,11 @@ if __name__ == '__main__':
 
     #StationDict is indexable
     print wx[66180].data['maxt']['2012-01-01'].wxOb
-
-    #Iterate through each station, parameter and weather observation
-    for station in wx:
-        for p in station.data:
-            print p
-            for ob in p:
-                print ob
-    print wx.stationNames
+##
+##    #Iterate through each station, parameter and weather observation
+##    for station in wx:
+##        for p in station.data:
+##            print p
+##            for ob in p:
+##                print ob
+##    print wx.stationNames

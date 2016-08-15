@@ -1,4 +1,5 @@
 from WxOb import WxOb
+
 class ParameterSeries(dict):
     '''
     Dictionary(-like object) of all weather observations for a particular climate parameter

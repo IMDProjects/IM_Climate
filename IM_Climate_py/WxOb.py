@@ -1,4 +1,4 @@
-from ACIS import missingValue
+from common import missingValue
 
 class WxOb(dict):
     ''''

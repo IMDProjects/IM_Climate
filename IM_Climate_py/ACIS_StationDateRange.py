@@ -1,5 +1,6 @@
-from ACIS import missingValue
 from StationDateRange import StationDateRange
+from common import missingValue
+from datetime import date
 
 class ACIS_StationDateRange(StationDateRange):
     '''
@@ -58,7 +59,7 @@ if __name__ == '__main__':
                                  []]
     parameters = ['mint', 'maxt', 'avgt']
     parameters = 'mint', 'maxt', 'avgt'
-    dr = StationDateRange(dateRanges = dateRanges, climateParameters = parameters)
+    dr = ACIS_StationDateRange(dateRanges = dateRanges, climateParameters = parameters)
     print dr.minRange
     print dr.maxRange
     print dr['avgt']

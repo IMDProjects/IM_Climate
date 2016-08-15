@@ -1,21 +1,18 @@
-from StationDateRange import StationDateRange
+from ACIS_StationDateRange import ACIS_StationDateRange
 from StationData import StationData
-from ACIS import missingValue
 from ACIS import ACIS
+from Station import Station
 
 
 
-class ACIS_Station(object):
+class ACIS_Station(Station):
     '''
     Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data by parameter
     Blank metadata values are converted to 'NA'
     '''
     def __init__(self, stationMeta, climateParameters, stationData = None):
-        self.climateParameters = climateParameters
-        self._setStationMetadata(stationMeta)
+        super(ACIS_Station, self).__init__(stationMeta, climateParameters, stationData = None)
         self._tags = ['name', 'latitude', 'longitude', 'stationType', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'minRange', 'maxRange']
-        if stationData:
-            self._addStationWxData(stationData)
 
     def _addStationWxData(self, stationData):
         '''
@@ -29,7 +26,7 @@ class ACIS_Station(object):
         Sets the station metadata. Values that are not present are set to 'NA'
         '''
 
-        default = missingValue
+        default = self.missingValue
         self.name = stationInfo.get('name', default).encode()
         try:
             self.sid1 = str(stationInfo['sids'][0]).encode()
@@ -47,7 +44,7 @@ class ACIS_Station(object):
         self.longitude = stationInfo.get('ll', default)[0]
         self.state = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
-        self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
+        self.validDateRange = ACIS_StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
         self.maxRange = self.validDateRange.maxRange
         self.minRange = self.validDateRange.minRange
         self.uid = stationInfo.get('uid', default)
@@ -55,14 +52,6 @@ class ACIS_Station(object):
 
         self._setStationType()
 
-    def _dumpToList(self):
-        return [self.__dict__[t] for t in self._tags]
-
-    def __repr__(self):
-        '''
-        Pretty representation of Station object
-        '''
-        return str(self._dumpToList())
 
     def _setStationType(self):
         acis = ACIS()

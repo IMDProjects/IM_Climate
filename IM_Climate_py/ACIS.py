@@ -11,7 +11,6 @@ except: #python 3.x
     except:
         raise Exception('Libary Import Failure')
 
-missingValue = 'NA'
 
 class ACIS(object):
 
