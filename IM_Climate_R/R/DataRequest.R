@@ -66,9 +66,9 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   body <- gsub("\\}\"\"","\\}",i)
   
   # This returns the full response - need to use content() and parse
-  dataResponseInit <- POST("http://data.rcc-acis.org/StnData", accept_json(), add_headers("Content-Type" = "application/json"), body = body, verbose())
   # content(dataResponseInit) results in a list lacking column names but containing data which needs to be
   # converted to dataFrame with appropriate vectors
+  dataResponseInit <- POST("http://data.rcc-acis.org/StnData", accept_json(), add_headers("Content-Type" = "application/json"), body = body, verbose())
   
   # Format climate data object
   rList <- content(dataResponseInit)
@@ -96,35 +96,32 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   # Assumes sids element contains 3 members (even if 2 are empty)
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[4,]))))
   colnames(dfMeta)[4]  <- "sid1"
-  if (!identical(dim(dfMetaInit), as.integer(c(7,1)))) {
+  if (identical(dim(dfMetaInit), as.integer(c(9,1)))) {
     dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
     colnames(dfMeta)[5]  <- "sid2"
-    if (identical(dim(dfMetaInit), as.integer(c(9,1)))) { # 3 sid elements
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
-      colnames(dfMeta)[6]  <- "sid3"
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[7,]))))
-      colnames(dfMeta)[7]  <- "state"
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[8,]))))
-      colnames(dfMeta)[8]  <- "elev"
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[9,]))))
-      colnames(dfMeta)[9]  <- "name"
-    }
-    else { # 2 sid elements
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
-      colnames(dfMeta)[6]  <- "state"
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[7,]))))
-      colnames(dfMeta)[7]  <- "elev"
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[8,]))))
-      colnames(dfMeta)[8]  <- "name"
-    }
-  } else { #sids element has only one member
-    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
-    colnames(dfMeta)[5]  <- "state"
-    dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[6,]))))
-    colnames(dfMeta)[6]  <- "elev"
-    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[7,]))))
-    colnames(dfMeta)[7]  <- "name"
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
+    colnames(dfMeta)[6]  <- "sid3"
   }
+  else { # missing one or more sid elements
+    if (identical(dim(dfMetaInit), as.integer(c(8,1)))) {
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
+      colnames(dfMeta)[5]  <- "sid2"
+    }
+    else {
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(NA)))
+      colnames(dfMeta)[5]  <- "sid2"
+    }
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(NA)))
+    colnames(dfMeta)[6]  <- "sid3"
+  }
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(strsplit(dfMetaInit[,1], " ")$state))))
+  colnames(dfMeta)[7]  <- "state"
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(strsplit(dfMetaInit[,1], " ")$elev))))
+  colnames(dfMeta)[8]  <- "elev"
+  #tempName <- paste(strsplit(dfMetaInit[,1], " ")$name, collapse = " ")
+  #dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(tempName))))
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(paste(strsplit(dfMetaInit[,1], " ")$name, collapse = " ")))))
+  colnames(dfMeta)[9]  <- "name"
   
   df <- cbind(dfMeta, dfDate)
   
