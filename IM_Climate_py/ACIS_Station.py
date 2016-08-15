@@ -5,7 +5,7 @@ from ACIS import ACIS
 
 
 
-class Station(object):
+class ACIS_Station(object):
     '''
     Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data by parameter
     Blank metadata values are converted to 'NA'
@@ -86,7 +86,7 @@ if __name__=='__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     climateParams = ['maxt', 'mint' ]
 
-    s = Station(stationMeta = meta, climateParameters = climateParams)
+    s = ACIS_Station(stationMeta = meta, climateParameters = climateParams)
     s._addStationWxData(data)
     print s.name
     print s.longitude
