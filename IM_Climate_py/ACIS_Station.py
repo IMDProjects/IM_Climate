@@ -11,8 +11,10 @@ class ACIS_Station(Station):
     Blank metadata values are converted to 'NA'
     '''
     def __init__(self, stationMeta, climateParameters, stationData = None):
-        super(ACIS_Station, self).__init__(stationMeta, climateParameters, stationData = None)
-        self._tags = ['name', 'latitude', 'longitude', 'stationType', 'sid1', 'sid2','sid3', 'state', 'elev', 'uid', 'minRange', 'maxRange']
+        super(ACIS_Station, self).__init__(stationMeta, climateParameters, stationData)
+        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid1_type',
+            'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
+            'elev', 'uid', 'minRange', 'maxRange']
 
     def _addStationWxData(self, stationData):
         '''
@@ -40,6 +42,9 @@ class ACIS_Station(Station):
             self.sid3 = str(stationInfo['sids'][2]).encode()
         except:
             self.sid3 = default
+        self.sid1_type = self._setStationType(self.sid1)
+        self.sid2_type = self._setStationType(self.sid2)
+        self.sid3_type = self._setStationType(self.sid3)
         self.latitude = stationInfo.get('ll', default)[1]
         self.longitude = stationInfo.get('ll', default)[0]
         self.state = stationInfo.get('state', default).encode()
@@ -50,17 +55,18 @@ class ACIS_Station(Station):
         self.uid = stationInfo.get('uid', default)
         self.sids = str(stationInfo.get('sids', default)).encode()
 
-        self._setStationType()
-
-
-    def _setStationType(self):
+    def _setStationType(self, sid):
         acis = ACIS()
-        self.stationType = acis.stationSources[str(self.sid1.split()[1])]['description'].encode()
-        if self.stationType == 'GHCN':
-            try:
-                self.stationType = acis.stationSources['6']['subtypes'][self.sid1[0:3]].encode()
-            except:
-                pass # Keep it GHCN
+        if sid <> self.missingValue:
+            stationType = acis.stationSources[str(sid.split()[1])]['description'].encode()
+            if stationType == 'GHCN':
+                try:
+                    stationType = acis.stationSources['6']['subtypes'][self.sid1[0:3]].encode()
+                except:
+                    pass # Keep it GHCN
+            return stationType
+        else:
+            return self.missingValue
 
 
 
@@ -81,7 +87,7 @@ if __name__=='__main__':
     print s.longitude
     print s.elev
     print s.sids
-    print s.stationType
+    print s.sid1_type
     print s.data['mint']
     print s
 

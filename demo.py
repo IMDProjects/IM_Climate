@@ -1,5 +1,5 @@
-from IM_Climate_py.StationFinder import StationFinder
-from IM_Climate_py.DataRequestor import DataRequestor
+from IM_Climate_py.ACIS_StationFinder import ACIS_StationFinder
+from IM_Climate_py.ACIS_DataRequestor import ACIS_DataRequestor
 
 '''
 This demo script showcases the utility of the IM_Climate.py package
@@ -9,7 +9,7 @@ localFolder = 'c:\\temp\\'
 
 #***************
 # STATION FINDER
-sf = StationFinder()
+sf = ACIS_StationFinder()
 
 #Test #1: All stations around NOCA within a 30km buffer. Save returned results
     #locally as SF01.csv MABI
@@ -59,7 +59,7 @@ climateStations = [66176, 31746]
 climateParameters = 'mint, maxt'
 startDate = '2012-01-01'
 endDate = '2012-02-01'
-dr = DataRequestor()
+dr = ACIS_DataRequestor()
 wxData = dr.getDailyWxObservations(climateParameters = climateParameters
                             ,climateStations = climateStations
                             ,startDate= startDate, endDate = endDate

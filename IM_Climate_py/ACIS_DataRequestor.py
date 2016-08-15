@@ -1,10 +1,9 @@
 from ACIS import ACIS
-import StationDict
-reload (StationDict)
+from ACIS_Station import ACIS_Station
 from StationDict import StationDict
 
 
-class DataRequestor(ACIS):
+class ACIS_DataRequestor(ACIS):
     '''
     INFO
     ----
@@ -12,7 +11,7 @@ class DataRequestor(ACIS):
 
     '''
     def __init__(self, *args, **kwargs):
-        super(DataRequestor,self).__init__(*args, **kwargs)
+        super(ACIS_DataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnData'
 
         self.reduceCodes = {'max': 'Maximum value for the period'
@@ -98,7 +97,7 @@ class DataRequestor(ACIS):
             for p in self.climateParameters:
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
-            wd._addStation(stationID = uid, stationMeta = response['meta']
+            wd._addStation(stationSubClass = ACIS_Station,  stationID = uid, stationMeta = response['meta']
                 , stationData = response['data'])
 
         return wd
@@ -237,7 +236,7 @@ class DataRequestor(ACIS):
 if __name__=='__main__':
     stationIDs = [66180, 67175]
 
-    dr = DataRequestor()
+    dr = ACIS_DataRequestor()
 
     #Daily Data
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'

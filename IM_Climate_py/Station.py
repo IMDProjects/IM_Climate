@@ -53,14 +53,7 @@ if __name__=='__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     climateParams = ['maxt', 'mint' ]
 
-##    s = Station(stationMeta = meta, climateParameters = climateParams)
-##    s._addStationWxData(data)
-##    print s.name
-##    print s.longitude
-##    print s.elev
-##    print s.sids
-##    print s.stationType
-##    print s.data['mint']
-##    print s
+    s = Station(stationMeta = meta, climateParameters = climateParams)
+
 
 

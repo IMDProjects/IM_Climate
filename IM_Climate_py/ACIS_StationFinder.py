@@ -16,7 +16,7 @@ class ACIS_StationFinder(ACIS):
 
     '''
     def __init__(self, *args, **kwargs):
-        super(StationFinder,self).__init__(*args, **kwargs)
+        super(ACIS_StationFinder,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
     def findStation(self, parkCodes = None, distance = 0,
