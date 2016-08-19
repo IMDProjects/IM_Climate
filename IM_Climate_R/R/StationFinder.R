@@ -92,14 +92,42 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     #longitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta[,2], function(x) unlist(as.numeric(x[1])))))),"longitude")
     latitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta$ll, function(x) unlist(as.numeric(x[2])))))),"latitude")
     #latitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta[,2], function(x) unlist(as.numeric(x[2])))))),"latitude")
-    # Check for presence of all SID values (max of 3)
-    
-    sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids, function(x) unlist(x[1])))))),"sid1")
-    sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids, function(x) unlist(x[2])))))),"sid2")
-    sid3 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids, function(x) unlist(x[3])))))),"sid3")
-    #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
-    #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid2")
-    
+    # Check for presence of all SID values (use max of 3 per record even if station has > 3)
+    sid1 = c()
+    sid2 = c()
+    sid3 = c()
+    for (i in 1:length(stationListInit$meta$sids)) {
+      #if (identical(length(unlist(stationListInit$meta$sids)), as.integer(c(3)))) {
+      if (length(unlist(stationListInit$meta$sids[i])) >= 3) {
+        sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
+        #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1])))))),"sid1")
+        #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2])))))),"sid2")
+        sid2[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2]))))
+        #sid3 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[3])))))),"sid3")
+        sid3[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[3]))))
+        #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
+        #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid2")
+      }
+      else if (identical(length(unlist(stationListInit$meta$sids[i])), as.integer(c(2)))) {
+        sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
+        sid2[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2]))))
+        #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1])))))),"sid1")
+        #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2])))))),"sid2")
+        #sid3 <- setNames(as.data.frame(as.character(NA)),"sid3")
+        sid3[i] <- as.character(NA)
+      }
+      else {
+        sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
+        sid2[i] <- as.character(NA)
+        sid3[i] <- as.character(NA)
+        #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1])))))),"sid1")
+        #sid2 <- setNames(as.data.frame(as.character(NA)),"sid2")
+        #sid3 <- setNames(as.data.frame(as.character(NA)),"sid3")
+      }
+    }
+    sid1 <- setNames(as.data.frame(sid1),"sid1")
+    sid2 <- setNames(as.data.frame(sid2),"sid2")
+    sid3 <- setNames(as.data.frame(sid3),"sid3")
     #stationListTemp <- as.data.frame(lapply(unlist(stationListInit$meta[,2][1],function(x) as.numeric(as.character(x)))))
     #stationList <- as.data.frame(stationListInit$meta)
     stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid2, sid3, state=stationListInit$meta[,4], elev=stationListInit$meta[,5])
