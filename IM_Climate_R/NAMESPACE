@@ -2,3 +2,4 @@
 
 export(findStation)
 export(getDailyWxObservations)
+export(getStationSubtype)

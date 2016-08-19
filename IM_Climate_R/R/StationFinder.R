@@ -35,6 +35,11 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     bboxExpand = distance*0.011
   }
   
+  # ACIS lookup
+  #jsonFile  <- "..//ACISLookups.json"
+  #acisLookup <- fromJSON(jsonFile)
+  acisLookup <- fromJSON("..//ACISLookups.json")
+  
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
   webServiceSource <- "StnMeta"
@@ -96,30 +101,44 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     sid1 = c()
     sid2 = c()
     sid3 = c()
+    sid1_type = c(as.character(NA))
+    sid2_type = c(as.character(NA))
+    sid3_type = c(as.character(NA))
     for (i in 1:length(stationListInit$meta$sids)) {
       #if (identical(length(unlist(stationListInit$meta$sids)), as.integer(c(3)))) {
       if (length(unlist(stationListInit$meta$sids[i])) >= 3) {
         sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
+        sid1_type[i] <-  getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
+        
+        #sid1_type[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
         #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1])))))),"sid1")
         #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2])))))),"sid2")
         sid2[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2]))))
+        sid2_type[i] <-  getStationSubtype(unlist(strsplit(sid2[i], " "))[2], substr(sid2[i],1,3))
         #sid3 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[3])))))),"sid3")
         sid3[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[3]))))
+        sid3_type[i] <-  getStationSubtype(unlist(strsplit(sid3[i], " "))[2], substr(sid3[i],1,3))
         #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid1")
         #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta[,3], function(x) unlist(x[1])))))),"sid2")
       }
       else if (identical(length(unlist(stationListInit$meta$sids[i])), as.integer(c(2)))) {
         sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
+        sid1_type[i] <-  getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
         sid2[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2]))))
+        sid2_type[i] <-  getStationSubtype(unlist(strsplit(sid2[i], " "))[2], substr(sid2[i],1,3))
         #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1])))))),"sid1")
         #sid2 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2])))))),"sid2")
         #sid3 <- setNames(as.data.frame(as.character(NA)),"sid3")
         sid3[i] <- as.character(NA)
+        sid3_type[i] <-  as.character(NA)
       }
       else {
         sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
+        sid1_type[i] <-  getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
         sid2[i] <- as.character(NA)
+        sid2_type[i] <-  as.character(NA)
         sid3[i] <- as.character(NA)
+        sid3_type[i] <-  as.character(NA)
         #sid1 <- setNames(as.data.frame(as.character(as.vector(as.matrix(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1])))))),"sid1")
         #sid2 <- setNames(as.data.frame(as.character(NA)),"sid2")
         #sid3 <- setNames(as.data.frame(as.character(NA)),"sid3")
@@ -128,9 +147,16 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     sid1 <- setNames(as.data.frame(sid1),"sid1")
     sid2 <- setNames(as.data.frame(sid2),"sid2")
     sid3 <- setNames(as.data.frame(sid3),"sid3")
+    sid1_type <- setNames(as.data.frame(sid1_type),"sid1_type")
+    sid2_type <- setNames(as.data.frame(sid2_type),"sid2_type")
+    sid3_type <- setNames(as.data.frame(sid3_type),"sid3_type")
+    minDate <- as.Date(range(unlist(stationListInit$meta$valid_daterange))[1], "%Y-%m-%d")
+    minDate <-  setNames(as.data.frame(minDate), "minDate")
+    maxDate <- as.Date(range(unlist(stationListInit$meta$valid_daterange))[2], "%Y-%m-%d")
+    maxDate <-  setNames(as.data.frame(maxDate), "maxDate")
     #stationListTemp <- as.data.frame(lapply(unlist(stationListInit$meta[,2][1],function(x) as.numeric(as.character(x)))))
     #stationList <- as.data.frame(stationListInit$meta)
-    stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid2, sid3, state=stationListInit$meta[,4], elev=stationListInit$meta[,5])
+    stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
     stationList$unit_code <- parkCode[1]
   }
   else {
@@ -145,3 +171,13 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
   }
   return (stationList)
 }
+
+# getStationSubtype <- function(testType, testSid) {
+#   # ACIS lookup
+#   #jsonFile  <- "..//ACISLookups.json"
+#   #acisLookup <- fromJSON(jsonFile)
+#   acisLookup <- fromJSON("..//ACISLookups.json")
+#   
+# 
+#  return (NA)
+# }
