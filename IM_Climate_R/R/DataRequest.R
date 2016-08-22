@@ -65,6 +65,11 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   i = gsub("\"\"\\{","\\{",h)
   body <- gsub("\\}\"\"","\\}",i)
   
+  # Initialize vectors for SID type
+  sid1_type = c(as.character(NA))
+  sid2_type = c(as.character(NA))
+  sid3_type = c(as.character(NA))
+  
   # This returns the full response - need to use content() and parse
   # content(dataResponseInit) results in a list lacking column names but containing data which needs to be
   # converted to dataFrame with appropriate vectors
@@ -96,32 +101,54 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   # Assumes sids element contains 3 members (even if 2 are empty)
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[4,]))))
   colnames(dfMeta)[4]  <- "sid1"
+  dfMeta$sid1  <- as.character(dfMeta$sid1)
+  sid1_type <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid1), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid1), " "))[1],1,3))
+  dfMeta  <- cbind(dfMeta, sid1_type)
+  colnames(dfMeta)[5]  <- "sid1_type"
+    #getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
+  #sid1_type[i] <-  getStationSubtype(unlist(strsplit(unlist(rList$meta$sids[i]), " "))[2], substr(unlist(strsplit(unlist(rList$meta$sids[i]), " "))[1],1,3))
+  #for (i in 1:length(rList$meta$sids)) {
+  #  sid1_type[i] <-  getStationSubtype(unlist(strsplit(unlist(rList$meta$sids[i]), " "))[2], substr(unlist(strsplit(unlist(rList$meta$sids[i]), " "))[1],1,3))
+  #}
   if (identical(dim(dfMetaInit), as.integer(c(9,1)))) {
-    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
-    colnames(dfMeta)[5]  <- "sid2"
     dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
-    colnames(dfMeta)[6]  <- "sid3"
+    colnames(dfMeta)[6]  <- "sid2"
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[7,]))))
+    colnames(dfMeta)[7]  <- "sid3"
   }
   else { # missing one or more sid elements
     if (identical(dim(dfMetaInit), as.integer(c(8,1)))) {
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
-      colnames(dfMeta)[5]  <- "sid2"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
+      colnames(dfMeta)[6]  <- "sid2"
     }
     else {
       dfMeta  <- cbind(dfMeta, as.data.frame(as.character(NA)))
-      colnames(dfMeta)[5]  <- "sid2"
+      colnames(dfMeta)[6]  <- "sid2"
     }
     dfMeta  <- cbind(dfMeta, as.data.frame(as.character(NA)))
-    colnames(dfMeta)[6]  <- "sid3"
+    colnames(dfMeta)[7]  <- "sid3"
+  }
+  
+  dfMeta$sid2  <- as.character(dfMeta$sid2)
+  dfMeta$sid3  <- as.character(dfMeta$sid3)
+  # Use SID vectors to find sid_type  # lapply() might work here
+  for (i in 1:length(dfMeta$sid1)) { 
+    sid1_type[i] <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid1), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid1), " "))[1],1,3))
+  }
+  for (i in 1:length(dfMeta$sid2)) { 
+    sid2_type[i] <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid2), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid2), " "))[1],1,3))
+  }
+  for (i in 1:length(dfMeta$sid3)) { 
+    sid3_type[i] <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid3), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid3), " "))[1],1,3))
   }
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(strsplit(dfMetaInit[,1], " ")$state))))
-  colnames(dfMeta)[7]  <- "state"
+  colnames(dfMeta)[8]  <- "state"
   dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(strsplit(dfMetaInit[,1], " ")$elev))))
-  colnames(dfMeta)[8]  <- "elev"
+  colnames(dfMeta)[9]  <- "elev"
   #tempName <- paste(strsplit(dfMetaInit[,1], " ")$name, collapse = " ")
   #dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(tempName))))
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(paste(strsplit(dfMetaInit[,1], " ")$name, collapse = " ")))))
-  colnames(dfMeta)[9]  <- "name"
+  colnames(dfMeta)[10]  <- "name"
   
   df <- cbind(dfMeta, dfDate)
   
