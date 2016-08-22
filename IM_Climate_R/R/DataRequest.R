@@ -150,16 +150,6 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
     colnames(dfMeta)[9]  <- "sid3_type"
   }
 
-  # Use SID vectors to find sid_type  # lapply() might work here
-  # for (i in 1:length(dfMeta$sid1)) { 
-  #   sid1_type[i] <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid1), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid1), " "))[1],1,3))
-  # }
-  # for (i in 1:length(dfMeta$sid2)) { 
-  #   sid2_type[i] <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid2), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid2), " "))[1],1,3))
-  # }
-  # for (i in 1:length(dfMeta$sid3)) { 
-  #   sid3_type[i] <-  getStationSubtype(unlist(strsplit(unlist(dfMeta$sid3), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid3), " "))[1],1,3))
-  # }
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(strsplit(dfMetaInit[,1], " ")$state))))
   colnames(dfMeta)[10]  <- "state"
   dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(strsplit(dfMetaInit[,1], " ")$elev))))
@@ -186,6 +176,11 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
     df[[sName]] <- as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
   }
   
+  # Convert factors and booleans to character vectors
+  fc  <- sapply(df, is.factor)
+  lc <- sapply(df, is.logical)
+  df[, fc]  <- sapply(df[, fc], as.character)
+  df[, lc]  <- sapply(df[, lc], as.character)
   dataResponse <- df
   
   # Output file

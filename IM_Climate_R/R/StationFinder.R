@@ -131,7 +131,7 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
         sid3_type[i] <-  as.character(NA)
       }
     }
-    sid1 <- setNames(as.data.frame(sid1),"sid1")
+    sid1 <- setNames(sid1,"sid1")
     sid2 <- setNames(as.data.frame(sid2),"sid2")
     sid3 <- setNames(as.data.frame(sid3),"sid3")
     sid1_type <- setNames(as.data.frame(sid1_type),"sid1_type")
@@ -141,10 +141,15 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
       minDate[i] <- as.Date(range(unlist(stationListInit$meta$valid_daterange[i]))[1], "%Y-%m-%d")
       maxDate[i] <- as.Date(range(unlist(stationListInit$meta$valid_daterange[i]))[2], "%Y-%m-%d")
     }
-    minDate <-  setNames(as.data.frame(minDate), "minDate")
-    maxDate <-  setNames(as.data.frame(maxDate), "maxDate")
+    minDate <-  setNames(minDate, "minDate")
+    maxDate <-  setNames(maxDate, "maxDate")
     stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
     stationList$unit_code <- parkCode[1]
+    # Convert factors to character vectors
+    fc  <- sapply(stationList, is.factor)
+    lc <- sapply(stationList, is.logical)
+    stationList[, fc]  <- sapply(stationList[, fc], as.character)
+    stationList[, lc]  <- sapply(stationList[, lc], as.character)
   }
   else {
     stationList <- cat("No stations for ", parkCode, "using distance ", distance) 
