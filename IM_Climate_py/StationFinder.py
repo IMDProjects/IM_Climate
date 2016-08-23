@@ -8,7 +8,7 @@ from ACIS import ACIS
 from ACIS_Station import ACIS_Station
 import common
 
-class ACIS_StationFinder(ACIS):
+class StationFinder(ACIS):
     '''
     INFO
     -------
@@ -17,7 +17,7 @@ class ACIS_StationFinder(ACIS):
 
     '''
     def __init__(self, *args, **kwargs):
-        super(ACIS_StationFinder, self).__init__(*args, **kwargs)
+        super(StationFinder, self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
     def findStation(self, unitCode = None, distance = 0,
@@ -81,7 +81,7 @@ class ACIS_StationFinder(ACIS):
 
 
 if __name__ == '__main__':
-    sf = ACIS_StationFinder()
+    sf = StationFinder()
 
     wxStations = sf.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
     print wxStations.queryParameters
