@@ -1,5 +1,5 @@
 from ACIS_StationDateRange import ACIS_StationDateRange
-from StationData import StationData
+##from StationData import StationData
 from ACIS import ACIS
 from Station import Station
 
@@ -12,48 +12,11 @@ class ACIS_Station(Station):
     '''
     def __init__(self, stationMeta, climateParameters, stationData = None):
         super(ACIS_Station, self).__init__(stationMeta, climateParameters, stationData)
-        self._tags = ['name', 'latitude', 'longitude', 'sid1', 'sid1_type',
-            'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
-            'elev', 'uid', 'minRange', 'maxRange']
-
-    def _addStationWxData(self, stationData):
-        '''
-        Method to add weather data to Station object
-        '''
-        self.data = StationData(stationData, self.climateParameters)
-
-
-    def _setStationMetadata(self, stationInfo):
-        '''
-        Sets the station metadata. Values that are not present are set to 'NA'
-        '''
-
-        default = self.missingValue
-        self.name = stationInfo.get('name', default).encode()
-        try:
-            self.sid1 = str(stationInfo['sids'][0]).encode()
-        except:
-            self.sid1 = default
-        try:
-            self.sid2 = str(stationInfo['sids'][1]).encode()
-        except:
-            self.sid2 = default
-        try:
-            self.sid3 = str(stationInfo['sids'][2]).encode()
-        except:
-            self.sid3 = default
-        self.sid1_type = self._setStationType(self.sid1)
-        self.sid2_type = self._setStationType(self.sid2)
-        self.sid3_type = self._setStationType(self.sid3)
-        self.latitude = stationInfo.get('ll', default)[1]
-        self.longitude = stationInfo.get('ll', default)[0]
-        self.state = stationInfo.get('state', default).encode()
-        self.elev = stationInfo.get('elev', default)
-        self.validDateRange = ACIS_StationDateRange(stationInfo.get('valid_daterange', default), self.climateParameters)
+        self.validDateRange = ACIS_StationDateRange(stationMeta.get('valid_daterange', self.missingValue), self.climateParameters)
         self.maxRange = self.validDateRange.maxRange
         self.minRange = self.validDateRange.minRange
-        self.uid = stationInfo.get('uid', default)
-        self.sids = str(stationInfo.get('sids', default)).encode()
+
+
 
     def _setStationType(self, sid):
         acis = ACIS()
@@ -67,8 +30,6 @@ class ACIS_Station(Station):
             return stationType
         else:
             return self.missingValue
-
-
 
 
 if __name__=='__main__':

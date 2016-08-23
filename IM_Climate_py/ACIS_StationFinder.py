@@ -6,6 +6,7 @@ reload(StationDict)
 from StationDict import StationDict
 from ACIS import ACIS
 from ACIS_Station import ACIS_Station
+import common
 
 class ACIS_StationFinder(ACIS):
     '''
@@ -16,10 +17,10 @@ class ACIS_StationFinder(ACIS):
 
     '''
     def __init__(self, *args, **kwargs):
-        super(ACIS_StationFinder,self).__init__(*args, **kwargs)
+        super(ACIS_StationFinder, self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
 
-    def findStation(self, parkCodes = None, distance = 0,
+    def findStation(self, unitCode = None, distance = 0,
         climateParameters = None, sDate = None, eDate = None
         ,filePathAndName = None):
         '''
@@ -31,7 +32,7 @@ class ACIS_StationFinder(ACIS):
 
         ARGUMENTS
         ---------
-        parkCodes           4-Letter park code (searches for station within buffer)
+        unitCode           4-Letter park code (searches for station within buffer)
 
         distance            buffer distance around the provided unitCode (if provided).
                             Default is 0 km.
@@ -56,67 +57,41 @@ class ACIS_StationFinder(ACIS):
         else:
             climateParameters = climateParameters.replace(' ','')
 
-        if parkCodes:
-            bbox = self._getBoundingBox(parkCodes, distance)
+        if unitCode:
+            bbox = common.getBoundingBox(unitCode, distance)
 
-        self._input_dict = {}    #Clears the input dictionary
         results =  self._call_ACIS(elems = climateParameters
             ,bbox = bbox, sDate = sDate, eDate = eDate
             ,meta = metadata)
 
-        #adds parkCodes to input_dict following the call to ACIS
-        if parkCodes:
-            self._input_dict['parkCodes'] = parkCodes
+        #adds unitCode to input_dict following the call to ACIS
+        if unitCode:
+            self._input_dict['unitCode'] = unitCode
 
         si =  StationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
         for station in results['meta']:
+            station['unitCode'] = unitCode
             si._addStation(ACIS_Station, stationID = station['uid'], stationMeta = station)
         if filePathAndName:
                 si.exportMeta(filePathAndName)
         return si
 
 
-    def _getBoundingBox(self, unitCode, distanceKM = None):
-        '''
-        INFO
-        ----
-        Calls NPS IRMA Unit Service to get bounding box for respective NPS unit
-        Converts buffer to KM based on 0.011
-        Formats String to 'West, South, East, North'
 
-        ARGUMENTS
-        ---------
-        unitCode - 4-letter park code
-        distanceKM - distance to buffer park boundary
-        '''
-        connection = urllib2.urlopen('http://irmaservices.nps.gov/v2/rest/unit/' + unitCode + '/geography?detail=envelope&dataformat=wkt&format=json')
-        geo = json.loads(connection.read())[0]['Geography'][10:-2].split(',')
-        west = float(geo[0].split()[0])
-        east = float(geo[1].split()[0])
-        north = float(geo[2].split()[1])
-        south = float(geo[0].split()[1])
-
-        if distanceKM:
-            bufr = float(distanceKM)*0.011
-            west+=bufr
-            east-=bufr
-            south-=bufr
-            north+=bufr
-        return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
 
 
 if __name__ == '__main__':
     sf = ACIS_StationFinder()
 
-    #wxStations = sf.findStation(parkCodes = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
-    #print wxStations.queryParameters
-    #print wxStations
-    #print sf.supportedParameters
-    #print wxStations[26202].validDateRange
-    #print wxStations[26202].validDateRange.keys()
+    wxStations = sf.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
+    print wxStations.queryParameters
+    print wxStations
+    print sf.supportedParameters
+    print wxStations[26202].validDateRange
+    print wxStations[26202].validDateRange.keys()
 
-    wxStations = sf.findStation(parkCodes = 'ROMO', climateParameters = 'mint, maxt,pcpn')
-    #print wxStations
+    wxStations = sf.findStation(unitCode = 'ROMO', climateParameters = 'mint, maxt,pcpn')
+    print wxStations
     print wxStations[48106].validDateRange
     print wxStations[48106].validDateRange['pcpn']
 

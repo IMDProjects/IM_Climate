@@ -13,16 +13,16 @@ sf = ACIS_StationFinder()
 
 #Test #1: All stations around NOCA within a 30km buffer. Save returned results
     #locally as SF01.csv MABI
-wxStations = sf.findStation(parkCodes = 'MABI', distance = 30, sDate = '1940-01-01', eDate = '1940-01-01')
+wxStations = sf.findStation(unitCode = 'MABI', distance = 30, sDate = '1940-01-01', eDate = '1940-01-01')
 wxStations.export(localFolder + 'SF01.csv')
 
 #Test #2: All stations around ACAD recording minimum temperature; distance = 10km
-wxStations = sf.findStation(parkCodes = 'ACAD', distance = 10, climateParameters = 'mint')
+wxStations = sf.findStation(unitCode = 'ACAD', distance = 10, climateParameters = 'mint')
 wxStations.export(localFolder + 'SF02.csv')
 
 #Test 3: All stations around ROMO recording maximum OR minimum temperature; distance = 40km
         #with option to save file
-wxStations = sf.findStation(parkCodes = 'ROMO', distance = 40, climateParameters = 'maxt, mint'
+wxStations = sf.findStation(unitCode = 'ROMO', distance = 40, climateParameters = 'maxt, mint'
         ,filePathAndName = localFolder + 'SF03.csv')
 
 #Test #4: View Station Properties for station uid=4211
@@ -37,13 +37,13 @@ print station.uid
 print station
 
 #Test #5: Acccess/View UnitCode Query Parameter
-print wxStations.queryParameters['parkCodes']
+print wxStations.queryParameters['unitCode']
 
 #Test #6: Print first five station IDs
 print wxStations.stationIDs[0:5]
 
 #Test #7: MABI AvgT -  MABI + 10km
-wxStations = sf.findStation(parkCodes = 'MABI', distance = 10, climateParameters = 'avgt')
+wxStations = sf.findStation(unitCode = 'MABI', distance = 10, climateParameters = 'avgt')
 wxStations.export(localFolder + 'SF07.csv') #save to file
 for station in wxStations: #Iterate through list of stations and print to screen
     print(station)

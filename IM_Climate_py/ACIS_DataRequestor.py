@@ -89,7 +89,7 @@ class ACIS_DataRequestor(ACIS):
         StationDict object
 
         '''
-        wd = StationDict(queryParameters = None, dateInterval = self.duration,
+        sd = StationDict(queryParameters = None, dateInterval = self.duration,
             aggregation = self.reduceCode, climateParameters = self.climateParameters)
 
         for uid in self.stationIDs:
@@ -97,10 +97,10 @@ class ACIS_DataRequestor(ACIS):
             for p in self.climateParameters:
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
-            wd._addStation(stationSubClass = ACIS_Station,  stationID = uid, stationMeta = response['meta']
+            sd._addStation(stationSubClass = ACIS_Station,  stationID = uid, stationMeta = response['meta']
                 , stationData = response['data'])
 
-        return wd
+        return sd
 
 ##    def monthySummaryByYear(self, stationIDs, parameter, reduceCode, startDate = 'por',
 ##         endDate = 'por', maxMissing = 1):

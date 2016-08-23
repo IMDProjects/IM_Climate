@@ -12,35 +12,69 @@ class Station(object):
         self.missingValue = missingValue
         self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
-        self._tags = None #tags defined in child class
+        self._metaTags = ['uid', 'name', 'latitude', 'longitude', 'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
+            'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
+            'elev', 'minRange', 'maxRange', 'unitCode']
         if stationData:
             self._addStationWxData(stationData)
 
-    def _addStationWxData(self, stationData):
-        '''
-        Method to add weather data to Station object
-        '''
-        pass #implementation should be in child class
-
-
     def _setStationMetadata(self, stationInfo):
         '''
-        Sets the station metadata. Values that are not present are set to 'NA'
+        Sets the station metadata. Values that are not present are set to missing value
         '''
 
-        pass #implementation should be in child class
+        default = self.missingValue
+        self.name = stationInfo.get('name', default).encode()
+        try:
+            self.sid1 = str(stationInfo['sids'][0]).encode()
+        except:
+            self.sid1 = default
+        try:
+            self.sid2 = str(stationInfo['sids'][1]).encode()
+        except:
+            self.sid2 = default
+        try:
+            self.sid3 = str(stationInfo['sids'][2]).encode()
+        except:
+            self.sid3 = default
+        self.sid1_type = self._setStationType(self.sid1)
+        self.sid2_type = self._setStationType(self.sid2)
+        self.sid3_type = self._setStationType(self.sid3)
+        self.latitude = stationInfo.get('ll', default)[1]
+        self.longitude = stationInfo.get('ll', default)[0]
+        self.state = stationInfo.get('state', default).encode()
+        self.elev = stationInfo.get('elev', default)
+
+        self.uid = stationInfo.get('uid', default)
+        self.sids = str(stationInfo.get('sids', default)).encode()
+        self.unitCode = stationInfo.get('unitCode', default)
+
+    def _setStationType(self, sid = None):
+        return self.missingValue
+
+##    def _addStationWxData(self, stationData):
+##        '''
+##        Method to add weather data to Station object
+##        '''
+##        pass #implementation should be in child class
 
 
-    def _dumpToList(self):
-        return [self.__dict__[t] for t in self._tags]
+    def _dumpMetaToList(self):
+        return [self.__dict__[t] for t in self._metaTags]
 
     def __repr__(self):
         '''
         Pretty representation of Station object
         '''
-        return str(self._dumpToList())
+        return str(self._dumpMetaToList())
 
 
+
+    def _addStationWxData(self, stationData):
+        '''
+        Method to add weather data to Station object
+        '''
+        self.data = StationData(stationData, self.climateParameters)
 
 
 if __name__=='__main__':
@@ -54,6 +88,8 @@ if __name__=='__main__':
     climateParams = ['maxt', 'mint' ]
 
     s = Station(stationMeta = meta, climateParameters = climateParams)
+    print s.name
+
 
 
 

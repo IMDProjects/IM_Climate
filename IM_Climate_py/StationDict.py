@@ -1,15 +1,13 @@
 import csv
 from datetime import date
-from common import Common
-
-
+import common
 
 class StationDict(dict):
 
     '''
     Object containing all station metadata and associated data
     StationDict is composed of the following nested objects:
-        Station
+        Station (or derivative subclass)
             StationData
                 ParameterSeries
                     WxOb
@@ -21,23 +19,28 @@ class StationDict(dict):
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.climateParameters = climateParameters
+        self._dataTags = ['uid', 'name', 'latitude', 'longitude', 'sid1', 'sid1_type',
+            'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
+            'elev'] #station metadata to include with data export
 
     def _writeToCSV(self):
         '''
         INFO
         ----
         Writes a 2-dimensional list to a CSV text file
-        Comma-delimits values.
+        Comma-delimits values.  If there is no data, then there is no attempt to
+        creat a file.
 
         RETURNS
         -------
         None
 
         '''
-        with open(self._filePathAndName,'w') as csvFile:
-            writer = csv.writer(csvFile, lineterminator='\n' )
-            writer.writerows(self._dataAsList)
-        csvFile.close()
+        if self._dataAsList:
+            with open(self._filePathAndName,'w') as csvFile:
+                writer = csv.writer(csvFile, lineterminator='\n' )
+                writer.writerows(self._dataAsList)
+            csvFile.close()
 
 
 
@@ -123,11 +126,10 @@ class StationDict(dict):
         --------
         None
         '''
-        tags = self[self.stationIDs[0]]._tags
+        tags = self[self.stationIDs[0]]._metaTags
         self._dataAsList = [tags]
         for station in self:
-            #info = [station.__dict__[t] for t in tags]
-            self._dataAsList.append(station._dumpToList())
+            self._dataAsList.append(station._dumpMetaToList())
         return self._dataAsList
 
 
@@ -142,31 +144,28 @@ class StationDict(dict):
         Method currently assumes that each station has the same set of parameters
         for the same date range.
         '''
-        c = Common()
+
         self._dataAsList = None
         try:
             self.stationIDs
         except:
-            self._dataAsList = 'NO DATA'
+            self._dataAsList = None
             return
 
         #Create header row
-        header = ['uid','longitude', 'latitude', 'sid1', 'sid2','sid3', 'state', 'elev', 'name', 'date']
+        header = self._dataTags
+        header.extend(['date'])
+
         for p in self.climateParameters:
-            header.extend([c.supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag'])
+            header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
 
         self._dataAsList = [header]
         for station in self:
-            lat = station.latitude
-            lon = station.longitude
-            name = station.name
-            elev = station.elev
-            sid1 = station.sid1
-            sid2 = station.sid2
-            sid3 = station.sid3
-            state = station.state
             for date in station.data.observationDates:
-                a = [str(station.uid), lon, lat, sid1, sid2, sid3, state,  elev, name, date]
+                a = [str(station.uid), station.name, station.latitude, station.longitude,
+                     station.sid1, station.sid1_type, station.sid2,
+                     station.sid2_type, station.sid3, station.sid3_type,
+                     station.state,  station.elev, date]
                 for param in self.climateParameters:
                     a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
                 self._dataAsList.append(a)

@@ -60,6 +60,7 @@ class ACIS(object):
         Method to pack all arguments into input_dict which used to call the ACIS web
             service. Filters out all argument of None.
         '''
+        self._input_dict = {}    #Clears the input dictionary
         for k in kwargs:
             if kwargs[k] and kwargs[k] <> 'None':
                 self._input_dict[k] = kwargs[k]
