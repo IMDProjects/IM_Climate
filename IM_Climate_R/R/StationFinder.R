@@ -96,6 +96,7 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     longitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta$ll, function(x) unlist(as.numeric(x[1])))))),"longitude")
     latitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta$ll, function(x) unlist(as.numeric(x[2])))))),"latitude")
     # Check for presence of all SID values (use max of 3 per record even if station has > 3)
+    # Suppress warnings from getStationSubtype(): raised due to conversion necessary because data.frame vector access does not recognize column name
     sid1 = c()
     sid2 = c()
     sid3 = c()
@@ -107,24 +108,24 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     for (i in 1:length(stationListInit$meta$sids)) {
       if (length(unlist(stationListInit$meta$sids[i])) >= 3) {
         sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
-        sid1_type[i] <-  getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
+        sid1_type[i] <-  suppressWarnings(getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3)))
         
         sid2[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2]))))
-        sid2_type[i] <-  getStationSubtype(unlist(strsplit(sid2[i], " "))[2], substr(sid2[i],1,3))
+        sid2_type[i] <-  suppressWarnings(getStationSubtype(unlist(strsplit(sid2[i], " "))[2], substr(sid2[i],1,3)))
         sid3[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[3]))))
-        sid3_type[i] <-  getStationSubtype(unlist(strsplit(sid3[i], " "))[2], substr(sid3[i],1,3))
+        sid3_type[i] <-  suppressWarnings(getStationSubtype(unlist(strsplit(sid3[i], " "))[2], substr(sid3[i],1,3)))
       }
       else if (identical(length(unlist(stationListInit$meta$sids[i])), as.integer(c(2)))) {
         sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
-        sid1_type[i] <-  getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
+        sid1_type[i] <-  suppressWarnings(getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3)))
         sid2[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[2]))))
-        sid2_type[i] <-  getStationSubtype(unlist(strsplit(sid2[i], " "))[2], substr(sid2[i],1,3))
+        sid2_type[i] <-  suppressWarnings(getStationSubtype(unlist(strsplit(sid2[i], " "))[2], substr(sid2[i],1,3)))
         sid3[i] <- as.character(NA)
         sid3_type[i] <-  as.character(NA)
       }
       else {
         sid1[i] <- as.character(as.vector(lapply(stationListInit$meta$sids[i], function(x) unlist(x[1]))))
-        sid1_type[i] <-  getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3))
+        sid1_type[i] <-  suppressWarnings(getStationSubtype(unlist(strsplit(sid1[i], " "))[2], substr(sid1[i],1,3)))
         sid2[i] <- as.character(NA)
         sid2_type[i] <-  as.character(NA)
         sid3[i] <- as.character(NA)

@@ -13,13 +13,13 @@ getStationSubtype <- function(testType, testSid) {
   typeDesc <- acisLookup$stationIdType$description[acisLookup$stationIdType$code == testType]
   subtypeDesc <- NULL
   # If subtypes exist for station type, find matching subtype
-  # if (!acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType] == "") {
-  #   subtypes <- unlist(acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType])
-  #   
-  #   #typeDesc <- acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType]
-  #   #subtypeDesc <- strsplit(unlist(acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType])[testSid], '\n')$testSid
-  #   typeDesc <- strsplit(unlist(acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType])[testSid], '\n')$testSid
-  # }
+  if (!acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType] == "") {
+     subtypes <- unlist(acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType])
+     if(!subtypes == "") {
+       tempdf <- as.data.frame(strsplit(unlist(acisLookup$stationIdType$subtypes[acisLookup$stationIdType$code == testType])[testSid], '\n')[testSid])
+       typeDesc <- as.character(as.vector(tempdf[1,]))
+     }    
+  }
   
   # if (exists("subtypeDesc")) {
   #   if (length(subtypeDesc) > 0) {return (subtypeDesc)}
@@ -30,5 +30,6 @@ getStationSubtype <- function(testType, testSid) {
   # else {return (NA)}
   
   return(typeDesc)
+
   
 }
