@@ -4,7 +4,7 @@
 \alias{findStation}
 \title{Find stations near a park}
 \usage{
-findStation(parkCode, distance = NULL, climateParams,
+findStation(parkCode, distance = NULL, climateParameters = NULL,
   filePathAndName = NULL)
 }
 \arguments{
@@ -12,9 +12,9 @@ findStation(parkCode, distance = NULL, climateParams,
 
 \item{distance}{(optional) Distance (in kilometers) to buffer park bounding box.}
 
-\item{filePathAndName}{(optional) File path and name including extension for output CSV file}
+\item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}}
 
-\item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}}
+\item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }
 \value{
 A data frame containing station information for stations near the specified park

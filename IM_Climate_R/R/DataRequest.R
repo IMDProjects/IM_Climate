@@ -65,6 +65,11 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   i = gsub("\"\"\\{","\\{",h)
   body <- gsub("\\}\"\"","\\}",i)
   
+  # Initialize vectors for SID type
+  sid1_type = c()
+  sid2_type = c()
+  sid3_type = c()
+  
   # This returns the full response - need to use content() and parse
   # content(dataResponseInit) results in a list lacking column names but containing data which needs to be
   # converted to dataFrame with appropriate vectors
@@ -93,35 +98,63 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
   colnames(dfMeta)[2]  <- "longitude"
   dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[3,]))))
   colnames(dfMeta)[3]  <- "latitude"
+  
   # Assumes sids element contains 3 members (even if 2 are empty)
+  # Suppress warnings from getStationSubtype(): raised due to conversion necessary because data.frame vector access does not recognize column name
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[4,]))))
   colnames(dfMeta)[4]  <- "sid1"
+  dfMeta$sid1  <- as.character(dfMeta$sid1)
+  sid1_type <-  suppressWarnings(getStationSubtype(unlist(strsplit(unlist(dfMeta$sid1), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid1), " "))[1],1,3)))
+  dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(sid1_type))))
+  colnames(dfMeta)[5]  <- "sid1_type"
   if (identical(dim(dfMetaInit), as.integer(c(9,1)))) {
-    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
-    colnames(dfMeta)[5]  <- "sid2"
     dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
-    colnames(dfMeta)[6]  <- "sid3"
+    colnames(dfMeta)[6]  <- "sid2"
+    dfMeta$sid2  <- as.character(dfMeta$sid2)
+    sid2_type <-  suppressWarnings(getStationSubtype(unlist(strsplit(unlist(dfMeta$sid2), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid2), " "))[1],1,3)))
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(sid2_type))))
+    colnames(dfMeta)[7]  <- "sid2_type"
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[8,]))))
+    colnames(dfMeta)[8]  <- "sid3"
+    dfMeta$sid3  <- as.character(dfMeta$sid3)
+    sid3_type <-  suppressWarnings(getStationSubtype(unlist(strsplit(unlist(dfMeta$sid3), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid3), " "))[1],1,3)))
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(sid3_type))))
+    colnames(dfMeta)[9]  <- "sid3_type"
   }
   else { # missing one or more sid elements
     if (identical(dim(dfMetaInit), as.integer(c(8,1)))) {
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[5,]))))
-      colnames(dfMeta)[5]  <- "sid2"
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[6,]))))
+      colnames(dfMeta)[6]  <- "sid2"
+      dfMeta$sid2  <- as.character(dfMeta$sid2)
+      sid2_type <-  suppressWarnings(getStationSubtype(unlist(strsplit(unlist(dfMeta$sid2), " "))[2], substr(unlist(strsplit(unlist(dfMeta$sid2), " "))[1],1,3)))
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(sid2_type))))
+      colnames(dfMeta)[7]  <- "sid2_type"
     }
-    else {
-      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(NA)))
-      colnames(dfMeta)[5]  <- "sid2"
-    }
-    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(NA)))
-    colnames(dfMeta)[6]  <- "sid3"
+    else { # no sid2 value
+      dfMeta  <- cbind(dfMeta, as.data.frame(NA))
+      colnames(dfMeta)[6]  <- "sid2"
+      #dfMeta$sid2  <- as.character(dfMeta$sid2)
+      sid2_type <-  as.data.frame(NA)
+      #dfMeta  <- cbind(dfMeta, as.character(sid2_type))
+      dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(sid2_type))))
+      colnames(dfMeta)[7]  <- "sid2_type"
+    } # no sid3 value
+    dfMeta  <- cbind(dfMeta, as.data.frame(NA))
+    colnames(dfMeta)[8]  <- "sid3"
+    #dfMeta$sid3  <- as.character(dfMeta$sid3)
+    sid3_type <-  as.data.frame(NA)
+    dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(sid3_type))))
+    colnames(dfMeta)[9]  <- "sid3_type"
   }
+
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(strsplit(dfMetaInit[,1], " ")$state))))
-  colnames(dfMeta)[7]  <- "state"
+  colnames(dfMeta)[10]  <- "state"
   dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(strsplit(dfMetaInit[,1], " ")$elev))))
-  colnames(dfMeta)[8]  <- "elev"
+  colnames(dfMeta)[11]  <- "elev"
   #tempName <- paste(strsplit(dfMetaInit[,1], " ")$name, collapse = " ")
   #dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(tempName))))
   dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(paste(strsplit(dfMetaInit[,1], " ")$name, collapse = " ")))))
-  colnames(dfMeta)[9]  <- "name"
+  colnames(dfMeta)[12]  <- "name"
   
   df <- cbind(dfMeta, dfDate)
   
@@ -140,6 +173,11 @@ getDailyWxObservations <- function(climateParameters, climateStations, sdate="po
     df[[sName]] <- as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
   }
   
+  # Convert factors and booleans to character vectors
+  fc  <- sapply(df, is.factor)
+  lc <- sapply(df, is.logical)
+  df[, fc]  <- sapply(df[, fc], as.character)
+  df[, lc]  <- sapply(df[, lc], as.character)
   dataResponse <- df
   
   # Output file
