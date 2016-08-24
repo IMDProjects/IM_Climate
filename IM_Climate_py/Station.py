@@ -1,6 +1,7 @@
 from StationDateRange import StationDateRange
 from StationData import StationData
 from common import missingValue
+from ACIS import ACIS
 
 
 class Station(object):
@@ -65,10 +66,6 @@ class Station(object):
             return stationType
         else:
             return self.missingValue
-
-    def _setStationType(self, sid = None):
-        return self.missingValue
-
 
     def _dumpMetaToList(self):
         return [self.__dict__[t] for t in self._metaTags]
