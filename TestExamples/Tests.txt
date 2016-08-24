@@ -1,0 +1,11 @@
+STATION FINDER
+	TEST 01 - 
+		unitCode = 'ROMO'
+		distance = 30
+		climateParameters = 'maxt, mint'
+
+DATA REQUESTOR
+	TEST 01 
+		climateStations =  25056,
+		climateParameters = 'pcpn', 'avgt', 'obst', 'mint', 'maxt'
+		startDate = '20150801', endDate = '20150804'
