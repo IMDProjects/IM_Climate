@@ -51,7 +51,7 @@ class DataRequestor(ACIS):
         metaElements = ['uid', 'll', 'name', 'elev', 'sids', 'state'] #additional metadata elements to request along with the data
         self.duration = 'dly'
         self.stationIDs = self._extractStationIDs(climateStations)
-        self.climateParameters = climateParameters.replace(' ','').split(',')
+        self.climateParameters = self._formatClimateParameters(climateParameters)
         self.reduceCode = None
 
         results =  self._fetchStationDataFromACIS(sdate = str(startDate),

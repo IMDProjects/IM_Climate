@@ -52,10 +52,7 @@ class StationFinder(ACIS):
         An object of station metadata (See StationDict.py)
         '''
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
-        if not climateParameters:
-            climateParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
-        else:
-            climateParameters = climateParameters.replace(' ','')
+        climateParameters = self._formatClimateParameters(climateParameters)
 
         if unitCode:
             bbox = common.getBoundingBox(unitCode, distance)
@@ -95,6 +92,8 @@ if __name__ == '__main__':
     print wxStations[48106].validDateRange
     print wxStations[48106].validDateRange['pcpn']
 
+    wxStations = sf.findStation(unitCode = 'ROMO', climateParameters = ['mint', 'maxt','pcpn'])
+    print wxStations[48106].validDateRange
 
 
 

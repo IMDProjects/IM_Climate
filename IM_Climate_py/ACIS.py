@@ -78,6 +78,18 @@ class ACIS(object):
                                         'subtypes': elem['subtypes'],
                                         } for elem in self._acis_lookups['stationIdType'] }
 
+    def _formatClimateParameters(self, climateParameters):
+        '''
+        Formats the climate parameters arguments to handle None, lists and strings
+        '''
+        if not climateParameters:
+            climateParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
+        elif type(climateParameters) == list:
+            pass
+        else:
+            climateParameters = climateParameters.replace(' ','')
+        return climateParameters
+
 if __name__ == '__main__':
     c = ACIS()
 
