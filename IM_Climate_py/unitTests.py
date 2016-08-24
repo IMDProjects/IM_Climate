@@ -25,7 +25,19 @@ class Test_StationFinder(unittest.TestCase):
 
     def test01(self):
         sf = StationFinder()
-        stations = sf.findStation()
+        stations = sf.findStation(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint'
+        ,filePathAndName = 'SF01.csv')
+        testFile = open('SF01.csv', 'r')
+        test_data = testFile.read()
+
+        refFile = open('../TestExamples/StationFinder/Test01.csv')
+        ref_data = refFile.read()
+        self.assertEquals(test_data, ref_data)
+
+        testFile.close()
+        refFile.close()
+        os.remove('SF01.csv')
+
 
     def test_StationIDs(self):
         '''
