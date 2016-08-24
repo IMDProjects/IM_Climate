@@ -26,7 +26,7 @@ class Test_StationFinder(unittest.TestCase):
     def test01(self):
         sf = StationFinder()
         stations = sf.findStation(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint'
-        ,filePathAndName = 'SF01.csv')
+            ,filePathAndName = 'SF01.csv')
         testFile = open('SF01.csv', 'r')
         test_data = testFile.read()
 
@@ -89,9 +89,6 @@ class Test_DataRequestor(unittest.TestCase):
         infile.close()
         refDataFile.close()
         os.remove('dr_test01.csv')
-
-
-
 
 
 if __name__ == '__main__':
