@@ -13,6 +13,9 @@ class StationData(dict):
             self[p] = ParameterSeries(([d[index+1] for d in stationData]), dates = self.observationDates, parameter = p)
     @property
     def climateParameters(self):
+        '''
+        For a particular station, list of all climate parameters with associated data
+        '''
         return self.keys()
 
     def __iter__(self):

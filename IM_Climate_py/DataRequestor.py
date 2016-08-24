@@ -1,5 +1,5 @@
 from ACIS import ACIS
-from ACIS_Station import ACIS_Station
+from Station import Station
 from StationDict import StationDict
 
 
@@ -97,7 +97,7 @@ class DataRequestor(ACIS):
             for p in self.climateParameters:
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
-            sd._addStation(stationSubClass = ACIS_Station,  stationID = uid, stationMeta = response['meta']
+            sd._addStation(stationSubClass = Station,  stationID = uid, stationMeta = response['meta']
                 , stationData = response['data'])
 
         return sd

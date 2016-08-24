@@ -49,14 +49,25 @@ class Station(object):
         self.sids = str(stationInfo.get('sids', default)).encode()
         self.unitCode = stationInfo.get('unitCode', default)
 
+        self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', self.missingValue), self.climateParameters)
+        self.maxRange = self.validDateRange.maxRange
+        self.minRange = self.validDateRange.minRange
+
+    def _setStationType(self, sid):
+        acis = ACIS()
+        if sid <> self.missingValue:
+            stationType = acis.stationSources[str(sid.split()[1])]['description'].encode()
+            if stationType == 'GHCN':
+                try:
+                    stationType = acis.stationSources['6']['subtypes'][self.sid1[0:3]].encode()
+                except:
+                    pass # Keep it GHCN
+            return stationType
+        else:
+            return self.missingValue
+
     def _setStationType(self, sid = None):
         return self.missingValue
-
-##    def _addStationWxData(self, stationData):
-##        '''
-##        Method to add weather data to Station object
-##        '''
-##        pass #implementation should be in child class
 
 
     def _dumpMetaToList(self):
@@ -67,7 +78,6 @@ class Station(object):
         Pretty representation of Station object
         '''
         return str(self._dumpMetaToList())
-
 
 
     def _addStationWxData(self, stationData):

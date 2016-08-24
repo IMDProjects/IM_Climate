@@ -1,6 +1,6 @@
-from datetime import date
 import datetime
 from common import missingValue
+from datetime import date
 
 class StationDateRange(dict):
     '''
@@ -51,6 +51,41 @@ class StationDateRange(dict):
             return missingValue
         return self._minRange.isoformat()
 
+    def _addDates(self, dateRanges, climateParameters):
+        if not climateParameters:
+            return
+        if type(climateParameters) == str:
+            climateParameters = climateParameters.split(',')
+
+
+        #Assign Begin and End Dates to Each Parameter
+        for index, p in enumerate(climateParameters):
+            try:
+                b =  dateRanges[index][0]
+                e = dateRanges[index][1]
+                self[p] = {'begin': date(int(b[0:4]), int(b[5:7]), int(b[8:10])),
+                    'end': date(int(e[0:4]), int(e[5:7]), int(e[8:10]))}
+            except:
+                self[p] = {'begin': missingValue, 'end': missingValue}
+
+        #Calculate the range of dates based on all parameters
+        self._minRange = date(2100,1,1)
+        self._maxRange =  date(1492,1,1)
+
+        for p in self.items():
+            if p[1]['begin'] <> missingValue:
+                if p[1]['begin'] < self._minRange:
+                    self._minRange = p[1]['begin']
+            if p[1]['end'] <> missingValue:
+                if p[1]['end'] > self._maxRange:
+                    self._maxRange = p[1]['end']
+
+        #Prevent non-sensical dates from being returned
+        if self._minRange == date(2100,1,1):
+            self._minRange = missingValue
+        if self._maxRange == date(1492,1,1):
+            self._maxRange = missingValue
+
 
 if __name__ == '__main__':
 
@@ -67,6 +102,6 @@ if __name__ == '__main__':
     print dr.maxRange
     print dr
     print dr.validDateRange
-##    print dr['avgt']
-##    print (dr.climateParameters)
-##    print (dr.allRanges)
+    print dr['avgt']
+    print (dr.climateParameters)
+    print (dr.allRanges)

@@ -16,6 +16,9 @@ class ParameterSeries(dict):
             self[date[0]] = WxOb(wo)
 
     def __iter__(self):
+        '''
+        Allows the dictionary to iterate like a list
+        '''
         for k in sorted(self.keys()):
             yield self[k]
 
