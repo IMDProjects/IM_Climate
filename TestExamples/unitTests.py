@@ -3,7 +3,7 @@ from sets import Set
 import datetime
 import os
 import sys
-
+import numpy
 
 sys.path.append(r'C:\CODE\IM_Climate\IM_Climate_py')
 from StationDateRange import StationDateRange
@@ -27,19 +27,23 @@ class Test_StationDateRanges(unittest.TestCase):
 class Test_StationFinder(unittest.TestCase):
 
     def test01(self):
+        '''
+        Confirms that all information is the same except for the maxRannge field
+        '''
         sf = StationFinder()
         stations = sf.findStation(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint'
             ,filePathAndName = 'SF01.csv')
-        testFile = open('SF01.csv', 'r')
-        test_data = testFile.read()
+        test_data = numpy.array(stations._dumpMetaToList())
 
         refFile = open('../TestExamples/StationFinder/Test01.csv')
-        ref_data = refFile.read()
-        self.assertEquals(test_data, ref_data)
+        ref_data = []
+        for line in refFile.readlines():
+            ref_data.append(line.rstrip('\n').split(','))
+        ref_data = numpy.array(ref_data)
+        self.assertTrue(numpy.array_equal(ref_data[:,1:13],test_data[:,1:13] ))
+        self.assertTrue(numpy.array_equal(ref_data[:,14],test_data[:,14] ))
 
-        testFile.close()
         refFile.close()
-        os.remove('SF01.csv')
 
 
     def test_StationIDs(self):
