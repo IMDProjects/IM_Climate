@@ -78,6 +78,10 @@ class ACIS(object):
                                         'subtypes': elem['subtypes'],
                                         } for elem in self._acis_lookups['stationIdType'] }
 
+    @property
+    def gridSources(self):
+        return self._acis_lookups['gridSources']
+
     def _formatClimateParameters(self, climateParameters):
         '''
         Formats the climate parameters arguments to handle None, lists and strings
@@ -88,6 +92,7 @@ class ACIS(object):
             pass
         else:
             climateParameters = climateParameters.replace(' ','')
+            climateParameters = climateParameters.split(',')
         return climateParameters
 
 if __name__ == '__main__':
@@ -115,3 +120,4 @@ if __name__ == '__main__':
     print (c._acis_lookups.keys())
     print (c.supportedParameters)
     print (c.stationSources)
+    print (c.gridSources.keys())
