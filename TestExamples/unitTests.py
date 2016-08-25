@@ -2,7 +2,10 @@ import unittest
 from sets import Set
 import datetime
 import os
+import sys
 
+
+sys.path.append(r'C:\CODE\IM_Climate\IM_Climate_py')
 from StationDateRange import StationDateRange
 from StationFinder import StationFinder
 from DataRequestor import DataRequestor
