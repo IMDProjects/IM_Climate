@@ -5,7 +5,7 @@
 #' Station location must intersect park bounding box (unbuffered or buffered).
 #' Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 # @param sourceURL sourceURL for ACIS data services
-#' @param parkCode One NPS park code as a string
+#' @param unitCode One NPS unit code as a string
 #' @param distance (optional) Distance (in kilometers) to buffer park bounding box.
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
@@ -13,17 +13,17 @@
 #' @examples 
 #' Find stations collecting average temperature within 10km of Marsh-Billings:
 #' 
-#' findStation(parkCode = "MABI", distance=10, climateParameters=list('avgt'))
+#' findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
 #' 
 #' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
 #' 
-#' findStation(parkCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
+#' findStation(unitCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
 #' @export 
 #' 
 
-# TODO: iterate parkCode list; add either/or capability for park code/bbox
+# TODO: iterate unitCode list; add either/or capability for park code/bbox
 
-findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePathAndName=NULL) {
+findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePathAndName=NULL) {
   # URLs and request parameters
   
   # NPS Park bounding boxes
@@ -57,7 +57,7 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
   # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279
   
   # Get bounding box for park(s)
-  bboxURL <- gsub("CODE", parkCode, bboxURLBase)
+  bboxURL <- gsub("CODE", unitCode, bboxURLBase)
   # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
   bboxWKT <- strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
   # Extract vertices and 'buffer' by 0.3 degrees (~33 km)
@@ -145,7 +145,7 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     minDate <-  setNames(minDate, "minDate")
     maxDate <-  setNames(maxDate, "maxDate")
     stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
-    stationList$unit_code <- parkCode[1]
+    stationList$unitCode <- unitCode[1]
     # Convert factors to character vectors
     fc  <- sapply(stationList, is.factor)
     lc <- sapply(stationList, is.logical)
@@ -153,7 +153,7 @@ findStation <- function (parkCode, distance=NULL, climateParameters=NULL, filePa
     stationList[, lc]  <- sapply(stationList[, lc], as.character)
   }
   else {
-    stationList <- cat("No stations for ", parkCode, "using distance ", distance) 
+    stationList <- cat("No stations for ", unitCode, "using distance ", distance) 
   }
   # Output file
   if (!is.null(filePathAndName)) {
