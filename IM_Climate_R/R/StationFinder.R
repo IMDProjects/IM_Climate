@@ -9,7 +9,7 @@
 #' @param distance (optional) Distance (in kilometers) to buffer park bounding box.
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
-#' @return A data frame containing station information for stations near the specified park
+#' @return A data frame containing station information for stations near the specified park. See User Guide for more details:  \url{https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/}
 #' @examples 
 #' Find stations collecting average temperature within 10km of Marsh-Billings:
 #' 
