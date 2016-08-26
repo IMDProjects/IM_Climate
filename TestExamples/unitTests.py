@@ -44,6 +44,22 @@ class Test_StationFinder(unittest.TestCase):
 
         refFile.close()
 
+    def test02(self):
+        sf = StationFinder()
+        stations = sf.findStation(unitCode = 'AGFO', distance = 10)
+        test_data = numpy.array(stations._dumpMetaToList())
+
+        refFile = open('../TestExamples/StationFinder/Test02.csv')
+        ref_data = []
+        for line in refFile.readlines():
+            ref_data.append(line.rstrip('\n').split(','))
+        ref_data = numpy.array(ref_data)
+        self.assertTrue(numpy.array_equal(ref_data[:,1:13],test_data[:,1:13] ))
+        self.assertTrue(numpy.array_equal(ref_data[:,14],test_data[:,14] ))
+
+        refFile.close()
+
+
 
     def test_StationIDs(self):
         '''
@@ -97,9 +113,6 @@ class Test_StationFinder(unittest.TestCase):
 
 class Test_DataRequestor(unittest.TestCase):
     def test01(self):
-        '''
-        list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 25056, "20150801", "20150804")
-        '''
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  25056,
             climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
@@ -115,12 +128,23 @@ class Test_DataRequestor(unittest.TestCase):
         refDataFile.close()
         os.remove('dr_test01.csv')
 
-    def test_Station_30433(self):
+    def test02(self):
         dr = DataRequestor()
-        climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
-        wxData =  dr.getDailyWxObservations(climateStations =  30433, climateParameters = climateParameters)
-        wxData.export('30433.csv')
-        os.remove('30433.csv')
+        wxData =  dr.getDailyWxObservations(climateStations =  30433,
+            climateParameters = 'pcpn'
+            ,startDate = '2015-08-01', endDate = '2015-08-04')
+        wxData.export('dr_test01.csv')
+        infile = open('dr_test01.csv','r')
+        testData = infile.read()
+        refDataFile = open('../TestExamples/DataRequestor/Test02.csv')
+        refData = refDataFile.read()
+        self.assertEqual(testData,refData)
+
+        infile.close()
+        refDataFile.close()
+        os.remove('dr_test01.csv')
+
+
 
 if __name__ == '__main__':
     unittest.main()
