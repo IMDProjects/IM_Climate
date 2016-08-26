@@ -9,13 +9,17 @@
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data
 #' @examples
-#' Precipitation, temperature weather observations for a station for a specifc date range:
+#' Precipitation, temperature weather observations for one station for a specifc date range:
 #'
 #' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 25056, "20150801", "20150831")
 #'
 #' All weather observations for a station for its period of record
 #'
 #' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 60903)
+#' 
+#' All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
+#' 
+#' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), stationDF, "20150801", "20150803")
 #' @export
 #'
 # TODO: iterate climateStation list
@@ -58,9 +62,9 @@ getDailyWxObservations <-
     elems <- toJSON(eList, auto_unbox = TRUE)
     
     # Iterate for each station
-    for (s in 1:length(climateStations)) {
+    for (s in 1:length(climateStations$uid)) {
       df <- NULL
-      cUid <- unlist(climateStations[s])
+      cUid <- unlist(climateStations$uid[s])
       
       bList <-
         list(
