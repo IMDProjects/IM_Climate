@@ -1,6 +1,8 @@
+import numpy as np
 
-class ACIS_Grid(object):
+class Grid(np.ndarray):
     def __init__(self):
         pass
+
 if __name__ == '__main__':
-    ACIS_Grid()
+    Grid()

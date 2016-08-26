@@ -31,8 +31,7 @@ class Test_StationFinder(unittest.TestCase):
         Confirms that all information is the same except for the maxRannge field
         '''
         sf = StationFinder()
-        stations = sf.findStation(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint'
-            ,filePathAndName = 'SF01.csv')
+        stations = sf.findStation(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint')
         test_data = numpy.array(stations._dumpMetaToList())
 
         refFile = open('../TestExamples/StationFinder/Test01.csv')
