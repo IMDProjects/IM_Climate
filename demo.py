@@ -11,8 +11,8 @@ localFolder = 'c:\\temp\\'
 # STATION FINDER - Module to find/locate stations
 sf = StationFinder()
 
-#Example #1: All stations around NOCA within a 30km buffer. Save returned results
-    #locally as SF01.csv MABI
+#Example #1: All stations around MABI within a 30km buffer. Save returned results
+    #locally as SF01.csv
 wxStations = sf.findStation(unitCode = 'MABI', distance = 30, sDate = '1940-01-01', eDate = '1940-01-01')
 wxStations.export(localFolder + 'SF01.csv')
 
@@ -68,6 +68,8 @@ wxData = dr.getDailyWxObservations(climateParameters = climateParameters
                             ,climateStations = climateStations
                             ,startDate= startDate, endDate = endDate
                             ,filePathAndName = localFolder + 'DR01.csv')
+
+print wxData
 
 #Example #2: Get daily data using wxStations object (from Example #1) for average termperature
 parameters = 'avgt'

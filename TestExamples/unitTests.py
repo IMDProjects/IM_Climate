@@ -56,6 +56,25 @@ class Test_StationFinder(unittest.TestCase):
         wxStations = sf.findStation(unitCode = 'MABI', distance = 20, sDate = '1940-01-01', eDate = '1940-01-01')
         self.assertSetEqual(stations, Set(wxStations.stationIDs))
 
+        #Check station metadata properties
+        station = wxStations[25057]
+        self.assertEqual(station.name,'BETHEL')
+        self.assertEqual(station.latitude,43.83333)
+        self.assertEqual(station.longitude,-72.63333)
+        self.assertEqual(station.sid1, '430660 2')
+        self.assertEqual(station.sid1_type, 'COOP')
+        self.assertEqual(station.state, 'VT')
+        self.assertEqual(station.elev, 541.0)
+        self.assertEqual(station.uid, 25057)
+
+    def test_DocumentationExample(self):
+        sf = StationFinder()
+        wxStations = sf.findStation(unitCode = 'MABI', distance = 30,
+            sDate = '1940-01-01', eDate = '1940-01-01',
+            climateParameters = 'mint, maxt')
+        self.assertEquals(len(wxStations.stationIDs), 6)
+
+
     def test_dates(self):
         '''
         Confirm that the start/end dates returned for a station are always the same
@@ -96,6 +115,12 @@ class Test_DataRequestor(unittest.TestCase):
         refDataFile.close()
         os.remove('dr_test01.csv')
 
+    def test_Station_30433(self):
+        dr = DataRequestor()
+        climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
+        wxData =  dr.getDailyWxObservations(climateStations =  30433, climateParameters = climateParameters)
+        wxData.export('30433.csv')
+        os.remove('30433.csv')
 
 if __name__ == '__main__':
     unittest.main()
