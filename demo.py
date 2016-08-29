@@ -13,7 +13,7 @@ sf = StationFinder()
 
 #Example #1: All stations around MABI within a 30km buffer. Save returned results
     #locally as SF01.csv
-wxStations = sf.findStation(unitCode = 'MABI', distance = 30, sDate = '1940-01-01', eDate = '1940-01-01')
+wxStations = sf.findStation(unitCode = 'MABI', distance = 30, sdate = '1940-01-01', edate = '1940-01-01')
 wxStations.export(localFolder + 'SF01.csv')
 
 #Example #2: All stations around ACAD recording minimum temperature; distance = 10km; save search results as file
@@ -66,7 +66,7 @@ endDate = '2012-02-01'
 dr = DataRequestor()
 wxData = dr.getDailyWxObservations(climateParameters = climateParameters
                             ,climateStations = climateStations
-                            ,startDate= startDate, endDate = endDate
+                            ,sdate= startDate, edate = endDate
                             ,filePathAndName = localFolder + 'DR01.csv')
 
 print wxData
@@ -74,7 +74,7 @@ print wxData
 #Example #2: Get daily data using wxStations object (from Example #1) for average termperature
 parameters = 'avgt'
 wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = climateParameters
-                            ,startDate = startDate, endDate = endDate)
+                            ,sdate = startDate, edate = endDate)
 wxData.export(filePathAndName = localFolder + 'DR02.csv')
 
 

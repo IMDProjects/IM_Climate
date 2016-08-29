@@ -81,7 +81,21 @@ class Station(object):
         '''
         Method to add weather data to Station object
         '''
-        self.data = StationData(stationData, self.climateParameters)
+        if stationData <> 'error':
+            self.data = StationData(stationData, self.climateParameters)
+
+    @property
+    def hasWxData(self):
+        '''
+        Boolean indicating whether Station object has associated weather observations
+        True - Yes
+        False - No
+        '''
+        try:
+            self.data
+            return True
+        except:
+            return False
 
 
 if __name__=='__main__':
@@ -96,6 +110,11 @@ if __name__=='__main__':
 
     s = Station(stationMeta = meta, climateParameters = climateParams)
     print s.name
+    print s.hasWxData
+
+    s = Station(stationMeta = meta, climateParameters = climateParams, stationData = data)
+    print s.name
+    print s.hasWxData
 
 
 

@@ -21,7 +21,7 @@ class StationFinder(ACIS):
         self.webServiceSource = 'StnMeta'
 
     def findStation(self, unitCode = None, distance = 0,
-        climateParameters = None, sDate = None, eDate = None
+        climateParameters = None, sdate = None, edate = None
         ,filePathAndName = None):
         '''
         INFO
@@ -58,7 +58,7 @@ class StationFinder(ACIS):
             bbox = common.getBoundingBox(unitCode, distance)
 
         results =  self._call_ACIS(elems = climateParameters
-            ,bbox = bbox, sDate = sDate, eDate = eDate
+            ,bbox = bbox, sDate = sdate, eDate = edate
             ,meta = metadata)
 
         #adds unitCode to input_dict following the call to ACIS
@@ -78,7 +78,8 @@ class StationFinder(ACIS):
 if __name__ == '__main__':
     sf = StationFinder()
 
-    wxStations = sf.findStation(unitCode = 'NOCA', filePathAndName  = 'C:\\TEMP\\test.csv', sDate = '1940-01-01', eDate = '1940-01-01')
+    wxStations = sf.findStation(unitCode = 'NOCA',
+        filePathAndName  = 'C:\\TEMP\\test.csv', sdate = '1940-01-01', edate = '1940-01-01')
     print wxStations.queryParameters
     print wxStations
     print sf.supportedParameters
@@ -94,7 +95,7 @@ if __name__ == '__main__':
     print wxStations[48106].validDateRange
 
     stationList = sf.findStation(unitCode = 'AGFO', distance = 10, climateParameters = 'pcpn'
-        ,sDate = '2015-08-01', eDate = '2015-08-04')
+        ,sdate = '2015-08-01', edate = '2015-08-04')
     print stationList
 
 

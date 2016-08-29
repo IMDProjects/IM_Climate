@@ -67,7 +67,7 @@ class Test_StationFinder(unittest.TestCase):
         stations = Set([25057, 17605, 25047, 25051, 25052, 25054])
 
         sf = StationFinder()
-        wxStations = sf.findStation(unitCode = 'MABI', distance = 20, sDate = '1940-01-01', eDate = '1940-01-01')
+        wxStations = sf.findStation(unitCode = 'MABI', distance = 20, sdate = '1940-01-01', edate = '1940-01-01')
         self.assertSetEqual(stations, Set(wxStations.stationIDs))
 
         #Check station metadata properties
@@ -84,7 +84,7 @@ class Test_StationFinder(unittest.TestCase):
     def test_DocumentationExample(self):
         sf = StationFinder()
         wxStations = sf.findStation(unitCode = 'MABI', distance = 30,
-            sDate = '1940-01-01', eDate = '1940-01-01',
+            sdate = '1940-01-01', edate = '1940-01-01',
             climateParameters = 'mint, maxt')
         self.assertEquals(len(wxStations.stationIDs), 6)
 
@@ -114,7 +114,7 @@ class Test_DataRequestor(unittest.TestCase):
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  25056,
             climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
-            ,sDate = '20150801', eDate = '20150804')
+            ,sdate = '20150801', edate = '20150804')
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
@@ -130,7 +130,7 @@ class Test_DataRequestor(unittest.TestCase):
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  30433,
             climateParameters = 'pcpn'
-            ,sDate = '2015-08-01', eDate = '2015-08-04')
+            ,sdate = '2015-08-01', edate = '2015-08-04')
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
@@ -144,11 +144,11 @@ class Test_DataRequestor(unittest.TestCase):
 
     def test03(self):
         sf = StationFinder()
-        stationList = sf.findStation(unitCode = 'AGFO', distance = 10, climateParameters = 'pcpn')
+        stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
         dr = DataRequestor()
         wxData = dr.getDailyWxObservations(climateStations = stationList,
             climateParameters = 'pcpn'
-            ,sDate = '2015-08-01', eDate = '2015-08-04')
+            ,sdate = '2015-08-01', edate = '2015-08-04')
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()

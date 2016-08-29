@@ -80,6 +80,20 @@ class StationDict(dict):
         '''
         self._export(dumpMethod = self._dumpDataToList, filePathAndName = filePathAndName, format = format)
 
+    @property
+    def wxDataExists(self):
+        '''
+        Confirms whether there is wxData for at least one station in the dictionary object
+        True - Yes
+        False - No
+        '''
+        for station in self:
+            try:
+                if station.data:
+                    return True
+            except:
+                pass
+        return False
 
     def export(self, filePathAndName, format='csv'):
         '''
@@ -99,14 +113,10 @@ class StationDict(dict):
         --------
         None
         '''
-        for station in self:
-            try:
-                if station.data:
-                    self._export(dumpMethod = self._dumpDataToList, filePathAndName = filePathAndName, format = format)
-                    return
-            except:
-                self._export(dumpMethod = self._dumpMetaToList, filePathAndName = filePathAndName, format = format)
-                return
+        if self.wxDataExists:
+            self._export(dumpMethod = self._dumpDataToList, filePathAndName = filePathAndName, format = format)
+        else:
+            self._export(dumpMethod = self._dumpMetaToList, filePathAndName = filePathAndName, format = format)
 
     def _export(self, dumpMethod, filePathAndName, format):
         '''
@@ -161,14 +171,15 @@ class StationDict(dict):
 
         self._dataAsList = [header]
         for station in self:
-            for date in station.data.observationDates:
-                a = [str(station.uid), station.name, station.latitude, station.longitude,
-                     station.sid1, station.sid1_type, station.sid2,
-                     station.sid2_type, station.sid3, station.sid3_type,
-                     station.state,  station.elev, date]
-                for param in self.climateParameters:
-                    a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
-                self._dataAsList.append(a)
+            if station.hasWxData:
+                for date in station.data.observationDates:
+                    a = [str(station.uid), station.name, station.latitude, station.longitude,
+                         station.sid1, station.sid1_type, station.sid2,
+                         station.sid2_type, station.sid3, station.sid3_type,
+                         station.state,  station.elev, date]
+                    for param in self.climateParameters:
+                        a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
+                    self._dataAsList.append(a)
         return self._dataAsList
 
 
@@ -205,13 +216,18 @@ class StationDict(dict):
         '''
         Pretty formatting of the StationDict object
         '''
-        a = self._dumpMetaToList()
-        a = map(str,a)
-        return '\n'.join(a)
+        if self.wxDataExists:
+            a = self._dumpDataToList()
+            a = map(str,a)
+            return '\n'.join(a)
+        else:
+            a = self._dumpMetaToList()
+            a = map(str,a)
+            return '\n'.join(a)
 
 
 if __name__ == '__main__':
-    from ACIS_Station import ACIS_Station
+    from Station import Station
     climateParams = ['mint']
     stations =  {'meta': [{'elev': 10549.9,
             'll': [-106.17, 39.49],
@@ -230,7 +246,7 @@ if __name__ == '__main__':
     queryParams = {'Example':'ExampleData'}
     sl = StationDict(queryParameters = queryParams, climateParameters =  climateParams)
     for s in stations['meta']:
-        sl._addStation(stationSubClass = ACIS_Station, stationID = s['uid'],  stationMeta =  s)
+        sl._addStation(stationSubClass = Station, stationID = s['uid'],  stationMeta =  s)
     print(sl.stationIDs)
     print(sl.stationNames)
     print(sl.queryParameters)
@@ -272,8 +288,8 @@ if __name__ == '__main__':
            u'uid': 1233}}
 
     wx = StationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
-    wx._addStation(stationSubClass= ACIS_Station, stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
-    wx._addStation(stationSubClass = ACIS_Station, stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
+    wx._addStation(stationSubClass= Station, stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
+    wx._addStation(stationSubClass = Station, stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
     print wx._dumpDataToList()
     print wx.climateParameters
     print wx.stationIDs

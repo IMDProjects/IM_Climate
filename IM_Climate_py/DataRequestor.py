@@ -19,8 +19,8 @@ class DataRequestor(ACIS):
                 , 'sum' : 'Sum of the values for the period'
                 , 'mean': 'Average of the values for the period'}
 
-    def getDailyWxObservations(self, climateParameters, climateStations, sDate = 'por',
-            eDate = 'por', filePathAndName = None):
+    def getDailyWxObservations(self, climateParameters, climateStations, sdate = 'por',
+            edate = 'por', filePathAndName = None):
         '''
         INFO
         -----
@@ -54,8 +54,8 @@ class DataRequestor(ACIS):
         self.climateParameters = self._formatClimateParameters(climateParameters)
         self.reduceCode = None
 
-        results =  self._fetchStationDataFromACIS(sdate = str(sDate),
-            edate = str(eDate), meta = metaElements)
+        results =  self._fetchStationDataFromACIS(sdate = str(sdate),
+            edate = str(edate), meta = metaElements)
 
         if filePathAndName:
             results.exportData(filePathAndName = filePathAndName)
@@ -98,7 +98,7 @@ class DataRequestor(ACIS):
                 elems.append({'name':p,'add':'f,s'})
             response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
             sd._addStation(stationSubClass = Station,  stationID = uid, stationMeta = response['meta']
-                , stationData = response['data'])
+                , stationData = response.get('data', 'error'))
 
         return sd
 
@@ -234,20 +234,31 @@ class DataRequestor(ACIS):
 
 
 if __name__=='__main__':
+
     stationIDs = [66180, 67175]
 
     dr = DataRequestor()
 
     #Daily Data
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
-        , sDate = '20120101', eDate = '2012-01-05' )
+        , sdate = '20120101', edate = '2012-01-05' )
     dailyData.exportData(filePathAndName = r'dailyData.csv')
 
     #GET DATA for a single station
     dailyData = dr.getDailyWxObservations(climateStations = 77572, climateParameters = 'mint, maxt'
-        , sDate = 20160101, eDate = '20160105' )
+        , sdate = 20160101, edate = '20160105' )
 
     #Print the station data to the screen
     print dailyData
+
+    #get data for stations returned in station search
+    from StationFinder import StationFinder
+    sf = StationFinder()
+    stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
+    dr = DataRequestor()
+    wxData = dr.getDailyWxObservations(climateStations = stationList,
+        climateParameters = 'pcpn'
+        ,sdate = '2015-08-01', edate = '2015-08-04')
+    print wxData
 
 
