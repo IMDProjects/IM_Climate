@@ -13,7 +13,7 @@ class Station(object):
         self.missingValue = missingValue
         self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
-        self._metaTags = ['uid', 'name', 'latitude', 'longitude', 'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
+        self._metaTags = ['uid', 'name','longitude', 'latitude',  'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
             'elev', 'minRange', 'maxRange', 'unitCode']
         if stationData:

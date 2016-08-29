@@ -35,6 +35,7 @@ class Test_StationFinder(unittest.TestCase):
         test_data = numpy.array(stations._dumpMetaToList())
 
         refFile = open('../TestExamples/StationFinder/SF_Test01.csv')
+        #refFile = open('../TestExamples/StationFinder/SF_Test01.csv')
         ref_data = []
         for line in refFile.readlines():
             ref_data.append(line.rstrip('\n').split(','))
@@ -154,7 +155,8 @@ class Test_DataRequestor(unittest.TestCase):
         testData = infile.read()
         refDataFile = open('../TestExamples/DataRequestor/DR_Test03.csv')
         refData = refDataFile.read()
-        self.assertEqual(testData,refData)
+        self.assertEqual(list(numpy.setdiff1d(testData, refData)),[])
+        #self.assertEqual(testData,refData)
 
         infile.close()
         refDataFile.close()

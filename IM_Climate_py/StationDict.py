@@ -19,7 +19,7 @@ class StationDict(dict):
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.climateParameters = climateParameters
-        self._dataTags = ['uid', 'name', 'latitude', 'longitude', 'sid1', 'sid1_type',
+        self._dataTags = ['uid', 'name', 'longitude', 'latitude', 'sid1', 'sid1_type',
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
             'elev'] #station metadata to include with data export
 
@@ -173,7 +173,7 @@ class StationDict(dict):
         for station in self:
             if station.hasWxData:
                 for date in station.data.observationDates:
-                    a = [str(station.uid), station.name, station.latitude, station.longitude,
+                    a = [str(station.uid), station.name, station.longitude, station.latitude,
                          station.sid1, station.sid1_type, station.sid2,
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
