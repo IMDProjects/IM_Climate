@@ -75,8 +75,6 @@ class StationFinder(ACIS):
 
 
 
-
-
 if __name__ == '__main__':
     sf = StationFinder()
 

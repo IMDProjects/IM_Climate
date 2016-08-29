@@ -32,8 +32,8 @@ def getBoundingBox(unitCode, distanceKM = None):
 
     if distanceKM:
         bufr = float(distanceKM)*0.011
-        west+=bufr
-        east-=bufr
+        west-=bufr
+        east+=bufr
         south-=bufr
         north+=bufr
     return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
