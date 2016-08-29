@@ -12,11 +12,17 @@ DATA REQUESTOR
 	TEST 01 
 		climateStations =  25056
 		climateParameters = 'pcpn', 'avgt', 'obst', 'mint', 'maxt'
-		startDate = '20150801'
-		endDate = '20150804'
+		sDate = '20150801'
+		eDate = '20150804'
 	TEST 02	
 		climateStations = 30433
 		climateParameters = 'pcpn'
-		startDate = '20150801'
-		endDate = '20150804'
+		sDate = '20150801'
+		eDate = '20150804'
+	TEST 03
+		climateStations = StationFinder.findStation(unitCode = 'AGFO', distance = 10)
+		climateParameters = 'pcpn'
+		sDate = '20150801'
+		eDate = '20150804'
+		
 		

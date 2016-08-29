@@ -19,8 +19,8 @@ class DataRequestor(ACIS):
                 , 'sum' : 'Sum of the values for the period'
                 , 'mean': 'Average of the values for the period'}
 
-    def getDailyWxObservations(self, climateParameters, climateStations, startDate = 'por',
-            endDate = 'por', filePathAndName = None):
+    def getDailyWxObservations(self, climateParameters, climateStations, sDate = 'por',
+            eDate = 'por', filePathAndName = None):
         '''
         INFO
         -----
@@ -54,8 +54,8 @@ class DataRequestor(ACIS):
         self.climateParameters = self._formatClimateParameters(climateParameters)
         self.reduceCode = None
 
-        results =  self._fetchStationDataFromACIS(sdate = str(startDate),
-            edate = str(endDate), meta = metaElements)
+        results =  self._fetchStationDataFromACIS(sdate = str(sDate),
+            edate = str(eDate), meta = metaElements)
 
         if filePathAndName:
             results.exportData(filePathAndName = filePathAndName)
@@ -240,12 +240,12 @@ if __name__=='__main__':
 
     #Daily Data
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
-        , startDate = '20120101', endDate = '2012-01-05' )
+        , sDate = '20120101', eDate = '2012-01-05' )
     dailyData.exportData(filePathAndName = r'dailyData.csv')
 
     #GET DATA for a single station
     dailyData = dr.getDailyWxObservations(climateStations = 77572, climateParameters = 'mint, maxt'
-        , startDate = 20160101, endDate = '20160105' )
+        , sDate = 20160101, eDate = '20160105' )
 
     #Print the station data to the screen
     print dailyData

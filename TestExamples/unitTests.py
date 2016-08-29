@@ -114,7 +114,7 @@ class Test_DataRequestor(unittest.TestCase):
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  25056,
             climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
-            ,startDate = '20150801', endDate = '20150804')
+            ,sDate = '20150801', eDate = '20150804')
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
@@ -130,11 +130,29 @@ class Test_DataRequestor(unittest.TestCase):
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  30433,
             climateParameters = 'pcpn'
-            ,startDate = '2015-08-01', endDate = '2015-08-04')
+            ,sDate = '2015-08-01', eDate = '2015-08-04')
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
         refDataFile = open('../TestExamples/DataRequestor/DR_Test02.csv')
+        refData = refDataFile.read()
+        self.assertEqual(testData,refData)
+
+        infile.close()
+        refDataFile.close()
+        os.remove('temp.csv')
+
+    def test03(self):
+        sf = StationFinder()
+        stationList = sf.findStation(unitCode = 'AGFO', distance = 10, climateParameters = 'pcpn')
+        dr = DataRequestor()
+        wxData = dr.getDailyWxObservations(climateStations = stationList,
+            climateParameters = 'pcpn'
+            ,sDate = '2015-08-01', eDate = '2015-08-04')
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
+        testData = infile.read()
+        refDataFile = open('../TestExamples/DataRequestor/DR_Test03.csv')
         refData = refDataFile.read()
         self.assertEqual(testData,refData)
 

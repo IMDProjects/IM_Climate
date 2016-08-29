@@ -93,5 +93,8 @@ if __name__ == '__main__':
     wxStations = sf.findStation(unitCode = 'ROMO', climateParameters = ['mint', 'maxt','pcpn'])
     print wxStations[48106].validDateRange
 
+    stationList = sf.findStation(unitCode = 'AGFO', distance = 10, climateParameters = 'pcpn'
+        ,sDate = '2015-08-01', eDate = '2015-08-04')
+    print stationList
 
 
