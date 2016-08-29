@@ -3,7 +3,7 @@
 #' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
 # @param dataURL URL for ACIS data service vending station data
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
-#' @param climateStations A list of one or more unique identifiers (uid) for climate stations
+#' @param climateStations A list of one or more unique identifiers (uid) for climate stations. Can be a single item, a list of items, or a data frame of the findStation response.
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
@@ -62,9 +62,18 @@ getDailyWxObservations <-
     elems <- toJSON(eList, auto_unbox = TRUE)
     
     # Iterate for each station
-    for (s in 1:length(climateStations$uid)) {
+    if (is.data.frame(climateStations)) {
+      listStations = climateStations$uid
+    }
+    else if (is.list(climateStations)) {
+      listStations = climateStations
+    }
+    else {
+      listStations = as.list(climateStations)
+    }
+    for (s in 1:length(listStations)) {
       df <- NULL
-      cUid <- unlist(climateStations$uid[s])
+      cUid <- unlist(listStations[s])
       
       bList <-
         list(

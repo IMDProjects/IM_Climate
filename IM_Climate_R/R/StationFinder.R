@@ -15,9 +15,13 @@
 #' 
 #' findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
 #' 
-#' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
+#' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file:
 #' 
 #' findStation(unitCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
+#' 
+#' Find stations within 30km of Rocky Mountain NP collecting maxt and mint:
+#' 
+#' findStation(unitCode = "ROMO", distance=30, climateParameters=list('pcpn'), filePathAndName = "Test01_R.csv")
 #' @export 
 #' 
 
