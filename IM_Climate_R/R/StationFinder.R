@@ -9,15 +9,19 @@
 #' @param distance (optional) Distance (in kilometers) to buffer park bounding box.
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
-#' @return A data frame containing station information for stations near the specified park
+#' @return A data frame containing station information for stations near the specified park. See User Guide for more details:  \url{https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/}
 #' @examples 
 #' Find stations collecting average temperature within 10km of Marsh-Billings:
 #' 
 #' findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
 #' 
-#' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
+#' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file:
 #' 
 #' findStation(unitCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
+#' 
+#' Find stations within 30km of Rocky Mountain NP collecting maxt and mint:
+#' 
+#' findStation(unitCode = "ROMO", distance=30, climateParameters=list('pcpn'), filePathAndName = "Test01_R.csv")
 #' @export 
 #' 
 
