@@ -34,14 +34,13 @@ class Test_StationFinder(unittest.TestCase):
         stations = sf.findStation(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint')
         test_data = numpy.array(stations._dumpMetaToList())
 
-        refFile = open('../TestExamples/StationFinder/Test01.csv')
+        refFile = open('../TestExamples/StationFinder/SF_Test01.csv')
         ref_data = []
         for line in refFile.readlines():
             ref_data.append(line.rstrip('\n').split(','))
         ref_data = numpy.array(ref_data)
-        self.assertTrue(numpy.array_equal(ref_data[:,1:13],test_data[:,1:13] ))
-        self.assertTrue(numpy.array_equal(ref_data[:,14],test_data[:,14] ))
-
+        self.assertEquals(list(numpy.setdiff1d(ref_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]
+            ,test_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]])),[])
         refFile.close()
 
     def test02(self):
@@ -49,14 +48,13 @@ class Test_StationFinder(unittest.TestCase):
         stations = sf.findStation(unitCode = 'AGFO', distance = 10)
         test_data = numpy.array(stations._dumpMetaToList())
 
-        refFile = open('../TestExamples/StationFinder/Test02.csv')
+        refFile = open('../TestExamples/StationFinder/SF_Test02.csv')
         ref_data = []
         for line in refFile.readlines():
             ref_data.append(line.rstrip('\n').split(','))
         ref_data = numpy.array(ref_data)
-        self.assertTrue(numpy.array_equal(ref_data[:,1:13],test_data[:,1:13] ))
-        self.assertTrue(numpy.array_equal(ref_data[:,14],test_data[:,14] ))
-
+        self.assertTrue(numpy.array_equal(ref_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]],
+            test_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]] ))
         refFile.close()
 
 
@@ -66,7 +64,7 @@ class Test_StationFinder(unittest.TestCase):
         List stations IDs for stations around NOCA within a 20km buffer. List only
         stations collecting data on January 1, 1940.
         '''
-        stations = Set([25057, 25054, 25047])
+        stations = Set([25057, 17605, 25047, 25051, 25052, 25054])
 
         sf = StationFinder()
         wxStations = sf.findStation(unitCode = 'MABI', distance = 20, sDate = '1940-01-01', eDate = '1940-01-01')
@@ -117,32 +115,32 @@ class Test_DataRequestor(unittest.TestCase):
         wxData =  dr.getDailyWxObservations(climateStations =  25056,
             climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
             ,startDate = '20150801', endDate = '20150804')
-        wxData.export('dr_test01.csv')
-        infile = open('dr_test01.csv','r')
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
         testData = infile.read()
-        refDataFile = open('../TestExamples/DataRequestor/Test01.csv')
+        refDataFile = open('../TestExamples/DataRequestor/DR_Test01.csv')
         refData = refDataFile.read()
         self.assertEqual(testData,refData)
 
         infile.close()
         refDataFile.close()
-        os.remove('dr_test01.csv')
+        os.remove('temp.csv')
 
     def test02(self):
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  30433,
             climateParameters = 'pcpn'
             ,startDate = '2015-08-01', endDate = '2015-08-04')
-        wxData.export('dr_test01.csv')
-        infile = open('dr_test01.csv','r')
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
         testData = infile.read()
-        refDataFile = open('../TestExamples/DataRequestor/Test02.csv')
+        refDataFile = open('../TestExamples/DataRequestor/DR_Test02.csv')
         refData = refDataFile.read()
         self.assertEqual(testData,refData)
 
         infile.close()
         refDataFile.close()
-        os.remove('dr_test01.csv')
+        os.remove('temp.csv')
 
 
 
