@@ -3,3 +3,10 @@ uid,longitude,latitude,sid1,sid1_type,sid2,sid2_type,sid3,sid3_type,state,elev,n
 30433,-103.7547,42.3579,US10siou005 6,GHCN,NA,NA,NA,NA,NE,NA,HARRISON 23.7 SSE,8/2/2015,0,NA,N
 30433,-103.7547,42.3579,US10siou005 6,GHCN,NA,NA,NA,NA,NE,NA,HARRISON 23.7 SSE,8/3/2015,0,NA,N
 30433,-103.7547,42.3579,US10siou005 6,GHCN,NA,NA,NA,NA,NE,NA,HARRISON 23.7 SSE,8/4/2015,0,NA,N
+=======
+"uid","longitude","latitude","sid1","sid1_type","sid2","sid2_type","sid3","sid3_type","state","elev","name","date","pcpn_in","pcpn_acis_flag","pcpn_source_flag"
+"30433",-103.7547,42.3579,"US10siou005 6","GHCN",NA,"NA",NA,"NA","NE",NA,"HARRISON 23.7 SSE",2015-08-01,0,"T","N"
+"30433",-103.7547,42.3579,"US10siou005 6","GHCN",NA,"NA",NA,"NA","NE",NA,"HARRISON 23.7 SSE",2015-08-02,0,NA,"N"
+"30433",-103.7547,42.3579,"US10siou005 6","GHCN",NA,"NA",NA,"NA","NE",NA,"HARRISON 23.7 SSE",2015-08-03,0,NA,"N"
+"30433",-103.7547,42.3579,"US10siou005 6","GHCN",NA,"NA",NA,"NA","NE",NA,"HARRISON 23.7 SSE",2015-08-04,0,NA,"N"
+>>>>>>> 909053df4de0b2b3502c7b4dd9660a5dfbac0b82
