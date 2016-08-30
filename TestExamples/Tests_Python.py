@@ -12,6 +12,7 @@ from DataRequestor import DataRequestor
 
 
 class Test_StationFinder(unittest.TestCase):
+    rootFolder = '../TestExamples/StationFinder/'
     def tmp(self):
         '''
         TEMPLATE
@@ -21,7 +22,7 @@ class Test_StationFinder(unittest.TestCase):
             climateParameters = self.climateParameters, sdate = self.sdate, edate = self.edate)
         test_data = numpy.array(stations._dumpMetaToList())
 
-        refFile = open(self.refFile)
+        refFile = open(Test_StationFinder.rootFolder + self.refFile)
         ref_data = []
         for line in refFile.readlines():
             ref_data.append(line.rstrip('\n').split(','))
@@ -40,7 +41,7 @@ class Test_StationFinder(unittest.TestCase):
         self.climateParameters = 'maxt, mint'
         self.sdate = None
         self.edate = None
-        self.refFile = '../TestExamples/StationFinder/SF_Test01.csv'
+        self.refFile = 'SF_Test01.csv'
         self.tmp()
         self.assertEquals(self.results, [])
 
@@ -52,12 +53,14 @@ class Test_StationFinder(unittest.TestCase):
         self.climateParameters = None
         self.sdate = None
         self.edate = None
-        self.refFile = '../TestExamples/StationFinder/SF_Test02.csv'
+        self.refFile = 'SF_Test02.csv'
         self.tmp()
         self.assertEquals(self.results, [])
 
 
 class Test_DataRequestor(unittest.TestCase):
+
+    rootFolder = '../TestExamples/DataRequestor/'
     def tmp(self):
         '''
         TEST TEMPLATE
@@ -69,7 +72,7 @@ class Test_DataRequestor(unittest.TestCase):
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
-        refDataFile = open(self.refDataFile, 'r')
+        refDataFile = open(Test_DataRequestor.rootFolder + self.refDataFile, 'r')
         refData = refDataFile.read()
 
         infile.close()
@@ -82,7 +85,7 @@ class Test_DataRequestor(unittest.TestCase):
         self.climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
         self.sdate = '20150801'
         self.edate = '20150804'
-        self.refDataFile = '../TestExamples/DataRequestor/DR_Test01.csv'
+        self.refDataFile = 'DR_Test01.csv'
         self.tmp()
         self.assertEqual(self.result,[])
 
@@ -91,7 +94,7 @@ class Test_DataRequestor(unittest.TestCase):
         self.climateParameters = 'pcpn'
         self.sdate = '2015-08-01'
         self.edate = '2015-08-04'
-        self.refDataFile = '../TestExamples/DataRequestor/DR_Test02.csv'
+        self.refDataFile = 'DR_Test02.csv'
         self.tmp()
         self.assertEqual(self.result,[])
 
@@ -102,13 +105,9 @@ class Test_DataRequestor(unittest.TestCase):
         self.climateParameters = 'pcpn'
         self.sdate = '2015-08-01'
         self.edate = '2015-08-04'
-        self.refDataFile = '../TestExamples/DataRequestor/DR_Test03.csv'
+        self.refDataFile = 'DR_Test03.csv'
         self.tmp()
         self.assertEqual(self.result,[])
-
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
