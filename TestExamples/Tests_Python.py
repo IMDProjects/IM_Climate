@@ -15,7 +15,8 @@ class Test_StationFinder(unittest.TestCase):
     rootFolder = '../TestExamples/StationFinder/'
     def tmp(self):
         '''
-        TEMPLATE
+        Confirms that all information is the same except for the maxRannge field.
+        Order is ignored
         '''
         sf = StationFinder()
         stations = sf.findStation(unitCode = self.unitCode, distance = self.distance,
@@ -33,9 +34,6 @@ class Test_StationFinder(unittest.TestCase):
             ,test_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]))
 
     def test01(self):
-        '''
-        Confirms that all information is the same except for the maxRannge field
-        '''
         self.unitCode = 'ROMO'
         self.distance = 30
         self.climateParameters = 'maxt, mint'
@@ -44,8 +42,6 @@ class Test_StationFinder(unittest.TestCase):
         self.refFile = 'SF_Test01.csv'
         self.tmp()
         self.assertEquals(self.results, [])
-
-
 
     def test02(self):
         self.unitCode = 'AGFO'
@@ -63,7 +59,7 @@ class Test_DataRequestor(unittest.TestCase):
     rootFolder = '../TestExamples/DataRequestor/'
     def tmp(self):
         '''
-        TEST TEMPLATE
+        Confirms that all information the same, ignoring record order
         '''
         dr = DataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  self.climateStations,
@@ -74,7 +70,6 @@ class Test_DataRequestor(unittest.TestCase):
         testData = infile.read()
         refDataFile = open(Test_DataRequestor.rootFolder + self.refDataFile, 'r')
         refData = refDataFile.read()
-
         infile.close()
         refDataFile.close()
         os.remove('temp.csv')
