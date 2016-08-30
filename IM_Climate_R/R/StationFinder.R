@@ -94,7 +94,6 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   
   # Use bounding box to request station list (jsonlite)
   stationListInit <- fromJSON(stationRequest) 
-  # Use bounding box to request station list (httr GET)
   if (length(stationListInit$meta) > 0) {
     uid <- setNames(as.data.frame(as.numeric(stationListInit$meta$uid)), "uid")
     longitude <- setNames(as.data.frame(as.numeric(as.matrix(lapply(stationListInit$meta$ll, function(x) unlist(as.numeric(x[1])))))),"longitude")

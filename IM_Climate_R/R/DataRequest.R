@@ -140,19 +140,23 @@ getDailyWxObservations <-
           )$uid)))
         #dfMeta <- as.data.frame(as.character(as.vector(dfMetaInit[1, ])))
         colnames(dfMeta)[1]  <- "uid"
-        #colnames(dfMeta)[1]  <- names(rList$meta)[1]
+        dfMeta  <-
+          cbind(dfMeta, as.data.frame(as.character(as.vector(
+            paste(strsplit(dfMetaInit[, 1], " ")$name, collapse = " ")
+          ))))
+        colnames(dfMeta)[2]  <- "name"
         dfMeta  <-
           cbind(dfMeta, as.data.frame(as.numeric(as.vector(
             rList$meta$ll[1]
           ))))
         #dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[2, ]))))
-        colnames(dfMeta)[2]  <- "longitude"
+        colnames(dfMeta)[3]  <- "longitude"
         dfMeta  <-
           cbind(dfMeta, as.data.frame(as.numeric(as.vector(
             rList$meta$ll[2]
           ))))
         #dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[3, ]))))
-        colnames(dfMeta)[3]  <- "latitude"
+        colnames(dfMeta)[4]  <- "latitude"
         
         # Assumes sids element contains 3 members (even if 2 are empty)
         # Suppress warnings from getStationSubtype(): raised due to conversion necessary because data.frame vector access technique does not recognize column name
@@ -161,7 +165,7 @@ getDailyWxObservations <-
             rList$meta$sids[1]
           ))))
         #dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[4, ]))))
-        colnames(dfMeta)[4]  <- "sid1"
+        colnames(dfMeta)[5]  <- "sid1"
         dfMeta$sid1  <- as.character(dfMeta$sid1)
         sid1_type <-
           suppressWarnings(getStationSubtype(unlist(strsplit(
@@ -171,13 +175,13 @@ getDailyWxObservations <-
           )[1], 1, 3)))
         dfMeta  <-
           cbind(dfMeta, as.data.frame(as.character(as.vector(sid1_type))))
-        colnames(dfMeta)[5]  <- "sid1_type"
+        colnames(dfMeta)[6]  <- "sid1_type"
         if (identical(dim(dfMetaInit), as.integer(c(9, 1)))) {
           dfMeta  <-
             cbind(dfMeta, as.data.frame(as.character(as.vector(
               dfMetaInit[5,]
             ))))
-          colnames(dfMeta)[6]  <- "sid2"
+          colnames(dfMeta)[7]  <- "sid2"
           dfMeta$sid2  <- as.character(dfMeta$sid2)
           sid2_type <-
             suppressWarnings(getStationSubtype(unlist(strsplit(
@@ -187,12 +191,12 @@ getDailyWxObservations <-
             )[1], 1, 3)))
           dfMeta  <-
             cbind(dfMeta, as.data.frame(as.character(as.vector(sid2_type))))
-          colnames(dfMeta)[7]  <- "sid2_type"
+          colnames(dfMeta)[8]  <- "sid2_type"
           dfMeta  <-
             cbind(dfMeta, as.data.frame(as.character(as.vector(
               dfMetaInit[6,]
             ))))
-          colnames(dfMeta)[8]  <- "sid3"
+          colnames(dfMeta)[9]  <- "sid3"
           dfMeta$sid3  <- as.character(dfMeta$sid3)
           sid3_type <-
             suppressWarnings(getStationSubtype(unlist(strsplit(
@@ -202,7 +206,7 @@ getDailyWxObservations <-
             )[1], 1, 3)))
           dfMeta  <-
             cbind(dfMeta, as.data.frame(as.character(as.vector(sid3_type))))
-          colnames(dfMeta)[9]  <- "sid3_type"
+          colnames(dfMeta)[10]  <- "sid3_type"
         }
         else {
           # missing one or more sid elements
@@ -211,7 +215,7 @@ getDailyWxObservations <-
               cbind(dfMeta, as.data.frame(as.character(as.vector(
                 dfMetaInit[5,]
               ))))
-            colnames(dfMeta)[6]  <- "sid2"
+            colnames(dfMeta)[7]  <- "sid2"
             dfMeta$sid2  <- as.character(dfMeta$sid2)
             sid2_type <-
               suppressWarnings(getStationSubtype(unlist(strsplit(
@@ -223,12 +227,12 @@ getDailyWxObservations <-
               cbind(dfMeta, as.data.frame(as.character(as.vector(
                 sid2_type
               ))))
-            colnames(dfMeta)[7]  <- "sid2_type"
+            colnames(dfMeta)[8]  <- "sid2_type"
           }
           else {
             # no sid2 value
             dfMeta  <- cbind(dfMeta, as.data.frame(NA))
-            colnames(dfMeta)[6]  <- "sid2"
+            colnames(dfMeta)[7]  <- "sid2"
             #dfMeta$sid2  <- as.character(dfMeta$sid2)
             sid2_type <-  as.data.frame(NA)
             #dfMeta  <- cbind(dfMeta, as.character(sid2_type))
@@ -236,15 +240,15 @@ getDailyWxObservations <-
               cbind(dfMeta, as.data.frame(as.character(as.vector(
                 sid2_type
               ))))
-            colnames(dfMeta)[7]  <- "sid2_type"
+            colnames(dfMeta)[8]  <- "sid2_type"
           } # no sid3 value
           dfMeta  <- cbind(dfMeta, as.data.frame(NA))
-          colnames(dfMeta)[8]  <- "sid3"
+          colnames(dfMeta)[9]  <- "sid3"
           #dfMeta$sid3  <- as.character(dfMeta$sid3)
           sid3_type <-  as.data.frame(NA)
           dfMeta  <-
             cbind(dfMeta, as.data.frame(as.character(as.vector(sid3_type))))
-          colnames(dfMeta)[9]  <- "sid3_type"
+          colnames(dfMeta)[10]  <- "sid3_type"
         }
         
         if (!is.null(strsplit(dfMetaInit[, 1], " ")$state)) {
@@ -257,7 +261,7 @@ getDailyWxObservations <-
           dfMeta  <-
             cbind(dfMeta, as.data.frame(NA))
         }
-        colnames(dfMeta)[10]  <- "state"
+        colnames(dfMeta)[11]  <- "state"
         
         if (!is.null(strsplit(dfMetaInit[, 1], " ")$elev)) {
           dfMeta  <-
@@ -269,13 +273,7 @@ getDailyWxObservations <-
           dfMeta  <-
             cbind(dfMeta, as.data.frame(NA))
         }
-        colnames(dfMeta)[11]  <- "elev"
-        
-        dfMeta  <-
-          cbind(dfMeta, as.data.frame(as.character(as.vector(
-            paste(strsplit(dfMetaInit[, 1], " ")$name, collapse = " ")
-          ))))
-        colnames(dfMeta)[12]  <- "name"
+        colnames(dfMeta)[12]  <- "elev"
         
         df <- cbind(dfMeta, dfDate)
         
