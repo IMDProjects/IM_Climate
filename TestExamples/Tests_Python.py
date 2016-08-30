@@ -12,86 +12,99 @@ from DataRequestor import DataRequestor
 
 
 class Test_StationFinder(unittest.TestCase):
-    def tmp(self, unitCode, distance, climateParameters,sdate, edate, refFile):
+    def tmp(self):
         '''
         TEMPLATE
         '''
         sf = StationFinder()
-        stations = sf.findStation(unitCode = unitCode, distance = distance,
-            climateParameters = climateParameters, sdate = sdate, edate = edate)
+        stations = sf.findStation(unitCode = self.unitCode, distance = self.distance,
+            climateParameters = self.climateParameters, sdate = self.sdate, edate = self.edate)
         test_data = numpy.array(stations._dumpMetaToList())
 
-        refFile = open(refFile)
+        refFile = open(self.refFile)
         ref_data = []
         for line in refFile.readlines():
             ref_data.append(line.rstrip('\n').split(','))
         ref_data = numpy.array(ref_data)
 
         refFile.close()
-        return list(numpy.setdiff1d(ref_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]
+        self.results =  list(numpy.setdiff1d(ref_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]
             ,test_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]))
 
     def test01(self):
         '''
         Confirms that all information is the same except for the maxRannge field
         '''
-        results = self.tmp(unitCode = 'ROMO', distance = 30, climateParameters = 'maxt, mint',
-                sdate = None, edate = None, refFile = '../TestExamples/StationFinder/SF_Test01.csv' )
-        self.assertEquals(results, [])
+        self.unitCode = 'ROMO'
+        self.distance = 30
+        self.climateParameters = 'maxt, mint'
+        self.sdate = None
+        self.edate = None
+        self.refFile = '../TestExamples/StationFinder/SF_Test01.csv'
+        self.tmp()
+        self.assertEquals(self.results, [])
 
 
 
     def test02(self):
-        results = self.tmp(unitCode = 'AGFO', distance = 10, climateParameters = None,
-                sdate = None, edate = None, refFile = '../TestExamples/StationFinder/SF_Test02.csv' )
-        self.assertEquals(results, [])
+        self.unitCode = 'AGFO'
+        self.distance = 10
+        self.climateParameters = None
+        self.sdate = None
+        self.edate = None
+        self.refFile = '../TestExamples/StationFinder/SF_Test02.csv'
+        self.tmp()
+        self.assertEquals(self.results, [])
 
 
 class Test_DataRequestor(unittest.TestCase):
-    def tmp(self, climateStations, climateParameters, sdate, edate, refDataFile):
+    def tmp(self):
         '''
         TEST TEMPLATE
         '''
         dr = DataRequestor()
-        wxData =  dr.getDailyWxObservations(climateStations =  climateStations,
-            climateParameters = climateParameters
-            ,sdate = sdate, edate = edate)
+        wxData =  dr.getDailyWxObservations(climateStations =  self.climateStations,
+            climateParameters = self.climateParameters
+            ,sdate = self.sdate, edate = self.edate)
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
-        refDataFile = open(refDataFile, 'r')
+        refDataFile = open(self.refDataFile, 'r')
         refData = refDataFile.read()
 
         infile.close()
         refDataFile.close()
         os.remove('temp.csv')
-        return list(numpy.setdiff1d(refData, testData))
+        self.result =  list(numpy.setdiff1d(refData, testData))
 
     def test01(self):
-        result = self.tmp(climateStations =  25056,
-            climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
-            ,sdate = '20150801', edate = '20150804',
-            refDataFile = '../TestExamples/DataRequestor/DR_Test01.csv')
-
-        self.assertEqual(result,[])
+        self.climateStations =  25056
+        self.climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
+        self.sdate = '20150801'
+        self.edate = '20150804'
+        self.refDataFile = '../TestExamples/DataRequestor/DR_Test01.csv'
+        self.tmp()
+        self.assertEqual(self.result,[])
 
     def test02(self):
-        result = self.tmp(climateStations =  30433,
-            climateParameters = 'pcpn'
-            ,sdate = '2015-08-01', edate = '2015-08-04',
-            refDataFile = '../TestExamples/DataRequestor/DR_Test02.csv')
-
-        self.assertEqual(result,[])
+        self.climateStations =  30433
+        self.climateParameters = 'pcpn'
+        self.sdate = '2015-08-01'
+        self.edate = '2015-08-04'
+        self.refDataFile = '../TestExamples/DataRequestor/DR_Test02.csv'
+        self.tmp()
+        self.assertEqual(self.result,[])
 
     def test03(self):
         sf = StationFinder()
         stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
-        result = self.tmp(climateStations = stationList,
-            climateParameters = 'pcpn'
-            ,sdate = '2015-08-01', edate = '2015-08-04',
-            refDataFile = '../TestExamples/DataRequestor/DR_Test03.csv')
-
-        self.assertEqual(result,[])
+        self.climateStations = stationList
+        self.climateParameters = 'pcpn'
+        self.sdate = '2015-08-01'
+        self.edate = '2015-08-04'
+        self.refDataFile = '../TestExamples/DataRequestor/DR_Test03.csv'
+        self.tmp()
+        self.assertEqual(self.result,[])
 
 
 
