@@ -23,7 +23,7 @@ class StationDateRange(dict):
     @property
     def validDateRange(self):
         try:
-            return self._minRange.strftime('%Y-%m-%d') + ':' + self._maxRange.strftime('%Y-%m-%d')
+            return self.minRange + ':' + self.maxRange
         except:
             return missingValue
 
