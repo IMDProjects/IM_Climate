@@ -2,9 +2,6 @@ import datetime
 from common import missingValue
 from datetime import date
 
-def dateToMDY(d):
-    return str(d.month) + '/' + str(d.day) + '/' + str(d.year)
-
 class StationDateRange(dict):
     '''
     Dictionary containing the valid date ranges for each weather parameter
@@ -46,15 +43,13 @@ class StationDateRange(dict):
         if self._maxRange == missingValue:
             return missingValue
         else:
-            #return self._maxRange.isoformat()
-            return dateToMDY(self._maxRange)
+            return self._maxRange.isoformat()
 
     @property
     def minRange(self):
         if self._minRange == missingValue:
             return missingValue
-        #return self._minRange.isoformat()
-        return dateToMDY(self._minRange)
+        return self._minRange.isoformat()
 
     def _addDates(self, dateRanges, climateParameters):
         if not climateParameters:
