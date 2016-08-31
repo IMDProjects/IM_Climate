@@ -11,8 +11,6 @@ from StationDateRange import StationDateRange
 from StationFinder import StationFinder
 from DataRequestor import DataRequestor
 
-
-
 class Test_StationFinder(unittest.TestCase):
     rootFolder = '../TestExamples/StationFinder/'
     def confirmContent_NoOrder(self):
@@ -43,8 +41,7 @@ class Test_StationFinder(unittest.TestCase):
         self.climateParameters = 'maxt, mint'
         self.sdate = None
         self.edate = None
-        #self.refFile = 'SF_Test01.csv'
-        self.refFile = 'Test01_R.csv'
+        self.refFile = 'SF_Test01.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
@@ -55,7 +52,6 @@ class Test_StationFinder(unittest.TestCase):
         self.sdate = None
         self.edate = None
         self.refFile = 'SF_Test02.csv'
-        #self.refFile = 'Test02_R.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
@@ -88,7 +84,6 @@ class Test_DataRequestor(unittest.TestCase):
         self.sdate = '20150801'
         self.edate = '20150804'
         self.refDataFile = 'DR_Test01.csv'
-        #self.refDataFile = 'Test01_R.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
@@ -98,7 +93,6 @@ class Test_DataRequestor(unittest.TestCase):
         self.sdate = '2015-08-01'
         self.edate = '2015-08-04'
         self.refDataFile = 'DR_Test02.csv'
-        #self.refDataFile = 'Test02_R.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
@@ -110,7 +104,6 @@ class Test_DataRequestor(unittest.TestCase):
         self.sdate = '2015-08-01'
         self.edate = '2015-08-04'
         self.refDataFile = 'DR_Test03.csv'
-        #self.refDataFile = 'Test03_R.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
