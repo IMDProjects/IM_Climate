@@ -147,6 +147,10 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
     }
     minDate <-  setNames(minDate, "minDate")
     maxDate <-  setNames(maxDate, "maxDate")
+    # Force elevation to be numeric with precision of 1
+    options(digits = 1)
+    elev <- as.numeric(stationListInit$meta[,5])
+    options(digits = 7)
     stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
     stationList$unitCode <- unitCode[1]
     # Convert factors to character vectors

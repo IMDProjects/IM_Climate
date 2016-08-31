@@ -280,7 +280,9 @@ getDailyWxObservations <-
         
         # For whatever reason, this conversion has to be re-forced again!
         dfMeta$uid <- as.numeric(as.character(dfMeta$uid))
+        options(digits = 1)
         dfMeta$elev <- as.numeric(as.character(dfMeta$elev))
+        options(digits = 7)
         df <- cbind(dfMeta, dfDate)
         
         # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
