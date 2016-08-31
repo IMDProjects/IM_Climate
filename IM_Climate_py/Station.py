@@ -15,7 +15,7 @@ class Station(object):
         self._setStationMetadata(stationMeta)
         self._metaTags = ['uid', 'name','longitude', 'latitude',  'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
-            'elev', 'minRange', 'maxRange', 'unitCode']
+            'elev', 'minDate', 'maxDate', 'unitCode']
         if stationData:
             self._addStationWxData(stationData)
 
@@ -51,8 +51,8 @@ class Station(object):
         self.unitCode = stationInfo.get('unitCode', default)
 
         self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', self.missingValue), self.climateParameters)
-        self.maxRange = self.validDateRange.maxRange
-        self.minRange = self.validDateRange.minRange
+        self.maxDate = self.validDateRange.maxRange
+        self.minDate = self.validDateRange.minRange
 
     def _setStationType(self, sid):
         acis = ACIS()
@@ -60,7 +60,7 @@ class Station(object):
             stationType = acis.stationSources[str(sid.split()[1])]['description'].encode()
             if stationType == 'GHCN':
                 try:
-                    stationType = acis.stationSources['6']['subtypes'][self.sid1[0:3]].encode()
+                    stationType = acis.stationSources['6']['subtypes'][sid[0:3]].encode()
                 except:
                     pass # Keep it GHCN
             return stationType
