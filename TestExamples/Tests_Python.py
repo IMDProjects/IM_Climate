@@ -4,11 +4,13 @@ import datetime
 import os
 import sys
 import numpy
+import csv
 
 sys.path.append(r'C:\CODE\IM_Climate\IM_Climate_py')
 from StationDateRange import StationDateRange
 from StationFinder import StationFinder
 from DataRequestor import DataRequestor
+
 
 
 class Test_StationFinder(unittest.TestCase):
@@ -23,11 +25,11 @@ class Test_StationFinder(unittest.TestCase):
         stations = sf.findStation(unitCode = self.unitCode, distance = self.distance,
             climateParameters = self.climateParameters, sdate = self.sdate, edate = self.edate)
         test_data = numpy.array(stations._dumpMetaToList())
-
-        refFile = open(Test_StationFinder.rootFolder + self.refFile)
         ref_data = []
-        for line in refFile.readlines():
-            ref_data.append(line.rstrip('\n').split(','))
+        with open(Test_StationFinder.rootFolder + self.refFile, 'r')as refFile:
+            r = csv.reader(refFile)
+            for line in r:
+                ref_data.append(line)
         ref_data = numpy.array(ref_data)
 
         refFile.close()
@@ -41,8 +43,8 @@ class Test_StationFinder(unittest.TestCase):
         self.climateParameters = 'maxt, mint'
         self.sdate = None
         self.edate = None
-        self.refFile = 'SF_Test01.csv'
-        #self.refFile = 'Test01_R.csv'
+        #self.refFile = 'SF_Test01.csv'
+        self.refFile = 'Test01_R.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 

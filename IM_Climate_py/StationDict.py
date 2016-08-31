@@ -38,11 +38,9 @@ class StationDict(dict):
         '''
         if self._dataAsList:
             with open(self._filePathAndName,'w') as csvFile:
-                writer = csv.writer(csvFile, lineterminator='\n' )
+                writer = csv.writer(csvFile, lineterminator='\n', quoting=csv.QUOTE_NONNUMERIC )
                 writer.writerows(self._dataAsList)
             csvFile.close()
-
-
 
     def exportMeta(self, filePathAndName, format='csv'):
         '''
@@ -184,7 +182,8 @@ class StationDict(dict):
         for station in self:
             if station.hasWxData:
                 for date in station.data.observationDates:
-                    a = [str(station.uid), station.name, station.longitude, station.latitude,
+                    #a = [str(station.uid), station.name, station.longitude, station.latitude,
+                    a = [station.uid, station.name, station.longitude, station.latitude,
                          station.sid1, station.sid1_type, station.sid2,
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]

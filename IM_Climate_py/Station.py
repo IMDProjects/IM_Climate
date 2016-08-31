@@ -46,7 +46,7 @@ class Station(object):
         self.state = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
 
-        self.uid = stationInfo.get('uid', default)
+        self.uid = int(stationInfo.get('uid'))
         self.sids = str(stationInfo.get('sids', default)).encode()
         self.unitCode = stationInfo.get('unitCode', default)
 
