@@ -260,5 +260,6 @@ if __name__=='__main__':
         climateParameters = 'pcpn'
         ,sdate = '2015-08-01', edate = '2015-08-04')
     print wxData
+    print wxData.stationCounts
 
 

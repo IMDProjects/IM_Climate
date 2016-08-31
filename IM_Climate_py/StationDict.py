@@ -95,6 +95,17 @@ class StationDict(dict):
                 pass
         return False
 
+    @property
+    def stationCounts(self):
+        '''
+        Summarizes the count of stations with metadata and those with data
+        '''
+        dCount = 0
+        for station in self:
+            if station.hasWxData:
+                    dCount+=1
+        return {'AllStations': len(self.stationIDs), 'StationsWithData': dCount}
+
     def export(self, filePathAndName, format='csv'):
         '''
         INFO
@@ -219,12 +230,10 @@ class StationDict(dict):
         if self.wxDataExists:
             a = self._dumpDataToList()
             a = map(str,a)
-            return '\n'.join(a)
         else:
             a = self._dumpMetaToList()
             a = map(str,a)
-            return '\n'.join(a)
-
+        return '\n'.join(a)
 
 if __name__ == '__main__':
     from Station import Station
@@ -306,3 +315,4 @@ if __name__ == '__main__':
             for ob in p:
                 print ob
     print wx.stationNames
+    print wx.stationCounts
