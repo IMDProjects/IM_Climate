@@ -235,7 +235,7 @@ getDailyWxObservations <-
             # no sid2 value
             dfMeta  <- cbind(dfMeta, as.data.frame(NA))
             dfMeta[7] <- setNames(dfMeta[7],"sid2")
-            dfMeta$sid2  <- as.character(dfMeta$sid2)
+            colnames(dfMeta)[7]  <- "sid2"
             sid2_type <-  as.data.frame(NA)
             #dfMeta  <- cbind(dfMeta, as.character(sid2_type))
             dfMeta  <-
@@ -278,7 +278,9 @@ getDailyWxObservations <-
         colnames(dfMeta)[12]  <- "elev"
         df$elev <- as.numeric(df$elev)
         
+        # For whatever reason, this conversion has to be re-forced again!
         dfMeta$uid <- as.numeric(as.character(dfMeta$uid))
+        dfMeta$elev <- as.numeric(as.character(dfMeta$elev))
         df <- cbind(dfMeta, dfDate)
         
         # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
