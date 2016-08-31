@@ -130,7 +130,7 @@ getDailyWxObservations <-
           )[][])))
         
         dfMetaInit <-  t(as.data.frame(rList$meta))
-        colnames(dfDate) <- c("date")
+        colnames(dfDate) <- "date"
         dfDate$date <- as.Date(dfDate$date, "%Y-%m-%d")
         
         # Populate 'metadata' i.e. station info; accommodate missing and unordered items
@@ -140,6 +140,8 @@ getDailyWxObservations <-
           )$uid)))
         #dfMeta <- as.data.frame(as.character(as.vector(dfMetaInit[1, ])))
         colnames(dfMeta)[1]  <- "uid"
+        #dfMeta$uid <- as.numeric(dfMeta$uid)
+        
         dfMeta  <-
           cbind(dfMeta, as.data.frame(as.character(as.vector(
             paste(strsplit(dfMetaInit[, 1], " ")$name, collapse = " ")
@@ -232,8 +234,8 @@ getDailyWxObservations <-
           else {
             # no sid2 value
             dfMeta  <- cbind(dfMeta, as.data.frame(NA))
-            colnames(dfMeta)[7]  <- "sid2"
-            #dfMeta$sid2  <- as.character(dfMeta$sid2)
+            dfMeta[7] <- setNames(dfMeta[7],"sid2")
+            dfMeta$sid2  <- as.character(dfMeta$sid2)
             sid2_type <-  as.data.frame(NA)
             #dfMeta  <- cbind(dfMeta, as.character(sid2_type))
             dfMeta  <-
@@ -274,7 +276,9 @@ getDailyWxObservations <-
             cbind(dfMeta, as.data.frame(NA))
         }
         colnames(dfMeta)[12]  <- "elev"
+        df$elev <- as.numeric(df$elev)
         
+        dfMeta$uid <- as.numeric(as.character(dfMeta$uid))
         df <- cbind(dfMeta, dfDate)
         
         # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
