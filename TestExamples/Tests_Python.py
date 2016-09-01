@@ -12,6 +12,10 @@ from StationFinder import StationFinder
 from DataRequestor import DataRequestor
 
 class Test_StationFinder(unittest.TestCase):
+
+    default_columns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
+    testColumns = default_columns
+
     rootFolder = '../TestExamples/StationFinder/'
     def confirmContent_NoOrder(self):
         '''
@@ -31,8 +35,8 @@ class Test_StationFinder(unittest.TestCase):
         ref_data = numpy.array(ref_data)
 
         refFile.close()
-        self.results =  list(numpy.setdiff1d(ref_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]
-            ,test_data[:,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]]))
+        self.results =  list(numpy.setdiff1d(ref_data[:,Test_StationFinder.testColumns]
+            ,test_data[:,Test_StationFinder.testColumns]))
 
     def test01(self):
         self.maxDiff = None
@@ -45,6 +49,19 @@ class Test_StationFinder(unittest.TestCase):
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
+    def test01_R(self):
+        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,13,14]
+        self.maxDiff = None
+        self.unitCode = 'ROMO'
+        self.distance = 30
+        self.climateParameters = 'maxt, mint'
+        self.sdate = None
+        self.edate = None
+        self.refFile = 'Test01_R.csv'
+        self.confirmContent_NoOrder()
+        Test_StationFinder.testColumns = Test_StationFinder.default_columns
+        self.assertEquals(self.results, [])
+
     def test02(self):
         self.unitCode = 'AGFO'
         self.distance = 10
@@ -53,6 +70,18 @@ class Test_StationFinder(unittest.TestCase):
         self.edate = None
         self.refFile = 'SF_Test02.csv'
         self.confirmContent_NoOrder()
+        self.assertEquals(self.results, [])
+
+    def test02_R(self):
+        Test_StationFinder.testColumns = [0,1,2,3,4,5,6,7,8,9,10,12,14]
+        self.unitCode = 'AGFO'
+        self.distance = 10
+        self.climateParameters = None
+        self.sdate = None
+        self.edate = None
+        self.refFile = 'Test02_R.csv'
+        self.confirmContent_NoOrder()
+        Test_StationFinder.testColumns = Test_StationFinder.default_columns
         self.assertEquals(self.results, [])
 
 
