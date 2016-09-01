@@ -30,6 +30,11 @@
 		"unit": "inches",
 		"unitabbr": "in"
 	}, {
+		"code": "snow",
+		"description": "Snowfall",
+		"unit": "inches",
+		"unitabbr": "in"
+	}, {
 		"code": "cdd",
 		"description": "Cooling degree days (default basee 65)",
 		"unit": "",
@@ -128,21 +133,5 @@
 	}, {
 		"code": "mly",
 		"description": "Monthly summary; must specify reduce"
-	}],
-	"gridSources":
-	{"NRCC Interpolated": {"code":1, "period": "1950-Present", "area": "Continental US"},
-            "NRCC Hi-Res": {"code":3,  "area": "US East of Rockies ", "period": "Temperature: 1998-present; Precipitation: 2002-present"},
-            "CRCM + NCEP": {"code":4,  "area": "Continental US ", "period": "1970-2000"},
-            "CRCM + CCSM": {"code":5,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "CRCM + CGCM3": {"code":6,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "MM5I + NCEP": {"code":9,  "area": "Continental US ", "period": "1970-2000"},
-            "MM5I + CCSM": {"code":10,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "RCM3 + NCEP": {"code":11,  "area": "Continental US ", "period": "1970-2000"},
-            "RCM3 + CGCM3": {"code":12,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "RCM3 + GFDL": {"code":13,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "WRFG + NCEP": {"code":14,  "area": "Continental US ", "period": "1970-2000"},
-            "WRFG + CCSM": {"code":15,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "WRFG + CGCM3": {"code":16,  "area": "Continental US ", "period": "1970-2000, 2040-2070"},
-            "PRISM": {"code":21,  "area": "Continental US ", "period": "Daily: 1981-present; Monthly/Yearly: 1895-present "}}
-	
+	}]
 }
