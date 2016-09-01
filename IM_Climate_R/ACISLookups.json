@@ -30,6 +30,11 @@
 		"unit": "inches",
 		"unitabbr": "in"
 	}, {
+		"code": "snow",
+		"description": "Snowfall",
+		"unit": "inches",
+		"unitabbr": "in"
+	}, {
 		"code": "cdd",
 		"description": "Cooling degree days (default basee 65)",
 		"unit": "",

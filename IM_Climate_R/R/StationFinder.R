@@ -7,13 +7,17 @@
 # @param sourceURL sourceURL for ACIS data services
 #' @param unitCode One NPS unit code as a string
 #' @param distance (optional) Distance (in kilometers) to buffer park bounding box.
-#' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}
+#' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd). If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing station information for stations near the specified park. See User Guide for more details:  \url{https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/}
 #' @examples 
-#' Find stations collecting average temperature within 10km of Marsh-Billings:
+#' Find stations collecting average temperature within 10km of Marsh-Billings NHP:
 #' 
 #' findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
+#' 
+#' Find stations collecting all climate parameters except degree days within 15km of Marsh-Billings NHP:
+#' 
+#' findStation(unitCode = "MABI", distance=10)
 #' 
 #' Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file:
 #' 
@@ -50,7 +54,8 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   
   stationMetadata = c('uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids')
   #stationMetadata <-c('uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids')
-  parameters <- list('pcpn', 'avgt', 'obst', 'mint', 'maxt', 'snwd', 'snow') #c('pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt')
+  # If climateParameters is NULL, default to all parameters except degree days.
+  parameters <- list('pcpn', 'avgt', 'obst', 'mint', 'maxt', 'snwd', 'snow') 
   encode <- c("json")
   config <- add_headers(Accept = "'Accept':'application/json'")
   
