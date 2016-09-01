@@ -2,7 +2,7 @@
 #'
 #' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
 # @param dataURL URL for ACIS data service vending station data
-#' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd, cdd, hdd, gdd).  See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
+#' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @param climateStations A list of one or more unique identifiers (uid) for climate stations. Can be a single item, a list of items, or a data frame of the findStation response.
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
@@ -11,22 +11,22 @@
 #' @examples
 #' Precipitation, temperature weather observations for one station for a specifc date range:
 #'
-#' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 25056, "20150801", "20150831")
+#' getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20150831")
 #'
 #' All weather observations for a station for its period of record
 #'
-#' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), 60903)
+#' getDailyWxObservations(climateStations=60903)
 #'
 #' All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
 #'
-#' getDailyWxObservations(list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), stationDF, "20150801", "20150803")
+#' getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=stationDF, sdate="20150801", edate="20150803")
 #' @export
 #'
 # TODO: encapsulate in error block
 # See https://github.com/hadley/httr/blob/master/vignettes/api-packages.Rmd
 
 getDailyWxObservations <-
-  function(climateParameters,
+  function(climateParameters = NULL,
            climateStations,
            sdate = "por",
            edate = "por",
@@ -39,6 +39,11 @@ getDailyWxObservations <-
     paramFlags <- c("f,s")
     lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
     luElements  <- lookups$element
+    
+    # If climateParameters is NULL, default to all parameters except degree days.
+    if (is.null(climateParameters)) {
+      climateParameters <- list('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
+    }
     
     # Initialize response object
     dfResponse <- NULL
