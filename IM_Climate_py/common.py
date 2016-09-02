@@ -3,7 +3,7 @@ import json
 from ACIS import ACIS
 
 
-missingValue = 'NA'
+missingValue = 'NA' #deines missing value for all modules
 
 def getSupportedParameters():
     acis = ACIS()
