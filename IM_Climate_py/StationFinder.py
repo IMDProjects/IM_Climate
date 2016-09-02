@@ -39,10 +39,10 @@ class StationFinder(ACIS):
 
         climateParameters    Parameter code for climate/weather element (e.g., mint, avgt, pcpn)
 
-        sDate               (Optional) - Start date as yyyy-mm-dd or yyyymmdd.
+        sdate               (Optional) - Start date as yyyy-mm-dd or yyyymmdd.
                              If not provided, the default is the period of record.
 
-        eData               (Optional) - End date as yyyy-mm-dd or yyyymmdd.
+        edate               (Optional) - End date as yyyy-mm-dd or yyyymmdd.
                              If not provided, the default is the period of record
 
         filePathAndName    If provided, a csv text file is saved to specific location.

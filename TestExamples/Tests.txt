@@ -3,26 +3,36 @@ STATION FINDER
 		unitCode = 'ROMO'
 		distance = 30
 		climateParameters = 'maxt, mint'
+		sdate = <blank>
+		edate = <blank>
 	TEST 02
 		unitCode = 'AGFO'
 		distance = 10
-
+		climateParameters = <NA/None>
+		sdate = <blank>
+		edate = <blank>
 		
 DATA REQUESTOR
 	TEST 01 
 		climateStations =  25056
 		climateParameters = 'pcpn', 'avgt', 'obst', 'mint', 'maxt'
-		sDate = '20150801'
-		eDate = '20150804'
+		sdate = '20150801'
+		edate = '20150804'
 	TEST 02	
 		climateStations = 30433
 		climateParameters = 'pcpn'
-		sDate = '20150801'
-		eDate = '20150804'
+		sdate = '20150801'
+		edate = '20150804'
 	TEST 03
 		climateStations = StationFinder.findStation(unitCode = 'AGFO', distance = 10)
 		climateParameters = 'pcpn'
-		sDate = '20150801'
-		eDate = '20150804'
+		sdate = '20150801'
+		edate = '20150804'
+		
+	TEST 04
+		climateStations = StationFinder.findStation(unitCode = 'ACAD', distance = 20)
+		climateParameters = <blank>
+		sdate = '2015-08-01'
+		edate = '20150804'
 		
 		

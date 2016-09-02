@@ -50,7 +50,7 @@ class Test_StationFinder(unittest.TestCase):
         self.assertEquals(self.results, [])
 
     def test01_R(self):
-        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,13,14]
+        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,14]
         self.maxDiff = None
         self.unitCode = 'ROMO'
         self.distance = 30
@@ -112,7 +112,7 @@ class Test_DataRequestor(unittest.TestCase):
         self.climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
         self.sdate = '20150801'
         self.edate = '20150804'
-        self.refDataFile = 'DR_Test01.csv'
+        self.refDataFile = 'Test01_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
@@ -121,7 +121,7 @@ class Test_DataRequestor(unittest.TestCase):
         self.climateParameters = 'pcpn'
         self.sdate = '2015-08-01'
         self.edate = '2015-08-04'
-        self.refDataFile = 'DR_Test02.csv'
+        self.refDataFile = 'Test02_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
@@ -132,7 +132,18 @@ class Test_DataRequestor(unittest.TestCase):
         self.climateParameters = 'pcpn'
         self.sdate = '2015-08-01'
         self.edate = '2015-08-04'
-        self.refDataFile = 'DR_Test03.csv'
+        self.refDataFile = 'Test03_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+    def test04(self):
+        sf = StationFinder()
+        stationList = sf.findStation(unitCode = 'ACAD', distance = 20)
+        self.climateStations = stationList
+        self.climateParameters = None
+        self.sdate = '2015-08-01'
+        self.edate = '2015-08-04'
+        self.refDataFile = 'Test04_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
