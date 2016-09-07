@@ -2,7 +2,7 @@ The IM_Climate Toolkit is a utility package for finding climate stations and dow
 
 #### Overview ####
 
-To serve the broadest user community, it is implemented in both Python (2.7) and R. Regardless of language, it provides data access via ACIS web services (http://www.rcc-acis.org/docs_webservices.html) to station information and station data that:
+To serve the broadest user community, it is implemented in both Python (v2.7) and R. Regardless of language, it provides data access via ACIS web services (http://www.rcc-acis.org/docs_webservices.html) to station information and station data that:
 
 + Supports basic data request functions using consistent (identical) logic:
 
