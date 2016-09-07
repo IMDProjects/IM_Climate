@@ -45,7 +45,7 @@ if __name__ == '__main__':
     climateParameters = 'mint, maxt'
     parkCode = 'AGFO'
     distance = 0
-    print agr.getDailyGrids(gridSource = gridSource, sDate = sDate, eDate = eDate,
+    print agr.getDailyGrids(sDate = sDate, eDate = eDate,
         unitCode = parkCode, distance = distance, climateParameters = climateParameters )
 ##    print agr.getMonthlyGrids(gridSource = gridSource, sDate = sDate, eDate = eDate,
 ##        parkCodes = parkCode, distance = distance, climateParameters = climateParameters )
