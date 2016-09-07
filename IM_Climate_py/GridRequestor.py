@@ -7,6 +7,10 @@ class GridRequestor(ACIS):
         super(GridRequestor,self).__init__()
         self.webServiceSource = 'GridData'
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d4d96fdba38f3a9dfa22ce6b4ef5de448d1f30b7
 
     def _callForGrids(self):
         self.climateParameters = self._formatClimateParameters(self.climateParameters)
