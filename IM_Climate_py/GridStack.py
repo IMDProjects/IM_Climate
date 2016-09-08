@@ -40,6 +40,9 @@ class GridStack(dict):
         return d
 
     def _addGrid(self, variable, date, grid):
+        '''
+        Method to control the adding of grids to the stack
+        '''
         try:
             self[variable]
         except:
@@ -49,6 +52,10 @@ class GridStack(dict):
             , missingValue = self.missingValue)
 
     def export(self, filePath = '', climateParameters = None, dates = None):
+        '''
+        Export that iterates through the set of grids within the stack and saves
+        all individually as ascii grids (with projection file).
+        '''
         if not climateParameters:
             climateParameters = self.variables
         if not dates:

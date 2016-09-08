@@ -36,8 +36,11 @@ class GridRequestor(ACIS):
                 elems.append({'name':p,'interval':self.interval, 'duration' : self.duration})
             return elems
 
-    def getDailyGrids(self, sDate, eDate,
-            unitCode = None, distance = 0,  climateParameters = None):
+    def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0, climateParameters = None):
+        '''
+        Method to fetch daily grids from ACIS.  Currently only PRISM grids are
+        supported.
+        '''
         self.gridSource = gridSource
         self.unitCode = unitCode
         self.climateParameters = climateParameters
@@ -51,10 +54,10 @@ if __name__ == '__main__':
     gridSource = 'PRISM'
     sDate = '2015-01-01'
     eDate = '2015-01-01'
-    climateParameters = 'maxt,pcpn'
-    parkCode = 'APPA'
+    climateParameters = 'mint'
+    parkCode = 'GRKO'
     distance = 0
-    data =  agr.getDailyGrids(sDate = sDate, eDate = eDate,
+    data =  agr.getDailyGrids(sdate = sDate, edate = eDate,
         unitCode = parkCode, distance = distance, climateParameters = climateParameters )
     print data.variables
     print data.dates

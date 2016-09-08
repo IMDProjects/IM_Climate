@@ -6,7 +6,7 @@ class Grid(np.ndarray):
         obj = np.asarray(grid).view(cls)
         return obj
 
-    def __init__(self, grid, XLLCenter, YLLCenter, cellSize, missingValue, projection):
+    def __init__(self, grid, XLLCenter, YLLCenter, cellSize, projection, missingValue):
         self.nrows = len(self)
         self.ncols = len(self[0])
         self.XLLCenter = XLLCenter # X dimension lower left center
@@ -46,8 +46,9 @@ if __name__ == '__main__':
     YLLCenter = 40
     cellSize = 4
     missingValue = -999
+    projection = 'NAD83'
     g = Grid(grid = grid, XLLCenter = XLLCenter, YLLCenter = YLLCenter
-        , cellSize = cellSize, missingValue = missingValue)
+        , cellSize = cellSize, projection = projection, missingValue = missingValue)
     g.export('aaa.asc')
     print g.ncols
     print g.nrows
