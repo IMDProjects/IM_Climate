@@ -1,5 +1,7 @@
 from ACIS import ACIS
 import common
+import GridStack
+reload (GridStack)
 from GridStack import GridStack
 
 class GridRequestor(ACIS):
@@ -7,22 +9,26 @@ class GridRequestor(ACIS):
         super(GridRequestor,self).__init__()
         self.webServiceSource = 'GridData'
 
-<<<<<<< HEAD
-=======
-
->>>>>>> d4d96fdba38f3a9dfa22ce6b4ef5de448d1f30b7
-
     def _callForGrids(self):
         self.climateParameters = self._formatClimateParameters(self.climateParameters)
         if self.unitCode:
             bbox = common.getBoundingBox(self.unitCode, distance)
         elems = self._formatElems()
-        grid = self.gridSources[self.gridSource]['code']
+        gridSourceCode = self.gridSources[self.gridSource]['code']
+        missingValue = int(self.gridSources[self.gridSource]['missingValue'])
+        cellSize = float(self.gridSources[self.gridSource]['cellSize'])
+        projection = self.gridSources[self.gridSource]['projection']
 
         grids =  self._call_ACIS(elems = elems
-            ,bbox = bbox, sDate = sDate, eDate = eDate, grid = 21)
-        gs = GridStack()
-        return grids
+            ,bbox = bbox, sDate = sDate, eDate = eDate, grid = gridSourceCode, meta='ll')
+        latValues = grids['meta']['lat']
+        lonValues = grids['meta']['lon']
+        gs = GridStack(gridSource = gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
+                projection = projection, missingValue = missingValue)
+        for grid in grids['data']:
+            for index, variable in enumerate(self.climateParameters):
+                gs._addGrid(variable = variable, date = grid[0].encode(), grid = grid[index+1])
+        return gs
 
     def _formatElems(self):
             elems = []
@@ -30,30 +36,28 @@ class GridRequestor(ACIS):
                 elems.append({'name':p,'interval':self.interval, 'duration' : self.duration})
             return elems
 
-    def getDailyGrids(self, gridSource, sDate, eDate,
+    def getDailyGrids(self, sDate, eDate,
             unitCode = None, distance = 0,  climateParameters = None):
         self.gridSource = gridSource
         self.unitCode = unitCode
         self.climateParameters = climateParameters
         self.interval = 'dly'
         self.duration = 'dly'
-        response = self._callForGrids()
-        print response
-
+        self.gridSource = 'PRISM'
+        return self._callForGrids()
 
 if __name__ == '__main__':
     agr = GridRequestor()
     gridSource = 'PRISM'
     sDate = '2015-01-01'
-    eDate = '2015-01-03'
-    climateParameters = 'mint, maxt'
-    parkCode = 'AGFO'
+    eDate = '2015-01-01'
+    climateParameters = 'maxt,pcpn'
+    parkCode = 'APPA'
     distance = 0
-    print agr.getDailyGrids(sDate = sDate, eDate = eDate,
+    data =  agr.getDailyGrids(sDate = sDate, eDate = eDate,
         unitCode = parkCode, distance = distance, climateParameters = climateParameters )
-##    print agr.getMonthlyGrids(gridSource = gridSource, sDate = sDate, eDate = eDate,
-##        parkCodes = parkCode, distance = distance, climateParameters = climateParameters )
-##    print agr.getYearlyGrids(gridSource = gridSource, sDate = sDate, eDate = eDate,
-##        parkCodes = parkCode, distance = distance, climateParameters = climateParameters )
+    print data.variables
+    print data.dates
+    data.export('C:\\TEMP\\')
 
 
