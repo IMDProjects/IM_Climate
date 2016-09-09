@@ -41,7 +41,7 @@ class Grid(np.ndarray):
         outfile.close()
 
 if __name__ == '__main__':
-    grid = [[15, 16, 16,17], [15, 14, 15,20], [13, 15, 15, 19]]
+    grid = [[1, 2, 3, 4], [5, 6, 7,8], [9, 10, 11, 12]]
     XLLCenter = -130
     YLLCenter = 40
     cellSize = 4
