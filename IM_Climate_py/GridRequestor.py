@@ -23,8 +23,8 @@ class GridRequestor(ACIS):
             ,bbox = bbox, sDate = sDate, eDate = eDate, grid = gridSourceCode, meta='ll')
         latValues = grids['meta']['lat']
         lonValues = grids['meta']['lon']
-        gs = GridStack(gridSource = gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
-                projection = projection, missingValue = missingValue)
+        gs = GridStack(gridSource = self.gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
+                projection = projection, aggregation = self.interval, missingValue = missingValue)
         for grid in grids['data']:
             for index, variable in enumerate(self.climateParameters):
                 gs._addGrid(variable = variable, date = grid[0].encode(), grid = grid[index+1])
@@ -36,31 +36,35 @@ class GridRequestor(ACIS):
                 elems.append({'name':p,'interval':self.interval, 'duration' : self.duration})
             return elems
 
-    def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0, climateParameters = None):
+    def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0,
+        climateParameters = None, filePath = None):
         '''
         Method to fetch daily grids from ACIS.  Currently only PRISM grids are
         supported.
         '''
-        self.gridSource = gridSource
         self.unitCode = unitCode
         self.climateParameters = climateParameters
         self.interval = 'dly'
         self.duration = 'dly'
         self.gridSource = 'PRISM'
-        return self._callForGrids()
+        grids = self._callForGrids()
+        if filePath:
+            grids.export(filePath = filePath)
+        return grids
 
 if __name__ == '__main__':
-    agr = GridRequestor()
-    gridSource = 'PRISM'
+    gr = GridRequestor()
     sDate = '2015-01-01'
     eDate = '2015-01-01'
     climateParameters = 'mint'
-    parkCode = 'GRKO'
+    parkCode = 'APPA'
     distance = 0
-    data =  agr.getDailyGrids(sdate = sDate, edate = eDate,
-        unitCode = parkCode, distance = distance, climateParameters = climateParameters )
+    filePath = 'C:\\TEMP\\'
+    data =  gr.getDailyGrids(sdate = sDate, edate = eDate,
+        unitCode = parkCode, distance = distance,
+        climateParameters = climateParameters, filePath = filePath )
     print data.variables
     print data.dates
-    data.export('C:\\TEMP\\')
+    #data.export('C:\\TEMP\\')
 
 

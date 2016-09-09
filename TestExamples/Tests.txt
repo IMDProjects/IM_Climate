@@ -35,4 +35,10 @@ DATA REQUESTOR
 		sdate = '2015-08-01'
 		edate = '20150804'
 		
-		
+GRID REQUESTOR
+	TEST 01
+		sdate = '2015-01-01'
+		edate = '2015-01-01'
+		unitCode = 'APPA'
+		distance = 0
+		climateParameters = 'mint'

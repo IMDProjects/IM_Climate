@@ -16,7 +16,8 @@ class GridStack(dict):
             Variable
 
     '''
-    def __init__(self, gridSource, latValues, lonValues, cellSize, projection, missingValue):
+    def __init__(self, gridSource, latValues, lonValues, cellSize, projection,
+                   aggregation, missingValue):
         self.gridSource = gridSource
         self.missingValue = missingValue       #The specified missing value - Must be the same for all grids
         self.latValues = np.array(latValues)         #The latitude values
@@ -25,6 +26,7 @@ class GridStack(dict):
         self.YLLCenter = self.latValues.min()
         self.cellSize = cellSize
         self.projection = projection
+        self.aggregation = aggregation
 
     @property
     def variables(self):
@@ -62,7 +64,8 @@ class GridStack(dict):
             dates = self.dates
         for c in climateParameters:
             for d in dates:
-                filePathAndName = filePath + self.gridSource + '_' +  c + '_' + d + '.asc'
+                filePathAndName = (filePath + self.gridSource + '_' +  c + '_' +
+                    self.aggregation + '_' + d.replace('-','') + '.asc')
                 self[c][d].export(filePathAndName = filePathAndName )
 
 
@@ -71,6 +74,7 @@ if __name__ == '__main__':
     cellSize = 4
     missingValue= -999
     projection = 'NAD83'
+    aggregation = 'dly'
     latValues = [[37.041666, 37.041666, 37.041666],
          [37.083333, 37.083333, 37.083333],
          [37.125, 37.125, 37.125]]
@@ -79,7 +83,7 @@ if __name__ == '__main__':
          [-93.458333, -93.416667, -93.375]]
     gs = GridStack(gridSource =gridSource, latValues = latValues,
         lonValues = lonValues, cellSize = cellSize, projection = projection,
-        missingValue = missingValue)
+        aggregation = aggregation, missingValue = missingValue)
 
     variable = 'mint'
     date = '2015-01-01'
