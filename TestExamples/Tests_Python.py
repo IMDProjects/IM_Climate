@@ -10,6 +10,7 @@ sys.path.append(r'C:\CODE\IM_Climate\IM_Climate_py')
 from StationDateRange import StationDateRange
 from StationFinder import StationFinder
 from DataRequestor import DataRequestor
+from GridRequestor import GridRequestor
 
 class Test_StationFinder(unittest.TestCase):
 
@@ -146,6 +147,39 @@ class Test_DataRequestor(unittest.TestCase):
         self.refDataFile = 'Test04_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
+
+class Test_GridRequestor(unittest.TestCase):
+    rootFolder = '../TestExamples/GridRequestor/'
+    def confirmAsciiGrid(self):
+        gr = GridRequestor()
+        data =  gr.getDailyGrids(sdate = self.sdate, edate = self.edate,
+            unitCode = self.unitCode, distance = self.distance,
+            climateParameters = self.climateParameters)
+        data.export()
+        testFile = open(self.testDataFile,'r')
+        testData = testFile.read()
+        testFile.close()
+        os.remove(self.testDataFile)
+        os.remove(self.testDataFile[:-3] + 'prj')
+
+        refDataFile = open(Test_GridRequestor.rootFolder + self.refDataFile,'r')
+        refData = refDataFile.read()
+        refDataFile.close()
+        self.result =  list(numpy.setdiff1d(refData,testData))
+
+
+    def test_01(self):
+
+        self.sdate = '2015-01-01'
+        self.edate = '2015-01-01'
+        self.climateParameters = 'mint'
+        self.unitCode = 'APPA'
+        self.distance = 0
+        self.refDataFile = 'Test01/PY_PRISM_mint_dly_20150101.asc'
+        self.testDataFile = 'PRISM_mint_dly_20150101.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
+
 
 if __name__ == '__main__':
     unittest.main()

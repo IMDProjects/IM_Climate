@@ -10,9 +10,10 @@ class GridRequestor(ACIS):
         self.webServiceSource = 'GridData'
 
     def _callForGrids(self):
+        bbox = '-130, 20,-50,60'
         self.climateParameters = self._formatClimateParameters(self.climateParameters)
         if self.unitCode:
-            bbox = common.getBoundingBox(self.unitCode, distance)
+            bbox = common.getBoundingBox(self.unitCode, self.distance)
         elems = self._formatElems()
         gridSourceCode = self.gridSources[self.gridSource]['code']
         missingValue = int(self.gridSources[self.gridSource]['missingValue'])
@@ -20,7 +21,7 @@ class GridRequestor(ACIS):
         projection = self.gridSources[self.gridSource]['projection']
 
         grids =  self._call_ACIS(elems = elems
-            ,bbox = bbox, sDate = sDate, eDate = eDate, grid = gridSourceCode, meta='ll')
+            ,bbox = bbox, sDate = self.sdate, eDate = self.edate, grid = gridSourceCode, meta='ll')
         latValues = grids['meta']['lat']
         lonValues = grids['meta']['lon']
         gs = GridStack(gridSource = self.gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
@@ -43,10 +44,13 @@ class GridRequestor(ACIS):
         supported.
         '''
         self.unitCode = unitCode
+        self.sdate = sdate
+        self.edate = edate
         self.climateParameters = climateParameters
         self.interval = 'dly'
         self.duration = 'dly'
         self.gridSource = 'PRISM'
+        self.distance = distance
         grids = self._callForGrids()
         if filePath:
             grids.export(filePath = filePath)
@@ -55,16 +59,16 @@ class GridRequestor(ACIS):
 if __name__ == '__main__':
     gr = GridRequestor()
     sDate = '2015-01-01'
-    eDate = '2015-01-01'
+    eDate = '2015-01-02'
     climateParameters = 'mint'
-    parkCode = 'APPA'
+    unitCode = 'WICR'
     distance = 0
     filePath = 'C:\\TEMP\\'
     data =  gr.getDailyGrids(sdate = sDate, edate = eDate,
-        unitCode = parkCode, distance = distance,
+        unitCode = unitCode, distance = distance,
         climateParameters = climateParameters, filePath = filePath )
     print data.variables
     print data.dates
-    #data.export('C:\\TEMP\\')
+    data.export()
 
 
