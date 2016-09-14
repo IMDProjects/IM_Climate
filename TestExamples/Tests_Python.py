@@ -9,7 +9,7 @@ import csv
 sys.path.append(r'C:\CODE\IM_Climate\IM_Climate_py')
 from StationDateRange import StationDateRange
 from StationFinder import StationFinder
-from DataRequestor import DataRequestor
+from StationDataRequestor import StationDataRequestor
 from GridRequestor import GridRequestor
 
 class Test_StationFinder(unittest.TestCase):
@@ -86,21 +86,21 @@ class Test_StationFinder(unittest.TestCase):
         self.assertEquals(self.results, [])
 
 
-class Test_DataRequestor(unittest.TestCase):
+class Test_StationDataRequestor(unittest.TestCase):
 
     rootFolder = '../TestExamples/DataRequestor/'
     def confirmContent(self):
         '''
         Confirms that all information the same, ignoring record order
         '''
-        dr = DataRequestor()
+        dr = StationDataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  self.climateStations,
             climateParameters = self.climateParameters
             ,sdate = self.sdate, edate = self.edate)
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
-        refDataFile = open(Test_DataRequestor.rootFolder + self.refDataFile, 'r')
+        refDataFile = open(Test_StationDataRequestor.rootFolder + self.refDataFile, 'r')
         refData = refDataFile.read()
         infile.close()
         refDataFile.close()
@@ -169,7 +169,6 @@ class Test_GridRequestor(unittest.TestCase):
 
 
     def test_01(self):
-
         self.sdate = '2015-01-01'
         self.edate = '2015-01-01'
         self.climateParameters = 'mint'

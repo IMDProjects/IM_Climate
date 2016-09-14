@@ -42,6 +42,23 @@ class GridRequestor(ACIS):
         '''
         Method to fetch daily grids from ACIS.  Currently only PRISM grids are
         supported.
+
+        ARGUMENTS
+            sdate - Start date (yyyy-mm-dd or yyyymmdd).
+            edate -     End date (yyyy-mm-dd or yyyymmdd).
+            unitCode  (optional) ? 4-letter unit code. Currently accepts only one.
+            distance (optional) ? Distance in kilometers for buffering a bounding box of park. If no distance is specified then 0 is used as the default buffer.
+            climateParameters (optional)  ? accepts one or more of the weather parameter codes in Table 2.
+            filePath (optional)?  If provided, one or more ascii grids are saved to the working directory. Grid names follow the pattern of Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
+
+        RETURNS
+            Dictionary like object (aka GridStack) containing one or more grids.
+            Grids are indexed first parameter and then by date
+            GridStack
+                Parameter
+                    Date
+                        Grid
+
         '''
         self.unitCode = unitCode
         self.sdate = sdate
@@ -59,16 +76,20 @@ class GridRequestor(ACIS):
 if __name__ == '__main__':
     gr = GridRequestor()
     sDate = '2015-01-01'
-    eDate = '2015-01-02'
+    eDate = '2015-01-04'
     climateParameters = 'mint'
-    unitCode = 'WICR'
+    unitCode = 'YELL'
     distance = 0
     filePath = 'C:\\TEMP\\'
     data =  gr.getDailyGrids(sdate = sDate, edate = eDate,
         unitCode = unitCode, distance = distance,
         climateParameters = climateParameters, filePath = filePath )
-    print data.variables
+    print data.climateParameters
     print data.dates
     data.export()
+    print data['mint']['2015-01-03']
+    print data.dates
+    print data.climateParameters
+    data['mint']['2015-01-03'].export('C:\\TEMP\\test.asc')
 
 

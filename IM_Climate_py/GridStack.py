@@ -29,7 +29,7 @@ class GridStack(dict):
         self.aggregation = aggregation
 
     @property
-    def variables(self):
+    def climateParameters(self):
         return self.keys()
 
     @property
@@ -59,7 +59,7 @@ class GridStack(dict):
         all individually as ascii grids (with projection file).
         '''
         if not climateParameters:
-            climateParameters = self.variables
+            climateParameters = self.climateParameters
         if not dates:
             dates = self.dates
         for c in climateParameters:
@@ -89,6 +89,6 @@ if __name__ == '__main__':
     date = '2015-01-01'
     grid = [[15, 16, 16], [15, 15, 15], [15, 15, 15]]
     gs._addGrid(variable = variable, date = date, grid = grid)
-    print gs.variables
+    print gs.climateParameters
     print gs.dates
     gs.export()
