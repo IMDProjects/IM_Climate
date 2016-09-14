@@ -23,7 +23,6 @@ class Test_StationFinder(unittest.TestCase):
         Confirms that all information is the same except for the maxRannge field.
         Order is ignored
         '''
-
         sf = StationFinder()
         stations = sf.findStation(unitCode = self.unitCode, distance = self.distance,
             climateParameters = self.climateParameters, sdate = self.sdate, edate = self.edate)
@@ -84,7 +83,6 @@ class Test_StationFinder(unittest.TestCase):
         self.confirmContent_NoOrder()
         Test_StationFinder.testColumns = Test_StationFinder.default_columns
         self.assertEquals(self.results, [])
-
 
 class Test_StationDataRequestor(unittest.TestCase):
 
@@ -167,7 +165,6 @@ class Test_GridRequestor(unittest.TestCase):
         refDataFile.close()
         self.result =  list(numpy.setdiff1d(refData,testData))
 
-
     def test_01(self):
         self.sdate = '2015-01-01'
         self.edate = '2015-01-01'
@@ -178,7 +175,6 @@ class Test_GridRequestor(unittest.TestCase):
         self.testDataFile = 'PRISM_mint_dly_20150101.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
-
 
 if __name__ == '__main__':
     unittest.main()
