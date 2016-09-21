@@ -3,7 +3,7 @@ from Station import Station
 from StationDict import StationDict
 
 
-class DataRequestor(ACIS):
+class StationDataRequestor(ACIS):
     '''
     INFO
     ----
@@ -11,7 +11,7 @@ class DataRequestor(ACIS):
 
     '''
     def __init__(self, *args, **kwargs):
-        super(DataRequestor,self).__init__(*args, **kwargs)
+        super(StationDataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnData'
 
     def getDailyWxObservations(self, climateStations, climateParameters = None, sdate = 'por',
@@ -106,7 +106,7 @@ if __name__=='__main__':
 
     stationIDs = [66180, 67175]
 
-    dr = DataRequestor()
+    dr = StationDataRequestor()
 
     #Daily Data
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
@@ -123,7 +123,7 @@ if __name__=='__main__':
     from StationFinder import StationFinder
     sf = StationFinder()
     stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
-    dr = DataRequestor()
+    dr = StationDataRequestor()
     wxData = dr.getDailyWxObservations(climateStations = stationList,
         climateParameters = 'pcpn'
         ,sdate = '2015-08-01', edate = '2015-08-04')
