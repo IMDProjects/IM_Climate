@@ -10,6 +10,9 @@ class GridRequestor(ACIS):
         self.webServiceSource = 'GridData'
 
     def _callForGrids(self):
+        '''
+        Common method to request grids from ACIS
+        '''
         bbox = '-130, 20,-50,60'
         self.climateParameters = self._formatClimateParameters(self.climateParameters)
         if self.unitCode:
@@ -19,7 +22,6 @@ class GridRequestor(ACIS):
         missingValue = int(self.gridSources[self.gridSource]['missingValue'])
         cellSize = float(self.gridSources[self.gridSource]['cellSize'])
         projection = self.gridSources[self.gridSource]['projection']
-
         grids =  self._call_ACIS(elems = elems
             ,bbox = bbox, sDate = self.sdate, eDate = self.edate, grid = gridSourceCode, meta='ll')
         latValues = grids['meta']['lat']
@@ -32,10 +34,13 @@ class GridRequestor(ACIS):
         return gs
 
     def _formatElems(self):
-            elems = []
-            for p in self.climateParameters:
-                elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': 1})
-            return elems
+        '''
+        Internal function to format the ACIS request into elements
+        '''
+        elems = []
+        for p in self.climateParameters:
+            elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': 1})
+        return elems
 
     def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0,
         climateParameters = None, filePath = None):
@@ -46,19 +51,14 @@ class GridRequestor(ACIS):
         ARGUMENTS
             sdate - Start date (yyyy-mm-dd or yyyymmdd).
             edate -     End date (yyyy-mm-dd or yyyymmdd).
-            unitCode  (optional) ? 4-letter unit code. Currently accepts only one.
-            distance (optional) ? Distance in kilometers for buffering a bounding box of park. If no distance is specified then 0 is used as the default buffer.
-            climateParameters (optional)  ? accepts one or more of the weather parameter codes in Table 2.
-            filePath (optional)?  If provided, one or more ascii grids are saved to the working directory. Grid names follow the pattern of Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
+            unitCode  (optional) - 4-letter unit code. Currently accepts only one.
+            distance (optional) - Distance in kilometers for buffering a bounding box of park. If no distance is specified then 0 is used as the default buffer.
+            climateParameters (optional)  - accepts one or more of the climate parameter codes
+            filePath (optional) -   If provided, one or more ascii grids are saved to the working directory. Grid names follow the pattern of Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
 
         RETURNS
             Dictionary like object (aka GridStack) containing one or more grids.
-            Grids are indexed first parameter and then by date
-            GridStack
-                Parameter
-                    Date
-                        Grid
-
+            Grids are indexed first by parameter and then by date
         '''
         self.unitCode = unitCode
         self.sdate = sdate
