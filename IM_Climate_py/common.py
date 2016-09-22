@@ -9,7 +9,7 @@ def getSupportedParameters():
     acis = ACIS()
     return acis.supportedParameters
 
-def getBoundingBox(unitCode, distanceKM = None):
+def getBoundingBox(unitCode = None, distanceKM = None):
     '''
     INFO
     ----
@@ -22,6 +22,8 @@ def getBoundingBox(unitCode, distanceKM = None):
     unitCode - 4-letter park code
     distanceKM - distance to buffer park boundary
     '''
+    if not unitCode:
+        return None
     distanceKM = str(distanceKM)
     connection = urllib2.urlopen('http://irmaservices.nps.gov/v2/rest/unit/' + unitCode + '/geography?detail=envelope&dataformat=wkt&format=json')
     geo = json.loads(connection.read())[0]['Geography'][10:-2].split(',')

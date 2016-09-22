@@ -15,8 +15,7 @@ class GridRequestor(ACIS):
         '''
         bbox = '-130, 20,-50,60'
         self.climateParameters = self._formatClimateParameters(self.climateParameters)
-        if self.unitCode:
-            bbox = common.getBoundingBox(self.unitCode, self.distance)
+        bbox = common.getBoundingBox(self.unitCode, self.distance)
         elems = self._formatElems()
         gridSourceCode = self.gridSources[self.gridSource]['code']
         missingValue = int(self.gridSources[self.gridSource]['missingValue'])
@@ -49,12 +48,15 @@ class GridRequestor(ACIS):
         supported.
 
         ARGUMENTS
-            sdate - Start date (yyyy-mm-dd or yyyymmdd).
-            edate -     End date (yyyy-mm-dd or yyyymmdd).
-            unitCode  (optional) - 4-letter unit code. Currently accepts only one.
-            distance (optional) - Distance in kilometers for buffering a bounding box of park. If no distance is specified then 0 is used as the default buffer.
-            climateParameters (optional)  - accepts one or more of the climate parameter codes
-            filePath (optional) -   If provided, one or more ascii grids are saved to the working directory. Grid names follow the pattern of Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
+            sdate               Start date (yyyy-mm-dd or yyyymmdd).
+            edate               End date (yyyy-mm-dd or yyyymmdd).
+            unitCode (optional) 4-letter unit code. Currently accepts only one.
+            distance (optional) Distance in kilometers for buffering a bounding box of park.
+                                If no distance is specified then 0 is used as the default buffer.
+            climateParameters (optional)    Accepts one or more of the climate parameter codes
+            filePath (optional)             If provided, one or more ascii grids are saved to the
+                                    working directory. Grid names follow the pattern of
+                                    Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
 
         RETURNS
             Dictionary like object (aka GridStack) containing one or more grids.
@@ -86,10 +88,10 @@ if __name__ == '__main__':
         climateParameters = climateParameters, filePath = filePath )
     print data.climateParameters
     print data.dates
-    data.export()
+    data.export(filePath = filePath)
     print data['mint']['2015-01-03']
     print data.dates
     print data.climateParameters
-    data['mint']['2015-01-03'].export('C:\\TEMP\\test.asc')
+    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
 
 

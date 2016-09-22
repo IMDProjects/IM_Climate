@@ -54,8 +54,7 @@ class StationFinder(ACIS):
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
         climateParameters = self._formatClimateParameters(climateParameters)
 
-        if unitCode:
-            bbox = common.getBoundingBox(unitCode, distance)
+        bbox = common.getBoundingBox(unitCode, distance)
 
         results =  self._call_ACIS(elems = climateParameters
             ,bbox = bbox, sDate = sdate, eDate = edate
