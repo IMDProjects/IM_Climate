@@ -4,20 +4,20 @@
 \alias{findStation}
 \title{Find stations near a park}
 \usage{
-findStation(parkCode, distance = NULL, climateParameters = NULL,
+findStation(unitCode, distance = NULL, climateParameters = NULL,
   filePathAndName = NULL)
 }
 \arguments{
-\item{parkCode}{One NPS park code as a string}
+\item{unitCode}{One NPS unit code as a string}
 
-\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box.}
+\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box}
 
-\item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}}
+\item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd). If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}}
 
 \item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }
 \value{
-A data frame containing station information for stations near the specified park
+A data frame containing station information for stations near the specified park. See User Guide for more details:  \url{https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/}
 }
 \description{
 Takes one park code and one or more climate parameters, determines the stations near the specified park using a bounding box from the IRMA Unit Service (\url{http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json}). 
@@ -26,12 +26,22 @@ Station location must intersect park bounding box (unbuffered or buffered).
 Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 }
 \examples{
-Find stations collecting average temperature within 10km of Marsh-Billings:
+\dontrun{
+Find stations collecting average temperature within 10km of Marsh-Billings NHP:
 
-findStation(parkCode = "MABI", distance=10, climateParameters=list('avgt'))
+findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
 
-Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file
+Find stations collecting all climate parameters except degree days within 15km of Marsh-Billings NHP:
 
-findStation(parkCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
+findStation(unitCode = "MABI", distance=10)
+
+Find stations collecting precipitation or average temperature within 10km of Agate Fossil Beds and save to a CSV file:
+
+findStation(unitCode = "AGFO", distance=10, climateParameters=list('pcpn'), filePathAndName = "agfo_stations.csv")
+
+Find stations within 30km of Rocky Mountain NP collecting maxt and mint:
+
+findStation(unitCode = "ROMO", distance=30, climateParameters=list('pcpn'), filePathAndName = "Test01_R.csv")
+}
 }
 
