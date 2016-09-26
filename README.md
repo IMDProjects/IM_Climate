@@ -12,6 +12,12 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 + Formats outputs consistently regardless of implementation technique (R, Python)
 
   * Limits alteration to data returned from ACIS web services
+  
+#### Release 1.0 - 20160906 ####
+
+#### Release 1.1 ####
+
+In development - access daily PRISM gridded data from ACIS
 
 Toolkit documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA
 

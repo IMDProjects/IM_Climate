@@ -7,26 +7,10 @@ class GridRequestor(ACIS):
         super(GridRequestor,self).__init__()
         self.webServiceSource = 'GridData'
 
-    def getMonthlyGrids(self, gridSource, sDate, eDate,
-            parkCodes = None, distance = 0,  climateParameters = None):
+<<<<<<< HEAD
+=======
 
-        self.gridSource = gridSource
-        self.unitCode = unitCode
-        self.climateParameters = climateParameters
-        self.interval = 'mly'
-        self.duration = 'mly'
-        response = self._callForGrids()
-
-    def getYearlyGrids(self, gridSource, sDate, eDate,
-            parkCodes = None, distance = 0,  climateParameters = None):
-
-        self.gridSource = gridSource
-        self.unitCode = unitCode
-        self.climateParameters = climateParameters
-        self.interval = 'yly'
-        self.duration = 'yly'
-        response = self._callForGrids()
-        print response
+>>>>>>> d4d96fdba38f3a9dfa22ce6b4ef5de448d1f30b7
 
     def _callForGrids(self):
         self.climateParameters = self._formatClimateParameters(self.climateParameters)
@@ -65,7 +49,7 @@ if __name__ == '__main__':
     climateParameters = 'mint, maxt'
     parkCode = 'AGFO'
     distance = 0
-    print agr.getDailyGrids(gridSource = gridSource, sDate = sDate, eDate = eDate,
+    print agr.getDailyGrids(sDate = sDate, eDate = eDate,
         unitCode = parkCode, distance = distance, climateParameters = climateParameters )
 ##    print agr.getMonthlyGrids(gridSource = gridSource, sDate = sDate, eDate = eDate,
 ##        parkCodes = parkCode, distance = distance, climateParameters = climateParameters )
