@@ -8,7 +8,7 @@
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
-#' @examples
+#' @examples \dontrun{
 #' Precipitation, temperature weather observations for one station for a specifc date range:
 #'
 #' getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20150831")
@@ -20,6 +20,7 @@
 #' All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
 #'
 #' getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=stationDF, sdate="20150801", edate="20150803")
+#' }
 #' @export
 #'
 # TODO: encapsulate in error block

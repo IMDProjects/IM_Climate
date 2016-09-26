@@ -34,6 +34,30 @@ getStationSubtype <- function(testType, testSid) {
   # else {return (NA)}
   
   return(typeDesc)
+}
 
+#' stripEscapes strips escape characters from input string
+#' @param inputStr input from which escape characters are to be stripped 
+#' @export 
+#' 
+
+stripEscapes <- function(inputStr) {
+  # Yes, this is crappy code but it works
+  # TODO: Clean this up!!!
+  iJSON <- gsub("\\\\", "T", toJSON(inputStr, auto_unbox = TRUE))
+  f = gsub("\"\\[", "\\[", iJSON)
+  g = gsub("\\]\"", "\\]", f)
+  h = gsub("T", "", g)
+  i = gsub("\"\"\\{", "\\{", h)
+  outputJSON <- gsub("\\}\"\"", "\\}", i)
+  
+  return(outputJSON)
+}
+
+#' outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
+# @param gridResponse grid (PNG-format) returned from ACIS request
+#' @export 
+#'
+outputAscii <- function(gridResponse) {
   
 }
