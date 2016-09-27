@@ -21,7 +21,7 @@ getDailyGrids <-
     # URLs and request parameters:
     # ACIS data services
     baseURL <- "http://data.rcc-acis.org/"
-    webServiceSource <- "StnData"
+    webServiceSource <- "GridData"
     config <- add_headers(Accept = "'Accept':'application/json'")
     
     # Default to CONUS
@@ -66,11 +66,11 @@ getDailyGrids <-
     bList <- list(bbox = bbox, sdate = sdate, edate = edate)
     
     # Hard-coded request elements
-    gridElements <- list(interval = "dly", duration = "dly", gridSource = "PRISM", dataPrecision = 1)
-    if (is.null(filePath)==FALSE) {  
-      # save grid(s) to a folder
-      gridElements <- c(gridElements, output="json")
-    }
+    gridElements <- list(interval = "dly", duration = "dly", gridSource = "PRISM", dataPrecision = 1, output = "json", meta = "ll")
+    # if (is.null(filePath)==FALSE) {  
+    #   # save grid(s) to a folder
+    #   gridElements <- c(gridElements, output="json")
+    # }
     
     # Elements from lookup file - used for output formatting and  request documentation
     lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
@@ -78,10 +78,11 @@ getDailyGrids <-
     
     # Configure image output
     gridElements <- c(gridElements, grid = luElements[[1]]$code)
-    if (is.null(filePath)==FALSE) {
-      #bList[[length(bList)+1]] <- list(output = unlist(gridElements$output))
-      bList <- c(bList, output=unlist(gridElements$output))
-    }
+    # if (is.null(filePath)==FALSE) {
+    #   #bList[[length(bList)+1]] <- list(output = unlist(gridElements$output))
+    #   bList <- c(bList, output=unlist(gridElements$output))
+    # }
+    bList <- c(bList, output=unlist(gridElements$output))
     bList <- c(bList, grid = unlist(gridElements$grid))
     #bList <- c(bList, prec = unlist(gridElements$dataPrecision))
     #bList[[length(bList)+1]] <- list(grid = unlist(gridElements$grid))
@@ -109,11 +110,57 @@ getDailyGrids <-
     body  <- stripEscapes(c(bList, elems=elems))
     print(dataURL)
     print(body)
-    
-    #     
-    # # Format POST request for use in httr
+         
+    # Format POST request for use in httr
     # Initialize response object
-    # dfResponse <- NULL
+    dfResponse <- NULL
+    # This returns the full response - need to use content() and parse
+    dataResponseInit <-
+      POST(
+        dataURL,
+        accept_json(),
+        add_headers("Content-Type" = "application/json"),
+        body = body,
+        verbose()
+      ) 
+    # Format climate data object
+    rList <- content(dataResponseInit)
+    dataResponseError <- rList$error
+    if (is.null(dataResponseError)) {
+      #print(dataResponseInit)
+      # ideas here: http://zevross.com/blog/2015/02/12/using-r-to-download-and-parse-json-an-example-using-data-from-an-open-data-portal/
+      # and ftp://cran.r-project.org/pub/R/web/packages/ascii/ascii.pdf
+      resp <- fromJSON(content(dataResponseInit, "text"), simplifyVector = FALSE)
+      respList <- content(dataResponseInit)$data
+      respJSON  <- toJSON(content(dataResponseInit, "text"), auto_unbox = TRUE)
+      # get the second grid content(dataResponseInit)$data[[2]][[2]]
+      print(class(resp))
+      for (i in 1:length(resp$data)) {
+        # Convert each output to ASCII format
+        print(resp$data[[i]][[1]]) #image date
+        print(length(resp$data[[i]][[2]])) #count of image rows
+      }
+      #print(stripEscapesGrid(resp))
+      if (!is.null(filePath)) {
+        
+      }
+      else {
+        
+      }
+    }
+    else {
+      print(paste("ERROR: ", dataResponseError))
+    }
+     # output <- tryCatch({
+     #    dfResponse = "test"
+     # }, warning = function(w) {
+     #    print(paste("WARNING: ", w))
+     #    
+     # }, error = function(e) {
+     #    print(paste("ERROR: ", e))
+     # }, finally = {
+     #   print("Finished try/catch")
+     # })
     # output <- try({
     #   
     # })

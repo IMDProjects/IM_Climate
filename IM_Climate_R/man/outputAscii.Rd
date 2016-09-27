@@ -6,6 +6,9 @@
 \usage{
 outputAscii(gridResponse)
 }
+\arguments{
+\item{gridResponse}{grid (JSON format) returned from ACIS request}
+}
 \description{
 outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
 }
