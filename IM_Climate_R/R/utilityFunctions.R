@@ -25,15 +25,47 @@ getStationSubtype <- function(testType, testSid) {
     }
   }
   
-  # if (exists("subtypeDesc")) {
-  #   if (length(subtypeDesc) > 0) {return (subtypeDesc)}
-  # }
-  # else if (exists("typeDesc")) {
-  #   if (length(typeDesc) > 0) {return (typeDesc)}
-  # }
-  # else {return (NA)}
-  
   return(typeDesc)
+}
 
+#' stripEscapes strips escape characters from input string
+#' @param inputStr input from which escape characters are to be stripped 
+#' @export 
+#' 
+
+stripEscapes <- function(inputStr) {
+  # Yes, this is crappy code but it works
+  # TODO: Clean this up!!!
+  iJSON <- gsub("\\\\", "T", toJSON(inputStr, auto_unbox = TRUE))
+  f = gsub("\"\\[", "\\[", iJSON)
+  g = gsub("\\]\"", "\\]", f)
+  h = gsub("T", "", g)
+  i = gsub("\"\"\\{", "\\{", h)
+  outputJSON <- gsub("\\}\"\"", "\\}", i)
+  
+  return(outputJSON)
+}
+
+#' stripEscapesGird strips escape characters from input string (used to format getDailyGrids response)
+#' @param inputStr input from which escape characters are to be stripped 
+#' @export 
+#' 
+
+stripEscapesGrid <- function(inputStr) {
+  # Yes, this is crappy code but it works
+  # TODO: Clean this up!!!
+  dd1  <- gsub("\"\\[", "\\[", inputStr)
+  dd2  <- gsub("\\\\", "T", dd1)
+  dd3  <- gsub("Tn", "", dd2)
+  outputJSON  <- gsub("T", "", dd3)
+  
+  return(outputJSON)
+}
+
+#' outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
+#' @param gridResponse grid (JSON format) returned from ACIS request
+#' @export 
+#'
+outputAscii <- function(gridResponse) {
   
 }
