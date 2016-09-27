@@ -15,16 +15,23 @@ To serve the broadest user community, it is implemented in both Python and R. Re
   
 Documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA   
  
-#### Past, Present and Future Development #### 
+#### Past, Present and Future Development
 	#### Development Roadmap ####
 	Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
+	#### Version 1.2 ####
+	Release Date: Planned for 11/1/2016
+	Functionality: Get monthly station summary by year for station data
+	v1.2 Documentation: In Development
+	
 	#### Version 1.1 ####
-	Release Date: Planned for 10/1/2016
-	v1.1 Documentation: In development - access daily PRISM gridded data from ACIS
+	Release Date: 10/1/2016
+	Functionality: Get daily gridded data (PRISM only)
+	v1.1 Documentation: https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
 
 	#### Version 1.0 ####
 	Release Date: 9/6/2016
+	Functionality: find stations and request daily station data
 	v1.0 Documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA
 
 
