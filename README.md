@@ -13,14 +13,15 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * Limits alteration to data returned from ACIS web services
   
-#### Release 1.0 - 20160906 ####
+#### Version 1.0####
+Release Date: 9/6/2016
+Documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA
 
-#### Release 1.1 ####
-
+#### Version 1.1 ####
+Release Date: Planned for 10/1/2016
 In development - access daily PRISM gridded data from ACIS
 
-Toolkit documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA
+#### future Version(s) ####
 
-Toolkit Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
+Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
-Tracking Spreadsheet: https://docs.google.com/spreadsheets/d/1gqPr6kbPQ0PP2jw8rSs6BakySaTWbRAXj1aDSYumQEM

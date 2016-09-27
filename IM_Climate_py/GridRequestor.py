@@ -79,7 +79,7 @@ if __name__ == '__main__':
     gr = GridRequestor()
     sDate = '2015-01-01'
     eDate = '2015-01-04'
-    climateParameters = 'mint'
+    climateParameters = 'mint, maxt'
     unitCode = 'YELL'
     distance = 0
     filePath = 'C:\\TEMP\\'
