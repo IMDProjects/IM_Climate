@@ -13,7 +13,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * Limits alteration to data returned from ACIS web services
   
-Documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA   
++ Current Documentation: https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
  
 #### Past, Present and Future Development
 	#### Development Roadmap ####
