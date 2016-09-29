@@ -24,7 +24,7 @@ getDailyGrids <-
     webServiceSource <- "GridData"
     config <- add_headers(Accept = "'Accept':'application/json'")
     
-    # Default to CONUS
+    # Default to CONUS extent
     if (is.null(unitCode)) {
       bbox <- "-130, 20,-50, 60"
     }
@@ -77,6 +77,7 @@ getDailyGrids <-
     luElements  <- lookups$gridSources[gridElements$gridSource]
     
     # Configure image output
+    fileNameRoot <- unlist(gridElements$gridSource)
     gridElements <- c(gridElements, grid = luElements[[1]]$code)
     # if (is.null(filePath)==FALSE) {
     #   #bList[[length(bList)+1]] <- list(output = unlist(gridElements$output))
@@ -137,8 +138,22 @@ getDailyGrids <-
       print(class(resp))
       for (i in 1:length(resp$data)) {
         # Convert each output to ASCII format
+        # grid data is resp$data[[i]][[2]]) as nested list
         print(resp$data[[i]][[1]]) #image date
         print(length(resp$data[[i]][[2]])) #count of image rows
+        # get grid data as a matrix
+        gridMatrix <- do.call(cbind, resp$data[[i]][[2]])
+        griddf <- NULL
+        for (j in 1:ncol(gridMatrix)) {
+          griddf <- cbind(griddf, as.numeric(gridMatrix[,j]))
+          #griddf <- cbind(griddf, as.data.frame(as.numeric(gridMatrix[,j])))
+          #griddf <- cbind(griddf, as.data.frame(gridMatrix[,j]))
+        }
+        ras = raster(griddf)
+        writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")
+        #r = raster(as.matrix(griddf), xmn=LLX, ymn=LLY, xmx=URX, ymx=URY)
+        #r = raster(vals=as.data.frame(griddf), resolution=c(as.numeric(luElements$PRISM$cellSize)), xmn=LLX, ymn=LLY)
+        #writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")
       }
       #print(stripEscapesGrid(resp))
       if (!is.null(filePath)) {
