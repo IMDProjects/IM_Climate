@@ -69,13 +69,14 @@ stripEscapesGrid <- function(inputStr) {
 #' @param luSource ACIS lookup source (as dataframe)
 #' @export 
 #'
-outputAscii <- function(gridResponse, filePath, bbox, luSource) {
-  write(paste("ncols ", length(gridResponse[1,])), filePath)
-  write(paste("nrows ", length(gridResponse[,1])), filePath, append=TRUE)
-  write(paste("xllcorner ", unlist(strsplit(bbox, ","))[1]), filePath, append=TRUE)
-  write(paste("yllcorner ", unlist(strsplit(bbox, ","))[3]), filePath, append=TRUE)
-  write(paste("cellsize ", luSource$cellSize), filePath, append=TRUE)
-  write(paste("NODATA_value ", luSource$missingValue), filePath, append=TRUE)
-  write.table(gridResponse, filePath, row.names = FALSE, col.names = FALSE, append = TRUE)
+outputAscii <- function(gridResponse, fullFilePath, bbox, luSource) {
+  write(paste("ncols ", length(gridResponse[1,])), fullFilePath)
+  write(paste("nrows ", length(gridResponse[,1])), fullFilePath, append=TRUE)
+  write(paste("xllcorner ", unlist(strsplit(bbox, ","))[1]), fullFilePath, append=TRUE)
+  write(paste("yllcorner ", unlist(strsplit(bbox, ","))[2]), fullFilePath, append=TRUE)
+  write(paste("cellsize ", luSource$cellSize), fullFilePath, append=TRUE)
+  write(paste("NODATA_value ", luSource$missingValue), fullFilePath, append=TRUE)
+  write.table(gridResponse, fullFilePath, row.names = FALSE, col.names = FALSE, append = TRUE)
+  write(luSource$projection, gsub(".asc", ".prj", fullFilePath))
   return("Success")
 }

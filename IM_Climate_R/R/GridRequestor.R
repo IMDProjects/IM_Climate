@@ -68,29 +68,20 @@ getDailyGrids <-
     
     # Hard-coded request elements
     gridElements <- list(interval = "dly", duration = "dly", gridSource = "PRISM", dataPrecision = 1, output = "json", meta = "ll")
-    # if (is.null(filePath)==FALSE) {  
-    #   # save grid(s) to a folder
-    #   gridElements <- c(gridElements, output="json")
-    # }
     
-    # Elements from lookup file - used for output formatting and  request documentation
+    # Image parameters from lookup file - used for output formatting and  request documentation
     lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
     luElements  <- lookups$gridSources[gridElements$gridSource]
     
     # Configure image output
     fileNameRoot <- unlist(gridElements$gridSource)
     gridElements <- c(gridElements, grid = luElements[[1]]$code)
-    # if (is.null(filePath)==FALSE) {
-    #   #bList[[length(bList)+1]] <- list(output = unlist(gridElements$output))
-    #   bList <- c(bList, output=unlist(gridElements$output))
-    # }
+   
     bList <- c(bList, output=unlist(gridElements$output))
     bList <- c(bList, grid = unlist(gridElements$grid))
-    #bList <- c(bList, prec = unlist(gridElements$dataPrecision))
-    #bList[[length(bList)+1]] <- list(grid = unlist(gridElements$grid))
     
     # If climateParameters is NULL, default to these parameters
-    if (is.null(climateParameters)) {
+    if (is.null(climateParameters == TRUE)) {
       climateParameters <- list('pcpn', 'mint', 'maxt', 'avgt')
     }
     
@@ -126,45 +117,44 @@ getDailyGrids <-
         verbose()
       ) 
     # Format climate data object
+    # TODO: cross-check response dimensionality
     rList <- content(dataResponseInit)
     dataResponseError <- rList$error
     if (is.null(dataResponseError)) {
-      #print(dataResponseInit)
-      # ideas here: http://zevross.com/blog/2015/02/12/using-r-to-download-and-parse-json-an-example-using-data-from-an-open-data-portal/
-      # and ftp://cran.r-project.org/pub/R/web/packages/ascii/ascii.pdf
       resp <- fromJSON(content(dataResponseInit, "text"), simplifyVector = FALSE)
       respList <- content(dataResponseInit)$data
       respJSON  <- toJSON(content(dataResponseInit, "text"), auto_unbox = TRUE)
       # get the second grid content(dataResponseInit)$data[[2]][[2]]
-      print(class(resp))
       for (i in 1:length(resp$data)) {
         # Convert each output to ASCII format
-        fileName <- paste(paste(paste(fileNameRoot, climateParameters[1], sep = "_"), resp$data[[i]][[1]], sep = "_"), ".asc")
-        #fileName <- paste(paste(paste(fileNameRoot, climateParameters[1], sep = "_"), gsub(" ", "", resp$data[[i]][[1]]), sep = "_dly_"), ".asc")
         # grid data is resp$data[[i]][[2]]) as nested list
         print(resp$data[[i]][[1]]) #image date
         print(length(resp$data[[i]][[2]])) #count of image rows
-        # get grid data as a matrix
-        gridMatrix <- do.call(cbind, resp$data[[i]][[2]])
-        griddf <- NULL
-        for (j in 1:ncol(gridMatrix)) {
-          griddf <- cbind(griddf, as.numeric(gridMatrix[,j]))
-          #griddf <- cbind(griddf, as.data.frame(as.numeric(gridMatrix[,j])))
-          #griddf <- cbind(griddf, as.data.frame(gridMatrix[,j]))
-        }
-        outfile <- outputAscii(griddf, paste(filePath, fileName, sep="\\"), bbox, luElements[[1]])
-        #ras = raster(griddf)
-        #writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")
-        #r = raster(as.matrix(griddf), xmn=LLX, ymn=LLY, xmx=URX, ymx=URY)
-        #r = raster(vals=as.data.frame(griddf), resolution=c(as.numeric(luElements$PRISM$cellSize)), xmn=LLX, ymn=LLY)
-        #writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")
-      }
-      #print(stripEscapesGrid(resp))
-      if (!is.null(filePath)) {
-        
-      }
-      else {
-        
+        # get grid data as a matrix; output to file or console
+        for (j in 1:length(climateParameters)) {
+          fileName <- NULL
+          fileName <- paste(paste(paste(fileNameRoot, climateParameters[j], sep = "_"), resp$data[[i]][[1]], sep = "_dly_"), ".asc", sep = "")
+          #fileName <- cat(paste(paste(fileNameRoot, climateParameters[j], sep = "_"), resp$data[[i]][[1]], sep = "_dly_"), ".asc")
+          print(fileName)
+          gridMatrix <- do.call(cbind, resp$data[[i]][[j+1]])
+          griddf <- NULL
+          for (k in 1:ncol(gridMatrix)) {
+            griddf <- cbind(griddf, as.numeric(gridMatrix[,k]))
+          }
+          if (is.null(filePath) == FALSE) {
+            outfile <- outputAscii(griddf, paste(filePath, fileName, sep="\\"), bbox, luElements[[1]])
+            if (outfile == "Success") {
+              print(cat("SUCCESS: Created raster(s) for", unlist(unitCode), "using climateParameter=", unlist(climateParameters)[j], "in " , filePath))
+            }
+            else {
+              print(cat("ERROR: Unable to create raster(s) for ", unlist(unitCode), "using climateParameter=", unlist(climateParameters)[j]))
+            }
+          }
+          else {
+            print("INFO: No filePath specified. Output written to console:\n")
+            outfile <- outputAscii(griddf, "", bbox, luElements[[1]])
+          }
+        } 
       }
     }
     else {
