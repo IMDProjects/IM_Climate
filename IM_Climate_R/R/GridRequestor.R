@@ -23,6 +23,7 @@ getDailyGrids <-
     baseURL <- "http://data.rcc-acis.org/"
     webServiceSource <- "GridData"
     config <- add_headers(Accept = "'Accept':'application/json'")
+    samplePeriod <- "dly"
     
     # Default to CONUS extent
     if (is.null(unitCode)) {
@@ -138,6 +139,8 @@ getDailyGrids <-
       print(class(resp))
       for (i in 1:length(resp$data)) {
         # Convert each output to ASCII format
+        fileName <- paste(paste(paste(fileNameRoot, climateParameters[1], sep = "_"), resp$data[[i]][[1]], sep = "_"), ".asc")
+        #fileName <- paste(paste(paste(fileNameRoot, climateParameters[1], sep = "_"), gsub(" ", "", resp$data[[i]][[1]]), sep = "_dly_"), ".asc")
         # grid data is resp$data[[i]][[2]]) as nested list
         print(resp$data[[i]][[1]]) #image date
         print(length(resp$data[[i]][[2]])) #count of image rows
@@ -149,8 +152,9 @@ getDailyGrids <-
           #griddf <- cbind(griddf, as.data.frame(as.numeric(gridMatrix[,j])))
           #griddf <- cbind(griddf, as.data.frame(gridMatrix[,j]))
         }
-        ras = raster(griddf)
-        writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")
+        outfile <- outputAscii(griddf, paste(filePath, fileName, sep="\\"), bbox, luElements[[1]])
+        #ras = raster(griddf)
+        #writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")
         #r = raster(as.matrix(griddf), xmn=LLX, ymn=LLY, xmx=URX, ymx=URY)
         #r = raster(vals=as.data.frame(griddf), resolution=c(as.numeric(luElements$PRISM$cellSize)), xmn=LLX, ymn=LLY)
         #writeRaster(ras, "D:\\temp\\trash\\test.asc", overwrite=TRUE, "ascii")

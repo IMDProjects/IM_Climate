@@ -4,10 +4,16 @@
 \alias{outputAscii}
 \title{outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)}
 \usage{
-outputAscii(gridResponse)
+outputAscii(gridResponse, filePath, bbox, luSource)
 }
 \arguments{
-\item{gridResponse}{grid (JSON format) returned from ACIS request}
+\item{gridResponse}{grid (dataframe format) returned from ACIS request}
+
+\item{filePath}{full file path for ASCII output}
+
+\item{bbox}{bounding box for grid request}
+
+\item{luSource}{ACIS lookup source (as dataframe)}
 }
 \description{
 outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
