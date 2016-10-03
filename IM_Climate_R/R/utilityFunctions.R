@@ -62,6 +62,38 @@ stripEscapesGrid <- function(inputStr) {
   return(outputJSON)
 }
 
+#' getBBox retrieves bounding box from IRMA Unit service and buffers it by specified distance
+#' @param unitCode unitCode One NPS unit code as a string
+#' @param bboxExpand buffer distance in decimal degrees (assumes WGS984)
+#' @export 
+#'
+getBBox <- function (unitCode, expandBBox) {
+  bboxURLBase <- "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+  config <- add_headers(Accept = "'Accept':'application/json'")
+  # Get bounding box for park(s)
+  bboxURL <- gsub("CODE", unitCode, bboxURLBase)
+  # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
+  bboxWKT <- strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
+  # Extract vertices and 'buffer' by bboxExpand distance or default of 0.011 degrees (~33 km)
+  # TODO: add Eastern Hemisphere detection
+  LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
+  LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
+  UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
+  UL  <- strsplit(gsub("))","",substring(bboxWKT[[1]][4], 2)), " ")
+    
+  LLX  <- as.numeric(LL[[1]][1]) - expandBBox
+  LLY  <- as.numeric(LL[[1]][2]) - expandBBox
+  LRX  <- as.numeric(LR[[1]][1]) + expandBBox
+  LRY  <- as.numeric(LR[[1]][2]) - expandBBox
+  URX  <- as.numeric(UR[[1]][1]) + expandBBox
+  URY  <- as.numeric(UR[[1]][2]) + expandBBox
+  ULX  <-  as.numeric(UL[[1]][1]) - expandBBox
+  ULY  <- as.numeric(UL[[1]][2]) + expandBBox
+    
+  bbox  <- paste(c(LLX, LLY, URX, URY), collapse=", ")
+  return(bbox)
+}
+
 #' outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
 #' @param gridResponse grid (dataframe format) returned from ACIS request
 #' @param filePath full file path for ASCII output

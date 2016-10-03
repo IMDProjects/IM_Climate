@@ -8,6 +8,10 @@
 #' @climateParameters (optional) A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt).  If not specified, defaults to all parameters. See the ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @filePath filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to the current working directory.
 #' @return ASCII-formatted grid file for each parameter
+#' @examples \dontrun {
+#' Two daily grids for PRWI for one date: returns one grid for each parameter for each date - 4 grids total
+#' getDailyGrids(unitCode = list("PRWI"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"), filePath="d:\\temp\\trash")
+#' }
 #' @export
 
 getDailyGrids <- 
@@ -36,31 +40,9 @@ getDailyGrids <-
         bboxExpand  = 0.0
       }
       else {
-        bboxExpand = distance*0.011
+        bboxExpand = distance*0.011 # convert km to decimal degrees
       }
-      
-      # TODO: move into helper function in utilityFunctions.R
-      # Get bounding box for park(s)
-      bboxURL <- gsub("CODE", unitCode, bboxURLBase)
-      # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
-      bboxWKT <- strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
-      # Extract vertices and 'buffer' by 0.3 degrees (~33 km)
-      # TODO: add Eastern Hemisphere detection
-      LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
-      LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
-      UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
-      UL  <- strsplit(gsub("))","",substring(bboxWKT[[1]][4], 2)), " ")
-      
-      LLX  <- as.numeric(LL[[1]][1]) - bboxExpand
-      LLY  <- as.numeric(LL[[1]][2]) - bboxExpand
-      LRX  <- as.numeric(LR[[1]][1]) + bboxExpand
-      LRY  <- as.numeric(LR[[1]][2]) - bboxExpand
-      URX  <- as.numeric(UR[[1]][1]) + bboxExpand
-      URY  <- as.numeric(UR[[1]][2]) + bboxExpand
-      ULX  <-  as.numeric(UL[[1]][1]) - bboxExpand
-      ULY  <- as.numeric(UL[[1]][2]) + bboxExpand
-      
-      bbox  <- paste(c(LLX, LLY, URX, URY), collapse=", ")
+      bbox <- getBBox(unitCode, bboxExpand)
     }
     
     # Initialize body of request
@@ -138,7 +120,7 @@ getDailyGrids <-
           print(fileName)
           gridMatrix <- do.call(cbind, resp$data[[i]][[j+1]])
           griddf <- NULL
-          for (k in 1:ncol(gridMatrix)) {
+          for (k in 1:ncol(gridMatrix)) { # does matrix need to be transposed?
             griddf <- cbind(griddf, as.numeric(gridMatrix[,k]))
           }
           if (is.null(filePath) == FALSE) {
