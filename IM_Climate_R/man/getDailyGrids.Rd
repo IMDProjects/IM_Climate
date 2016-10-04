@@ -24,6 +24,9 @@ Takes one park code and a list of one or more climate parameters and requests da
 \dontrun {
 Two daily grids for PRWI for one date: returns one grid for each parameter for each date - 4 grids total
 getDailyGrids(unitCode = list("PRWI"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"), filePath="d:\\\\temp\\\\trash")
+
+Two daily grids for GRSM for one date: print output to console
+getDailyGrids(unitCode = list("GRSM"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"))
 }
 }
 

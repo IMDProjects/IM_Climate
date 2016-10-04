@@ -102,8 +102,12 @@ getBBox <- function (unitCode, expandBBox) {
 #' @export 
 #'
 outputAscii <- function(gridResponse, fullFilePath, bbox, luSource) {
+  xcen <- as.numeric(unlist(strsplit(bbox, ","))[1]) - as.numeric(unlist(strsplit(bbox, ","))[3]) + as.numeric(unlist(strsplit(bbox, ","))[3])
+  ycen <- as.numeric(unlist(strsplit(bbox, ","))[4]) - as.numeric(unlist(strsplit(bbox, ","))[2]) + as.numeric(unlist(strsplit(bbox, ","))[2])
   write(paste("ncols ", length(gridResponse[1,])), fullFilePath)
   write(paste("nrows ", length(gridResponse[,1])), fullFilePath, append=TRUE)
+  #write(paste("xllcenter ", xcen), fullFilePath, append=TRUE)
+  #write(paste("yllcenter ", ycen), fullFilePath, append=TRUE)
   write(paste("xllcorner ", unlist(strsplit(bbox, ","))[1]), fullFilePath, append=TRUE)
   write(paste("yllcorner ", unlist(strsplit(bbox, ","))[2]), fullFilePath, append=TRUE)
   write(paste("cellsize ", luSource$cellSize), fullFilePath, append=TRUE)

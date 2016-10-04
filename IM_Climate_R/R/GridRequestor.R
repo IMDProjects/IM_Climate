@@ -11,6 +11,9 @@
 #' @examples \dontrun {
 #' Two daily grids for PRWI for one date: returns one grid for each parameter for each date - 4 grids total
 #' getDailyGrids(unitCode = list("PRWI"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"), filePath="d:\\temp\\trash")
+#' 
+#' Two daily grids for GRSM for one date: print output to console
+#' getDailyGrids(unitCode = list("GRSM"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"))
 #' }
 #' @export
 
@@ -21,7 +24,6 @@ getDailyGrids <-
             distance = NULL,
             climateParameters = NULL,
             filePath = NULL) {
-    
     # URLs and request parameters:
     # ACIS data services
     baseURL <- "http://data.rcc-acis.org/"
@@ -111,19 +113,20 @@ getDailyGrids <-
         # Convert each output to ASCII format
         # grid data is resp$data[[i]][[2]]) as nested list
         print(resp$data[[i]][[1]]) #image date
-        print(length(resp$data[[i]][[2]])) #count of image rows
+        #print(length(resp$data[[i]][[2]])) #count of image rows
         # get grid data as a matrix; output to file or console
         for (j in 1:length(climateParameters)) {
           fileName <- NULL
           fileName <- paste(paste(paste(fileNameRoot, climateParameters[j], sep = "_"), resp$data[[i]][[1]], sep = "_dly_"), ".asc", sep = "")
           #fileName <- cat(paste(paste(fileNameRoot, climateParameters[j], sep = "_"), resp$data[[i]][[1]], sep = "_dly_"), ".asc")
-          print(fileName)
-          gridMatrix <- do.call(cbind, resp$data[[i]][[j+1]])
+          #print(fileName)
+          gridMatrix <- do.call(rbind, resp$data[[i]][[j+1]])
           griddf <- NULL
-          for (k in 1:ncol(gridMatrix)) { # does matrix need to be transposed?
-            griddf <- cbind(griddf, as.numeric(gridMatrix[,k]))
+          for (k in 1:ncol(gridMatrix)) { # for proper image orientation, flip matrix columns with rev()
+            griddf <- cbind(griddf, as.numeric(rev(gridMatrix[,k])))
           }
           if (is.null(filePath) == FALSE) {
+            #print(griddf)
             outfile <- outputAscii(griddf, paste(filePath, fileName, sep="\\"), bbox, luElements[[1]])
             if (outfile == "Success") {
               print(cat("SUCCESS: Created raster(s) for", unlist(unitCode), "using climateParameter=", unlist(climateParameters)[j], "in " , filePath))
