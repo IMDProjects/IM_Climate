@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilityFunctions.R
 \name{stripEscapesGrid}
 \alias{stripEscapesGrid}
-\title{stripEscapesGird strips escape characters from input string (used to format getDailyGrids response)}
+\title{stripEscapesGrid strips escape characters from input string (used to format getDailyGrids response)}
 \usage{
 stripEscapesGrid(inputStr)
 }
@@ -10,6 +10,6 @@ stripEscapesGrid(inputStr)
 \item{inputStr}{input from which escape characters are to be stripped}
 }
 \description{
-stripEscapesGird strips escape characters from input string (used to format getDailyGrids response)
+stripEscapesGrid strips escape characters from input string (used to format getDailyGrids response)
 }
 

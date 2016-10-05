@@ -8,7 +8,13 @@ getDailyGrids(unitCode = NULL, sdate = NULL, edate = NULL,
   distance = NULL, climateParameters = NULL, filePath = NULL)
 }
 \arguments{
+\item{unitCode}{(optional) One NPS unit code as a string. If not specified, defaults to CONUS geographic extent.}
+
 \item{distance}{(optional) Distance (in kilometers) to buffer park bounding box}
+
+\item{climateParameters}{(optional) A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt).  If not specified, defaults to all parameters. See the ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
+
+\item{filePath}{filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to the current working directory.}
 
 \item{sDate}{sdate (required) Format as a string (yyyy-mm-dd, yyyymmdd, yyyy-mm, yyyymm, yyyy). The beginning of the desired date range.}
 
