@@ -17,7 +17,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
  
 #### Past, Present and Future Development
 	#### Development Roadmap ####
-	Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
+	Development Roadmap: (https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts)
 
 	#### Version 1.2 ####
 	Release Date: Planned for 11/1/2016
