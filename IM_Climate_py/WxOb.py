@@ -1,6 +1,32 @@
 from common import missingValue
 
-class WxOb(dict):
+class observation(dict):
+
+    def __init__(self, values):
+        self['date'] = values[0].encode()
+        self['wxOb']  = values[1].encode()
+        self._replaceBlanks()
+
+    @property
+    def date(self):
+        return self['date']
+
+    @property
+    def wxOb(self):
+        return self['wxOb']
+
+    def _replaceBlanks(self):
+        #replace blanks with the missing value
+        for index, value in self.items():
+            if len(value.strip()) == 0:
+                self[index] = missingValue
+
+class monthlyOb(observation):
+    def __init__(self, values):
+        super(WxOb, self).__init__(values)
+
+
+class WxOb(observation):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
     WxOb is indexable like a standard dictionary although values can also
@@ -11,23 +37,11 @@ class WxOb(dict):
         -WxOb.sourceFlag
     '''
     def __init__(self, values):
-        self['date'] = values[0].encode()
-        self['wxOb']  = values[1].encode()
+
         self['ACIS_Flag'] = values[2].encode()
         self['sourceFlag'] = values[3].encode()
+        super(WxOb, self).__init__(values)
 
-        #replace blanks with the missing value
-        for index, value in self.items():
-            if len(value.strip()) == 0:
-                self[index] = missingValue
-
-
-    @property
-    def date(self):
-        return self['date']
-    @property
-    def wxOb(self):
-        return self['wxOb']
     @property
     def ACIS_Flag(self):
         return self['ACIS_Flag']

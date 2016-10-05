@@ -77,21 +77,34 @@ class GridRequestor(ACIS):
 
 if __name__ == '__main__':
     gr = GridRequestor()
-    sDate = '2015-01-01'
-    eDate = '2015-01-04'
+    filePath = 'C:\\TEMP\\'
+
+    #TEST 01
+    sdate = '2015-01-01'
+    edate = '2015-01-04'
     climateParameters = 'mint, maxt'
     unitCode = 'YELL'
     distance = 0
-    filePath = 'C:\\TEMP\\'
-    data =  gr.getDailyGrids(sdate = sDate, edate = eDate,
-        unitCode = unitCode, distance = distance,
-        climateParameters = climateParameters, filePath = filePath )
-    print data.climateParameters
-    print data.dates
-    data.export(filePath = filePath)
-    print data['mint']['2015-01-03']
-    print data.dates
-    print data.climateParameters
-    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+
+##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+##        unitCode = unitCode, distance = distance,
+##        climateParameters = climateParameters, filePath = filePath )
+##    print data.climateParameters
+##    print data.dates
+##    data.export(filePath = filePath)
+##    print data['mint']['2015-01-03']
+##    print data.dates
+##    print data.climateParameters
+##    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+
+    #Test 02
+    unitCode = 'OLYM'
+    sdate = '20160615'
+    edate = '20160616'
+    climateParameters = 'mint'
+    distance = 0
+    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+    unitCode = unitCode, distance = distance,
+    climateParameters = climateParameters, filePath = filePath )
 
 

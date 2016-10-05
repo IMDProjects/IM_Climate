@@ -1,5 +1,4 @@
 from ACIS import ACIS
-from Station import Station
 from StationDict import StationDict
 
 
@@ -14,6 +13,57 @@ class StationDataRequestor(ACIS):
         super(StationDataRequestor,self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnData'
 
+
+
+    def _fetchStationDataFromACIS(self, **kwargs):
+        '''
+        INFO
+        ----
+        Makes data requests using one or more stationIDs. Adds information for
+        each station (i.e., station meta and data) to the StationDict object.
+
+        RETURNS
+        -------
+        StationDict object
+
+        '''
+
+
+        metaElements = ['uid', 'll', 'name', 'elev', 'sids', 'state'] #additional metadata elements to request along with the data
+
+        elems = []
+        for p in self.climateParameters:
+            arguments = {'name': p, 'interval': self.interval, 'add': self.add
+             ,'duration': self.duration,'maxMissing': self.maxMissing}
+            elems.append(arguments)
+
+        #add all variations of reduce codes, where applicable - too bad it isn't just ignored
+        if self.reduceCodes:
+            rcelems = []
+            for rd in self.reduceCodes:
+                for k in elems:
+                    k['reduce'] = {'reduce': rd, 'add':self.add}
+                    rcelems.append(k.copy())
+            elems = rcelems
+
+        cp = [k['name'] + '_' + k['reduce']['reduce'] for k in elems]
+        #Instantiate the station dictionary object
+        sd = StationDict(queryParameters = None, dateInterval = self.duration,
+            aggregation = self.reduceCodes
+            #, climateParameters = self.climateParameters)
+            , climateParameters = cp)
+
+        for uid in self.stationIDs:
+            response = self._call_ACIS(uid = uid, elems = elems,
+                 meta = metaElements, **kwargs)
+            sd._addStation(stationID = uid, stationMeta = response['meta']
+                , stationData = response.get('data', 'error'))
+
+        if self.filePathAndName:
+            sd.exportData(filePathAndName = self.filePathAndName)
+        return sd
+
+
     def getDailyWxObservations(self, climateStations, climateParameters = None, sdate = 'por',
             edate = 'por', filePathAndName = None):
         '''
@@ -27,7 +77,7 @@ class StationDataRequestor(ACIS):
 
 
 
-        climateStations -               The ACIS uids. These can either be a single station (int or string),
+        climateStations                 The ACIS uids. These can either be a single station (int or string),
                                         a list of stationIDs, or the StationDict object returned
                                         from the StationFinder.FindStation method.
 
@@ -47,18 +97,65 @@ class StationDataRequestor(ACIS):
         and all associated flags
 
         '''
-        metaElements = ['uid', 'll', 'name', 'elev', 'sids', 'state'] #additional metadata elements to request along with the data
+
         self.duration = 'dly'
+        self.interval = 'dly'
         self.stationIDs = self._extractStationIDs(climateStations)
         self.climateParameters = self._formatClimateParameters(climateParameters)
-        self.reduceCode = None
+        self.reduceCodes = None
+        self.maxMissing = 0
+        self.filePathAndName = filePathAndName
+        self.add = 'f,s'
 
-        results =  self._fetchStationDataFromACIS(sdate = str(sdate),
-            edate = str(edate), meta = metaElements)
+        return self._fetchStationDataFromACIS(sdate = str(sdate),
+            edate = str(edate))
 
-        if filePathAndName:
-            results.exportData(filePathAndName = filePathAndName)
-        return results
+    def getMonthlySummaryByYear(self, climateStations, climateParameters = None, reduceCodes = None
+            ,sdate = 'por', edate = 'por', maxMissing = 1, filePathAndName = None):
+        '''
+        Returns the monthly summaries of weather observations for one or more stations.
+        # of observations is returned
+
+        ARGUMENTS
+        ---------
+
+
+
+        climateStations                 The ACIS uids. These can either be a single station (int or string),
+                                        a list of stationIDs, or the StationDict object returned
+                                        from the StationFinder.FindStation method.
+
+        climateParameters (optional)    The weather parameters to fetch. Valid parameters
+                                        can be found by accesssing the supportedParamters property.
+                                        Note that ACIS vernacular for climate parameter is element.
+
+        reduceCodes (optional)          The method used to summarize the daily observations into monthly
+                                        values. Current options inlcude max, min, sum
+                                        mean, and stdev. If none are provided, then all are returned.
+
+        sdate (optional)                Start Date -  YYYY-MM-DD OR YYYYMMDD (default is period of record)
+
+        edate (optional)                End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+
+        filePathAndName (optional)      Location and name of CSV text file to save
+
+        RETURNS
+        -------
+        Returns object that contains station metadata and the monthly weather summaries
+
+        '''
+        self.duration = 'mly'
+        self.interval = 'mly'
+        self.reduceCodes = self._formatReduceCodes(reduceCodes)
+        self.maxMissing =  maxMissing
+        self.filePathAndName = filePathAndName
+        self.add = 'mcnt'
+
+        self.stationIDs = self._extractStationIDs(climateStations)
+        self.climateParameters = self._formatClimateParameters(climateParameters)
+
+        return self._fetchStationDataFromACIS(sdate = str(sdate),
+            edate = str(edate))
 
 
     def _extractStationIDs(self, stations):
@@ -76,30 +173,6 @@ class StationDataRequestor(ACIS):
             else:
                 return [stations]
 
-    def _fetchStationDataFromACIS(self, **kwargs):
-        '''
-        INFO
-        ----
-        Makes data requests using one or more stationIDs. Adds information for
-        each station (i.e., station meta and data) to the StationDict object.
-
-        RETURNS
-        -------
-        StationDict object
-
-        '''
-        sd = StationDict(queryParameters = None, dateInterval = self.duration,
-            aggregation = self.reduceCode, climateParameters = self.climateParameters)
-
-        for uid in self.stationIDs:
-            elems = []
-            for p in self.climateParameters:
-                elems.append({'name':p,'add':'f,s'})
-            response = self._call_ACIS(uid = uid, elems = elems, **kwargs)
-            sd._addStation(stationSubClass = Station,  stationID = uid, stationMeta = response['meta']
-                , stationData = response.get('data', 'error'))
-
-        return sd
 
 
 if __name__=='__main__':
@@ -108,26 +181,32 @@ if __name__=='__main__':
 
     dr = StationDataRequestor()
 
-    #Daily Data
-    dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
-        , sdate = '20120101', edate = '2012-01-05' )
-    dailyData.exportData(filePathAndName = r'dailyData.csv')
+    #monthlyData
+    monthlyData = dr.getMonthlySummaryByYear(climateStations = stationIDs,
+        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
+        , sdate = '2012-01-01', edate = '2013-01-01' )
+    print (monthlyData)
 
-    #GET DATA for a single station
-    dailyData = dr.getDailyWxObservations(climateStations = 77572, sdate = 20160101, edate = '20160105' )
-
-    #Print the station data to the screen
-    print dailyData
-
-    #get data for stations returned in station search
-    from StationFinder import StationFinder
-    sf = StationFinder()
-    stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
-    dr = StationDataRequestor()
-    wxData = dr.getDailyWxObservations(climateStations = stationList,
-        climateParameters = 'pcpn'
-        ,sdate = '2015-08-01', edate = '2015-08-04')
-    print wxData
-    print wxData.stationCounts
+##    #Daily Data
+##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'
+##        , sdate = '20120101', edate = '2012-01-05' )
+##    dailyData.exportData(filePathAndName = r'dailyData.csv')
+##
+##    #GET DATA for a single station
+##    dailyData = dr.getDailyWxObservations(climateStations = 77572, sdate = 20160101, edate = '20160105' )
+##
+##    #Print the station data to the screen
+##    print (dailyData)
+##
+##    #get data for stations returned in station search
+##    from StationFinder import StationFinder
+##    sf = StationFinder()
+##    stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
+##    dr = StationDataRequestor()
+##    wxData = dr.getDailyWxObservations(climateStations = stationList,
+##        climateParameters = 'pcpn'
+##        ,sdate = '2015-08-01', edate = '2015-08-04')
+##    print (wxData)
+##    print (wxData.stationCounts)
 
 

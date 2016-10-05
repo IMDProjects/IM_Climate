@@ -41,6 +41,6 @@ def getBoundingBox(unitCode = None, distanceKM = None):
     return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
 
 if __name__=='__main__':
-    print missingValue
-    print getSupportedParameters()
-    print getBoundingBox('ACAD',0)
+    print (missingValue)
+    print (getSupportedParameters())
+    print (getBoundingBox('ACAD',0))

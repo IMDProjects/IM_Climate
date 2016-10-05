@@ -50,6 +50,6 @@ if __name__ == '__main__':
     g = Grid(grid = grid, XLLCenter = XLLCenter, YLLCenter = YLLCenter
         , cellSize = cellSize, projection = projection, missingValue = missingValue)
     g.export('aaa.asc')
-    print g.ncols
-    print g.nrows
-    print g
+    print (g.ncols)
+    print (g.nrows)
+    print (g)
