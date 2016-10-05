@@ -1,7 +1,5 @@
 from ACIS import ACIS
 import common
-import GridStack
-reload (GridStack)
 from GridStack import GridStack
 
 class GridRequestor(ACIS):
@@ -99,9 +97,9 @@ if __name__ == '__main__':
 
     #Test 02
     unitCode = 'OLYM'
-    sdate = '20160615'
-    edate = '20160616'
-    climateParameters = 'mint'
+    sdate = '20150615'
+    edate = '20150615'
+    climateParameters = 'maxt'
     distance = 0
     data =  gr.getDailyGrids(sdate = sdate, edate = edate,
     unitCode = unitCode, distance = distance,
