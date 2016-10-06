@@ -23,7 +23,12 @@ class observation(dict):
 
 class monthlyOb(observation):
     def __init__(self, values):
-        super(WxOb, self).__init__(values)
+        super(monthlyOb, self).__init__(values)
+        self['countMissing'] = values[2]
+
+    @property
+    def countMissing(self):
+        return self['countMissing']
 
 
 class WxOb(observation):
@@ -51,6 +56,12 @@ class WxOb(observation):
 
 if __name__=='__main__':
 
+    #Daily data
     data = ['2012-02-01',u'32.0', u' ', u'U']
     wx = WxOb(data)
     print wx
+
+    #Monthly data
+    data = [u'2012-01', u'22.60', 0]
+    dmonth = monthlyOb(data)
+    print dmonth
