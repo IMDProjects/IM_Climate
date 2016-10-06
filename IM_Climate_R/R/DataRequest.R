@@ -90,15 +90,7 @@ getDailyWxObservations <-
       #bList <- list(uid = climateStations, sdate = sdate, edate = edate, elems = elems)
       #bList <- list(sid = climateStations, sdate = sdate, edate = edate, elems = elems)
       
-      # Format and clean up JSON elements
-      # Yes, this is crappy code but it works
-      # TODO: Clean this up!!!
-      bJSON <- gsub("\\\\", "T", toJSON(bList, auto_unbox = TRUE))
-      f = gsub("\"\\[", "\\[", bJSON)
-      g = gsub("\\]\"", "\\]", f)
-      h = gsub("T", "", g)
-      i = gsub("\"\"\\{", "\\{", h)
-      body <- gsub("\\}\"\"", "\\}", i)
+      body  <- stripEscapes(bList)
       
       # Initialize vectors for SID type
       sid1_type = c()

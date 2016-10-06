@@ -36,18 +36,17 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # URLs and request parameters
   
   # NPS Park bounding boxes
-  bboxURLBase <- "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
   if (is.null(distance)) {
     bboxExpand  = 0.0
   }
   else {
-    bboxExpand = distance*0.011
+    bboxExpand = distance*0.011  # convert km to decimal degrees
   }
   
   # ACIS lookup
   #jsonFile  <- "..//ACISLookups.json"
   #acisLookup <- fromJSON(jsonFile)
-  acisLookup <- fromJSON("..//ACISLookups.json")
+  acisLookup <- fromJSON("ACISLookups.json")
   
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
@@ -67,27 +66,7 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279
   
   # Get bounding box for park(s)
-  bboxURL <- gsub("CODE", unitCode, bboxURLBase)
-  # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
-  bboxWKT <- strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
-  # Extract vertices and 'buffer' by 0.3 degrees (~33 km)
-  # TODO: add Eastern Hemisphere detection
-  LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
-  LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
-  UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
-  UL  <- strsplit(gsub("))","",substring(bboxWKT[[1]][4], 2)), " ")
-  
-  LLX  <- as.numeric(LL[[1]][1]) - bboxExpand
-  LLY  <- as.numeric(LL[[1]][2]) - bboxExpand
-  LRX  <- as.numeric(LR[[1]][1]) + bboxExpand
-  LRY  <- as.numeric(LR[[1]][2]) - bboxExpand
-  URX  <- as.numeric(UR[[1]][1]) + bboxExpand
-  URY  <- as.numeric(UR[[1]][2]) + bboxExpand
-  ULX  <-  as.numeric(UL[[1]][1]) - bboxExpand
-  ULY  <- as.numeric(UL[[1]][2]) + bboxExpand
-  
-  bbox  <- paste(c(LLX, LLY, URX, URY), collapse=", ")
- 
+  bbox <- getBBox(unitCode, bboxExpand) 
   body  <- list(bbox = bbox)
 
   # Format GET URL for use in jsonlite request
