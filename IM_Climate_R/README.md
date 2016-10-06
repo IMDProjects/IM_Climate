@@ -21,9 +21,21 @@ In development - access daily PRISM gridded data from ACIS
   
 #### R - Installing the IM_Climate Package ####
 
-The package can be installed from this GitHub repository by first installing and loading the [devtools](https://github.com/hadley/devtools) library from CRAN. Then, run the
+The package can be installed from this GitHub repository by first installing and loading the [devtools](https://github.com/hadley/devtools) library from CRAN. __If you are on the NPS network__, run the
 
 ```R
+library(httr)
+set_config( config( ssl_verifypeer = 0L ) )
+library(devtools)
 install_github("IMDProjects/IM_Climate/IM_Climate_R")
 ```
 operation to grab the package code and install it locally. 
+
+
+Otherwise, run the
+
+```R
+library(devtools)
+install_github("IMDProjects/IM_Climate/IM_Climate_R")
+```
+operation to grab the package code and install it locally.

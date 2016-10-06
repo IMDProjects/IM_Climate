@@ -71,13 +71,20 @@ stripEscapesGrid <- function(inputStr) {
 }
 
 #' getBBox retrieves bounding box from IRMA Unit service and buffers it by specified distance
-#' @param unitCode unitCode One NPS unit code as a string
+#' @param unitCode unitCode One NPS or FWS unit code as a string
 #' @param bboxExpand buffer distance in decimal degrees (assumes WGS984)
 #' @export
 #'
 getBBox <- function (unitCode, expandBBox) {
-  bboxURLBase <-
-    "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+  # NPS codes are alphabetic; FWS codes are alphanumeric
+  if (grepl('^[A-Za-z]+$', unitCode) == TRUE) {
+    bboxURLBase <-
+      "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+  }
+  else {
+    bboxURLBase <-
+      "https://ecos.fws.gov/ServCatServices/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+  }
   config <- add_headers(Accept = "'Accept':'application/json'")
   # Get bounding box for park(s)
   bboxURL <- gsub("CODE", unitCode, bboxURLBase)
@@ -89,7 +96,8 @@ getBBox <- function (unitCode, expandBBox) {
   LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
   LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
   UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
-  UL  <- strsplit(gsub("))", "", substring(bboxWKT[[1]][4], 2)), " ")
+  UL  <-
+    strsplit(gsub("))", "", substring(bboxWKT[[1]][4], 2)), " ")
   
   LLX  <- as.numeric(LL[[1]][1]) - expandBBox
   LLY  <- as.numeric(LL[[1]][2]) - expandBBox

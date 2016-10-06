@@ -1,7 +1,7 @@
 #' Get daily climate data grids for specified parameter(s) and NPS unit(s)
 #'
 #' Takes one park code and a list of one or more climate parameters and requests daily climate data. Returns a grid or grids (by parameter) in ASCII format.
-#' @param unitCode (optional) One NPS unit code as a string. If not specified, defaults to CONUS geographic extent.
+#' @param unitCode (optional) One unit code as a string. If not specified, defaults to CONUS geographic extent.
 #' @param sDate sdate (required) Format as a string (yyyy-mm-dd, yyyymmdd, yyyy-mm, yyyymm, yyyy). The beginning of the desired date range.
 #' @param eDate edate (required) Format as a string (yyyy-mm-dd, yyyymmdd, yyyy-mm, yyyymm, yyyy). The end of the desired date range.
 #' @param distance (optional) Distance (in kilometers) to buffer park bounding box
@@ -36,8 +36,6 @@ getDailyGrids <-
       bbox <- "-130, 20,-50, 60"
     } else {
       # NPS Park bounding box
-      bboxURLBase <-
-        "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
       if (is.null(distance)) {
         bboxExpand  = 0.0
       } else {
