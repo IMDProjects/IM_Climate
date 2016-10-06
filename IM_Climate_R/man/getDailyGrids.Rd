@@ -8,7 +8,7 @@ getDailyGrids(unitCode = NULL, sdate = NULL, edate = NULL,
   distance = NULL, climateParameters = NULL, filePath = NULL)
 }
 \arguments{
-\item{unitCode}{(optional) One NPS unit code as a string. If not specified, defaults to CONUS geographic extent.}
+\item{unitCode}{(optional) One unit code as a string. If not specified, defaults to CONUS geographic extent.}
 
 \item{distance}{(optional) Distance (in kilometers) to buffer park bounding box}
 
