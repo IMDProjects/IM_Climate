@@ -46,7 +46,7 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # ACIS lookup
   #jsonFile  <- "..//ACISLookups.json"
   #acisLookup <- fromJSON(jsonFile)
-  acisLookup <- fromJSON("..//ACISLookups.json")
+  acisLookup <- fromJSON("ACISLookups.json")
   
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
