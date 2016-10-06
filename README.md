@@ -13,14 +13,26 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * Limits alteration to data returned from ACIS web services
   
-#### Release 1.0 - 20160906 ####
++ Current Documentation: https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
+ 
+#### Past, Present and Future Development
+	#### Development Roadmap ####
+	Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
-#### Release 1.1 ####
+	#### Version 1.2 ####
+	Release Date: Planned for 11/1/2016
+	Functionality: Get monthly station summary by year for station data
+	v1.2 Documentation: In Development
+	
+	#### Version 1.1 ####
+	Release Date: 10/1/2016
+	Functionality: Get daily gridded data (PRISM only)
+	v1.1 Documentation: https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
 
-In development - access daily PRISM gridded data from ACIS
+	#### Version 1.0 ####
+	Release Date: 9/6/2016
+	Functionality: find stations and request daily station data
+	v1.0 Documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA
 
-Toolkit documentation: https://drive.google.com/open?id=1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA
 
-Toolkit Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
-Tracking Spreadsheet: https://docs.google.com/spreadsheets/d/1gqPr6kbPQ0PP2jw8rSs6BakySaTWbRAXj1aDSYumQEM

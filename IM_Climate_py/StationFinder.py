@@ -54,8 +54,7 @@ class StationFinder(ACIS):
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
         climateParameters = self._formatClimateParameters(climateParameters)
 
-        if unitCode:
-            bbox = common.getBoundingBox(unitCode, distance)
+        bbox = common.getBoundingBox(unitCode, distance)
 
         results =  self._call_ACIS(elems = climateParameters
             ,bbox = bbox, sDate = sdate, eDate = edate
@@ -68,7 +67,7 @@ class StationFinder(ACIS):
         si =  StationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
         for station in results['meta']:
             station['unitCode'] = unitCode
-            si._addStation(Station, stationID = station['uid'], stationMeta = station)
+            si._addStation(stationID = station['uid'], stationMeta = station)
         if filePathAndName:
                 si.exportMeta(filePathAndName)
         return si

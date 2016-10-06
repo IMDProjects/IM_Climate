@@ -9,21 +9,27 @@ def getSupportedParameters():
     acis = ACIS()
     return acis.supportedParameters
 
-def getBoundingBox(unitCode, distanceKM = None):
+def getBoundingBox(unitCode = None, distanceKM = 0):
     '''
     INFO
     ----
-    Calls NPS IRMA Unit Service to get bounding box for respective NPS unit
+    Calls NPS IRMA/FWS ECOS Unit Service to get bounding box for respective unit
     Converts buffer to KM based on 0.011
     Formats String to 'West, South, East, North'
 
     ARGUMENTS
     ---------
-    unitCode - 4-letter park code
+    unitCode - NPS/FWS unit code
     distanceKM - distance to buffer park boundary
     '''
-    distanceKM = str(distanceKM)
-    connection = urllib2.urlopen('http://irmaservices.nps.gov/v2/rest/unit/' + unitCode + '/geography?detail=envelope&dataformat=wkt&format=json')
+    if not unitCode:
+        return None
+    #Test is alpha nps unit or alpha-numeric FWS Code
+    if unitCode.isalpha():
+        url = r'http://irmaservices.nps.gov/v2/rest/unit/'
+    else:
+        url = r'https://ecos.fws.gov/ServCatServices/v2/rest/unit/'
+    connection = urllib2.urlopen(url + unitCode + '/geography?detail=envelope&dataformat=wkt&format=json')
     geo = json.loads(connection.read())[0]['Geography'][10:-2].split(',')
     west = float(geo[0].split()[0])
     east = float(geo[1].split()[0])
@@ -39,6 +45,7 @@ def getBoundingBox(unitCode, distanceKM = None):
     return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
 
 if __name__=='__main__':
-    print missingValue
-    print getSupportedParameters()
-    print getBoundingBox('ACAD',0)
+    print (missingValue)
+    print (getSupportedParameters())
+    print (getBoundingBox('ACAD',0))
+    print (getBoundingBox('FF04RMHC00'))

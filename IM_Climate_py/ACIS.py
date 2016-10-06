@@ -62,7 +62,7 @@ class ACIS(object):
         '''
         self._input_dict = {}    #Clears the input dictionary
         for k in kwargs:
-            if kwargs[k] and kwargs[k] <> 'None':
+            if kwargs[k] and kwargs[k] != 'None':
                 self._input_dict[k] = kwargs[k]
 
     @property
@@ -84,16 +84,28 @@ class ACIS(object):
 
     def _formatClimateParameters(self, climateParameters):
         '''
-        Formats the climate parameters arguments to handle None, lists and strings
+        Formats the climate parameters
         '''
-        if not climateParameters:
-            climateParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
-        elif type(climateParameters) == list:
+        return self._formatStringArguments(climateParameters
+            , ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt'])
+
+    def _formatReduceCodes(self, reduceCodes):
+        return self._formatStringArguments(reduceCodes
+            , ['max', 'min', 'sum','mean','stdev'])
+
+    def _formatStringArguments(self, providedArgs, validArgs):
+        '''
+        Formats arguments to handle None, lists and strings
+        '''
+        if not providedArgs:
+            providedArgs = validArgs
+        elif type(providedArgs) == list:
             pass
         else:
-            climateParameters = climateParameters.replace(' ','')
-            climateParameters = climateParameters.split(',')
-        return climateParameters
+            providedArgs = providedArgs.replace(' ','')
+            providedArgs = providedArgs.split(',')
+        return providedArgs
+
 
 if __name__ == '__main__':
     c = ACIS()

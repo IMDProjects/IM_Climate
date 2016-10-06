@@ -6,11 +6,11 @@
 #' Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 # @param sourceURL sourceURL for ACIS data services
 #' @param unitCode One NPS unit code as a string
-#' @param distance (optional) Distance (in kilometers) to buffer park bounding box.
+#' @param distance (optional) Distance (in kilometers) to buffer park bounding box
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd). If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing station information for stations near the specified park. See User Guide for more details:  \url{https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/}
-#' @examples 
+#' @examples \dontrun{
 #' Find stations collecting average temperature within 10km of Marsh-Billings NHP:
 #' 
 #' findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
@@ -26,6 +26,7 @@
 #' Find stations within 30km of Rocky Mountain NP collecting maxt and mint:
 #' 
 #' findStation(unitCode = "ROMO", distance=30, climateParameters=list('pcpn'), filePathAndName = "Test01_R.csv")
+#' }
 #' @export 
 #' 
 
@@ -35,12 +36,11 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # URLs and request parameters
   
   # NPS Park bounding boxes
-  bboxURLBase <- "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
   if (is.null(distance)) {
     bboxExpand  = 0.0
   }
   else {
-    bboxExpand = distance*0.011
+    bboxExpand = distance*0.011  # convert km to decimal degrees
   }
   
   # ACIS lookup
@@ -66,27 +66,7 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279
   
   # Get bounding box for park(s)
-  bboxURL <- gsub("CODE", unitCode, bboxURLBase)
-  # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
-  bboxWKT <- strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
-  # Extract vertices and 'buffer' by 0.3 degrees (~33 km)
-  # TODO: add Eastern Hemisphere detection
-  LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
-  LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
-  UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
-  UL  <- strsplit(gsub("))","",substring(bboxWKT[[1]][4], 2)), " ")
-  
-  LLX  <- as.numeric(LL[[1]][1]) - bboxExpand
-  LLY  <- as.numeric(LL[[1]][2]) - bboxExpand
-  LRX  <- as.numeric(LR[[1]][1]) + bboxExpand
-  LRY  <- as.numeric(LR[[1]][2]) - bboxExpand
-  URX  <- as.numeric(UR[[1]][1]) + bboxExpand
-  URY  <- as.numeric(UR[[1]][2]) + bboxExpand
-  ULX  <-  as.numeric(UL[[1]][1]) - bboxExpand
-  ULY  <- as.numeric(UL[[1]][2]) + bboxExpand
-  
-  bbox  <- paste(c(LLX, LLY, URX, URY), collapse=", ")
- 
+  bbox <- getBBox(unitCode, bboxExpand) 
   body  <- list(bbox = bbox)
 
   # Format GET URL for use in jsonlite request

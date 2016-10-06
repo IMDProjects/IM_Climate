@@ -1,6 +1,7 @@
 import csv
 from datetime import date
 import common
+from Station import Station
 
 class StationDict(dict):
 
@@ -194,11 +195,11 @@ class StationDict(dict):
 
 
 
-    def _addStation(self, stationSubClass, stationID, stationMeta, stationData = None):
+    def _addStation(self, stationID, stationMeta, stationData = None):
         '''
         Hidden method to add a station to the StationDict object.
         '''
-        self[stationID] = stationSubClass(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
+        self[stationID] = Station(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
 
     @property
     def stationIDs(self):

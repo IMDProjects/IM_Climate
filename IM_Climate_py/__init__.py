@@ -2,18 +2,19 @@
 
 #   IM_Climate_py
 #
-#   Package to search for climate stations from ACIS and download data
+#   Package to search for climate stations/gridded data from ACIS and download data
 #
 #
 #   Prerequisites/Inputs (vary by tool):
-#       Python 2.7 or 3.+
+#       Python 2.7+
 #
 #   Outputs (vary by tool):
 #       List of stations
-#       Weather Observations
+#       Station weather observations
+#       Daily PRISM Grids
 #
 #   Created by:  NPS Inventory and Monitoring Division
-#       Update date: 20160603
+#       Update date: 20161001
 #
 #
 #   Credits:

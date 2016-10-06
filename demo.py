@@ -1,5 +1,6 @@
 from IM_Climate_py.StationFinder import StationFinder
-from IM_Climate_py.DataRequestor import DataRequestor
+from IM_Climate_py.StationDataRequestor import StationDataRequestor
+from IM_Climate_py.GridRequestor import GridRequestor
 
 '''
 This demo script showcases the utility of the IM_Climate.py package
@@ -7,76 +8,91 @@ This demo script showcases the utility of the IM_Climate.py package
 #specify local folder where demo files will be saved
 localFolder = 'c:\\temp\\'
 
-#***************
+#******************************************************************************
+#*****************************************************************************
 # STATION FINDER - Module to find/locate stations
+
 sf = StationFinder()
+#Locate all stations around MABI within a 30km buffer. Save results as MABI_Stations.csv
+wxStations = sf.findStation(unitCode = 'MABI', distance = 30, climateParameters = 'mint, maxt'
+    , filePathAndName = localFolder + 'MABI_Stations.csv')
 
-#Example #1: All stations around MABI within a 30km buffer. Save returned results
-    #locally as SF01.csv
-wxStations = sf.findStation(unitCode = 'MABI', distance = 30, sdate = '1940-01-01', edate = '1940-01-01')
-wxStations.export(localFolder + 'SF01.csv')
-
-#Example #2: All stations around ACAD recording minimum temperature; distance = 10km; save search results as file
-wxStations = sf.findStation(unitCode = 'ACAD', distance = 10, climateParameters = 'mint')
-wxStations.export(localFolder + 'SF02.csv')
-
-#Example 3: All stations around ROMO recording maximum OR minimum temperature; distance = 40km
-        #with option to save file
-wxStations = sf.findStation(unitCode = 'ROMO', distance = 40, climateParameters = 'maxt, mint'
-        ,filePathAndName = localFolder + 'SF03.csv')
-
-#Example #4: View Station Properties for station uid=4211
-station = wxStations[4211]
-print station.name
-print station.latitude
-print station.longitude
-print station.sids
-print station.state
-print station.elev
-print station.uid
-print station
-
-#Example #5: Acccess/View Query Parameters
-print wxStations.queryParameters
-
-#Example #6: Print first five station IDs
-print wxStations.stationIDs[0:5]
-
-#Example #7: MABI AvgT -  MABI + 10km
-wxStations = sf.findStation(unitCode = 'MABI', distance = 10, climateParameters = 'avgt')
-wxStations.export(localFolder + 'SF07.csv') #save to file
-
-#Example #8: #Iterate through list of stations and print to screen
-for station in wxStations:
-    print(station)
-
-#Example #9:  #print all stations to screen
+#print all stations to screen
 print (wxStations)
+
+#save station list to a comma-delimited text file
+wxStations.export(filePathAndName = localFolder + 'MABI_Stations.csv')
+
+#view station IDs from search results
+print (wxStations.stationIDs)
+
+#view query parameters
+print (wxStations.queryParameters)
+
+#iterate through list of stations
+for station in wxStations:
+    print(station.name)
+
+#view station properties for station uid=17605
+station = wxStations[17605]
+
+#view station name
+print (station.name)
+
+#view all station properties
+print (station)
 
 #******************************************************************************
 #*****************************************************************************
-# DATA REQUESTER - Module to request daily wx data
+# STATION DATA REQUESTER - Module to request daily wx data
 
 #Example #1: Get daily data for two station IDs (from list) and two parameters
 # and automatically save locally
 climateStations = [66176, 31746]
-climateParameters = 'mint, maxt'
-startDate = '2012-01-01'
-endDate = '2012-02-01'
-dr = DataRequestor()
-wxData = dr.getDailyWxObservations(climateParameters = climateParameters
-                            ,climateStations = climateStations
-                            ,sdate= startDate, edate = endDate
-                            ,filePathAndName = localFolder + 'DR01.csv')
 
-print wxData
-
-#Example #2: Get daily data using wxStations object (from Example #1) for average termperature
-parameters = 'avgt'
-wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = climateParameters
-                            ,sdate = startDate, edate = endDate)
-wxData.export(filePathAndName = localFolder + 'DR02.csv')
+dr = StationDataRequestor()
+#Get wxData for two stations
+wxData = dr.getDailyWxObservations(climateStations = [66176, 31746],
+    climateParameters = 'mint, maxt', sdate= '2012-01-01' , edate = '2012-02-01')
 
 
-#Example #3: print/access minimum temperature data for station 25047 on 2012-01-01
-print wxData[25047].data['mint']['2012-01-01']
+#get daily data using wxStations object (from Example #1) for average termperature
+wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = 'mint, maxt'
+                            ,sdate = '2012-01-01', edate = '2012-02-01')
+
+#view data
+print (wxData)
+
+#export weather data
+wxData.export(localFolder + 'DR02.csv')
+
+#view minimum temperature data for station 25047 on 2012-01-01
+print (wxData[25047].data['mint']['2012-01-01'])
+
+#******************************************************************************
+#*****************************************************************************
+# GRID REQUESTER - Module to request gridded data
+
+gr = GridRequestor()
+
+#get daily PRISM grids for GRKO and 10-km buffer for minimum temperature
+grids=  gr.getDailyGrids(sdate = '2015-01-01', edate = '2015-01-10', unitCode = 'GRKO'
+    ,distance = 10, climateParameters = 'mint')
+
+#view gridded data
+print (grids)
+
+#view all parameters
+print grids.climateParameters
+
+#view all dates
+print (grids.dates)
+
+#print the grid for minimum temperature on 1/3/2015
+print grids['mint']['2015-01-03']
+
+#export all grids (file names are automatically created)
+grids.export(filePath = localFolder)
+
+#export a single grid - note that filename is required. The prj file is automatically created
+grids['mint']['2015-01-01'].export(localFolder + 'GRKO_PRISM_mint_20150101.asc')
