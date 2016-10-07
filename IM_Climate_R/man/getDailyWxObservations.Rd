@@ -25,6 +25,7 @@ A data frame containing the requested data. See User Guide for more details: htt
 Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
 }
 \examples{
+\dontrun{
 Precipitation, temperature weather observations for one station for a specifc date range:
 
 getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20150831")
@@ -36,5 +37,6 @@ getDailyWxObservations(climateStations=60903)
 All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
 
 getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=stationDF, sdate="20150801", edate="20150803")
+}
 }
 

@@ -10,7 +10,7 @@ findStation(unitCode, distance = NULL, climateParameters = NULL,
 \arguments{
 \item{unitCode}{One NPS unit code as a string}
 
-\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box.}
+\item{distance}{(optional) Distance (in kilometers) to buffer park bounding box}
 
 \item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd). If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: \url{http://www.rcc-acis.org/docs_webservices.html}}
 
@@ -26,6 +26,7 @@ Station location must intersect park bounding box (unbuffered or buffered).
 Returns station information as a data frame with the following items: name, longitude, latitude, station IDs (sids), state code, elevation (feet), and unique station ID
 }
 \examples{
+\dontrun{
 Find stations collecting average temperature within 10km of Marsh-Billings NHP:
 
 findStation(unitCode = "MABI", distance=10, climateParameters=list('avgt'))
@@ -41,5 +42,6 @@ findStation(unitCode = "AGFO", distance=10, climateParameters=list('pcpn'), file
 Find stations within 30km of Rocky Mountain NP collecting maxt and mint:
 
 findStation(unitCode = "ROMO", distance=30, climateParameters=list('pcpn'), filePathAndName = "Test01_R.csv")
+}
 }
 

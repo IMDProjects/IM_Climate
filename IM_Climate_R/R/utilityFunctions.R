@@ -9,8 +9,7 @@
 getStationSubtype <- function(testType, testSid) {
   # ACIS lookup
   acisLookup <-
-    fromJSON("ACISLookups.json") # assumes placement in package R subfolder
-  # acisLookup <- fromJSON("..//ACISLookups.json")
+    fromJSON(system.file("ACISLookups.json", package = "IMClimateR")) # assumes placement in package inst subfolder
   typeDesc <-
     acisLookup$stationIdType$description[acisLookup$stationIdType$code == testType]
   subtypeDesc <- NULL

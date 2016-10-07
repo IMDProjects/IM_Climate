@@ -62,7 +62,8 @@ getDailyGrids <-
       )
     
     # Image parameters from lookup file - used for output formatting and  request documentation
-    lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
+    lookups <- 
+      fromJSON(system.file("ACISLookups.json", package = "IMClimateR"), flatten = TRUE) # assumes placement in package inst subfolder
     luElements  <- lookups$gridSources[gridElements$gridSource]
     
     # Configure image output
