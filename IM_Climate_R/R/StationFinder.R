@@ -43,11 +43,6 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
     bboxExpand = distance*0.011  # convert km to decimal degrees
   }
   
-  # ACIS lookup
-  #jsonFile  <- "..//ACISLookups.json"
-  #acisLookup <- fromJSON(jsonFile)
-  acisLookup <- fromJSON("ACISLookups.json")
-  
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
   webServiceSource <- "StnMeta"
