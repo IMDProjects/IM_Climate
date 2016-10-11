@@ -8,7 +8,7 @@
 #' @param climateParameters (optional) A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt).  If not specified, defaults to all parameters. See the ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @param filePath filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to the current working directory.
 #' @return ASCII-formatted grid file for each parameter
-#' @examples \dontrun {
+#' @examples \dontrun{
 #' Two daily grids for PRWI for one date: returns one grid for each parameter for each date - 4 grids total
 #' getDailyGrids(unitCode = list("PRWI"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"), filePath="d:\\temp\\trash")
 #'
@@ -16,6 +16,7 @@
 #' getDailyGrids(unitCode = list("GRSM"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"))
 #' }
 #' @export
+#' 
 
 getDailyGrids <-
   function (unitCode = NULL,
