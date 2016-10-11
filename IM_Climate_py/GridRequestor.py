@@ -36,7 +36,7 @@ class GridRequestor(ACIS):
         '''
         elems = []
         for p in self.climateParameters:
-            elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': 1})
+            elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': self.precision})
         return elems
 
     def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0,

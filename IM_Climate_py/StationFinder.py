@@ -96,4 +96,8 @@ if __name__ == '__main__':
         ,sdate = '2015-08-01', edate = '2015-08-04')
     print stationList
 
+    wxStations = sf.findStation(unitCode = 'NOCA',
+         sdate = '2014-01-01', edate = '2016-01-01')
+    print wxStations
+
 

@@ -34,7 +34,7 @@ class StationDataRequestor(ACIS):
         elems = []
         for p in self.climateParameters:
             arguments = {'name': p, 'interval': self.interval, 'add': self.add
-             ,'duration': self.duration,'maxMissing': self.maxMissing, 'prec':1}
+             ,'duration': self.duration,'maxMissing': self.maxMissing, 'prec': self.precision}
             elems.append(arguments)
 
         #Update the elems object to add all variations of parameters and reduce
@@ -118,18 +118,18 @@ class StationDataRequestor(ACIS):
         return self._fetchStationDataFromACIS(sdate = str(sdate),
             edate = str(edate))
 
-    def getMonthlySummaryByYear(self, climateStations, climateParameters = None, reduceCodes = None
+    def getMonthlyWxSummaryByYear(self, climateStations, climateParameters = None, reduceCodes = None
             ,sdate = 'por', edate = 'por', maxMissing = 1, filePathAndName = None):
         '''
-        Returns the monthly summaries of weather observations for one or more stations.
+        Returns the monthly summaries/aggregates of weather observations for one or more stations.
         # of observations is returned
 
         ARGUMENTS
         ---------
 
-        climateStations                 The ACIS uids. These can either be a single station (int or string),
-                                        a list of stationIDs, or the StationDict object returned
-                                        from the StationFinder.FindStation method.
+        climateStations                 One or more station identifiers (uids)
+                                        passed either as a list or the response
+                                        object from the station finder.
 
         climateParameters (optional)    The weather parameters to fetch. Valid parameters
                                         can be found by accesssing the supportedParamters property.
@@ -137,7 +137,7 @@ class StationDataRequestor(ACIS):
 
         reduceCodes (optional)          The method used to summarize the daily observations into monthly
                                         values. Current options inlcude max, min, sum
-                                        mean, and stdev. If none are provided, then all are returned.
+                                        mean, and stddev. If none are provided, then all are returned.
 
         sdate (optional)                Start Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
 
@@ -174,31 +174,27 @@ class StationDataRequestor(ACIS):
         INFO
         ----
         If stations is a StationDict object, extracts list of stationIDs.
-        Otherwise, assumes stationIDs to be a list or a single stationID as a string.
+        Otherwise, assumes stationIDs to be a list, comma-delimited string,
+        or a single stationID as a string.
         '''
         try:
             return stations.stationIDs
         except:
-            if type(stations) == list:
-                return stations
-            else:
-                return [stations]
-
-
+            return self._formatStringArguments(stations)
 
 if __name__=='__main__':
 
-    stationIDs = [66180, 67175]
+    stationIDs = '66180, 67175'
 
     dr = StationDataRequestor()
 
     ###########################################################################
-##    #MONTHLY DATA
-##    monthlyData = dr.getMonthlySummaryByYear(climateStations = stationIDs,
-##        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
-##        , sdate = '2012-01-01', edate = '2013-01-01' )
-##    print (monthlyData)
-##    monthlyData.export(r'C:\TEMP\data.csv')
+    #MONTHLY DATA
+    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
+        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
+        , sdate = '2012-01-01', edate = '2013-01-01' )
+    print (monthlyData)
+    monthlyData.export(r'C:\TEMP\data.csv')
 
     ###########################################################################
     #DAILY DATA
