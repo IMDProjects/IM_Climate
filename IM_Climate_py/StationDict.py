@@ -228,6 +228,7 @@ class DailyStationDict(dict):
     def __str__(self):
         '''
         Pretty formatting of the StationDict object
+        If there is WxData, then show that. Otherwise, just show the metadata
         '''
         if self.wxDataExists:
             a = self._dumpDataToList()
@@ -258,6 +259,8 @@ class MonthlyStationDict(DailyStationDict):
         for p in self.climateParameters:
             header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_CountMissing'])
 
+        #Iterate through all stations. For those with WxData, iterate through
+        #each date and extend a list of the data
         self._dataAsList = [header]
         for station in self:
             if station.hasWxData:
