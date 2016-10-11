@@ -1,21 +1,26 @@
 from StationDateRange import StationDateRange
-from StationData import StationData
+from StationData import DailyStationData
+from StationData import MonthlyStationData
 from common import missingValue
 from ACIS import ACIS
 
 
-class Station(object):
+
+class DailyStation(object):
     '''
-    Base class for all Station objectves.
+    Class for all daily wx station objects.
     Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data by parameter
     '''
-    def __init__(self, stationMeta, climateParameters, stationData = None):
-        self.missingValue = missingValue
-        self.climateParameters = climateParameters
-        self._setStationMetadata(stationMeta)
+    def __init__(self):
+        self.StationDataClass = DailyStationData
         self._metaTags = ['uid', 'name','longitude', 'latitude',  'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
             'elev', 'minDate', 'maxDate', 'unitCode']
+        self.missingValue = missingValue
+
+    def _set(self, stationMeta, climateParameters, stationData = None ):
+        self.climateParameters = climateParameters
+        self._setStationMetadata(stationMeta)
         if stationData:
             self._addStationWxData(stationData)
 
@@ -70,7 +75,7 @@ class Station(object):
     def _dumpMetaToList(self):
         return [self.__dict__[t] for t in self._metaTags]
 
-    def __repr__(self):
+    def __str__(self):
         '''
         Pretty representation of Station object
         '''
@@ -82,7 +87,8 @@ class Station(object):
         Method to add weather data to Station object
         '''
         if stationData <> 'error':
-            self.data = StationData(stationData, self.climateParameters)
+            self.data = self.StationDataClass()
+            self.data._set(stationData, self.climateParameters)
 
     @property
     def hasWxData(self):
@@ -98,6 +104,11 @@ class Station(object):
             return False
 
 
+class MonthlyStation(DailyStation):
+    def __init__(self):
+        super(MonthlyStation,self).__init__()
+        self.StationDataClass = MonthlyStationData
+
 if __name__=='__main__':
 
     meta= {'name': 'Elliot Ridge', 'll': [-106.42, 39.86], 'sids': [u'USS0006K29S 6'], 'state': 'CO', 'valid_daterange': [['1983-01-12', '2016-04-05']], 'uid': 77459}
@@ -108,11 +119,13 @@ if __name__=='__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     climateParams = ['maxt', 'mint' ]
 
-    s = Station(stationMeta = meta, climateParameters = climateParams)
+    s = DailyStation()
+    s._set(stationMeta = meta, climateParameters = climateParams)
     print s.name
     print s.hasWxData
 
-    s = Station(stationMeta = meta, climateParameters = climateParams, stationData = data)
+    s = DailyStation()
+    s._set(stationMeta = meta, climateParameters = climateParams, stationData = data)
     print s.name
     print s.hasWxData
 

@@ -1,5 +1,7 @@
 from ACIS import ACIS
-from StationDict import StationDict
+import StationDict
+reload(StationDict)
+from StationDict import DailyStationDict, MonthlyStationDict
 
 
 class StationDataRequestor(ACIS):
@@ -27,8 +29,6 @@ class StationDataRequestor(ACIS):
         StationDict object
 
         '''
-
-
         metaElements = ['uid', 'll', 'name', 'elev', 'sids', 'state'] #additional metadata elements to request along with the data
 
         elems = []
@@ -37,7 +37,7 @@ class StationDataRequestor(ACIS):
              ,'duration': self.duration,'maxMissing': self.maxMissing}
             elems.append(arguments)
 
-        #add all variations of reduce codes, where applicable - too bad it isn't just ignored
+        #add all variations of parameters abd reduce codes, where applicable - too bad it isn't just ignored
         if self.reduceCodes:
             rcelems = []
             for rd in self.reduceCodes:
@@ -48,10 +48,8 @@ class StationDataRequestor(ACIS):
 
         cp = [k['name'] + '_' + k['reduce']['reduce'] for k in elems]
         #Instantiate the station dictionary object
-        sd = StationDict(queryParameters = None, dateInterval = self.duration,
-            aggregation = self.reduceCodes
-            #, climateParameters = self.climateParameters)
-            , climateParameters = cp)
+        sd = self.StationDictClass(queryParameters = None, dateInterval = self.duration,
+            aggregation = self.reduceCodes, climateParameters = cp)
 
         for uid in self.stationIDs:
             response = self._call_ACIS(uid = uid, elems = elems,
@@ -97,7 +95,7 @@ class StationDataRequestor(ACIS):
         and all associated flags
 
         '''
-
+        self.StationDictClass = DailyStationDict
         self.duration = 'dly'
         self.interval = 'dly'
         self.stationIDs = self._extractStationIDs(climateStations)
@@ -119,8 +117,6 @@ class StationDataRequestor(ACIS):
         ARGUMENTS
         ---------
 
-
-
         climateStations                 The ACIS uids. These can either be a single station (int or string),
                                         a list of stationIDs, or the StationDict object returned
                                         from the StationFinder.FindStation method.
@@ -133,9 +129,13 @@ class StationDataRequestor(ACIS):
                                         values. Current options inlcude max, min, sum
                                         mean, and stdev. If none are provided, then all are returned.
 
-        sdate (optional)                Start Date -  YYYY-MM-DD OR YYYYMMDD (default is period of record)
+        sdate (optional)                Start Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
 
         edate (optional)                End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+
+        maxMissing (optional)           Maximum number of missing days within a month
+                                        before a missing value is returned (default is 1, or approximately
+                                        3.3% missing days within a month)
 
         filePathAndName (optional)      Location and name of CSV text file to save
 
@@ -144,6 +144,7 @@ class StationDataRequestor(ACIS):
         Returns object that contains station metadata and the monthly weather summaries
 
         '''
+        self.StationDictClass = MonthlyStationDict
         self.duration = 'mly'
         self.interval = 'mly'
         self.reduceCodes = self._formatReduceCodes(reduceCodes)
@@ -186,6 +187,7 @@ if __name__=='__main__':
         reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
         , sdate = '2012-01-01', edate = '2013-01-01' )
     print (monthlyData)
+    monthlyData.export(r'C:\TEMP\data.csv')
 
 ##    #Daily Data
 ##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs, climateParameters = 'avgt, mint'

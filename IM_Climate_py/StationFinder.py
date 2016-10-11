@@ -3,9 +3,8 @@ import urllib2
 
 import StationDict
 reload(StationDict)
-from StationDict import StationDict
+from StationDict import DailyStationDict
 from ACIS import ACIS
-from Station import Station
 import common
 
 class StationFinder(ACIS):
@@ -64,7 +63,7 @@ class StationFinder(ACIS):
         if unitCode:
             self._input_dict['unitCode'] = unitCode
 
-        si =  StationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
+        si = DailyStationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
         for station in results['meta']:
             station['unitCode'] = unitCode
             si._addStation(stationID = station['uid'], stationMeta = station)
