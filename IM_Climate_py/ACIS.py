@@ -96,9 +96,7 @@ class ACIS(object):
         Formats reduce codes consistently.
         If None, then default to all supported reduce codes
         '''
-        return self._formatStringArguments(reduceCodes
-            , ['max', 'min', 'sum','mean'])
-            #,'stddev' - omitting right now because ACIS does not return any data
+        return self._formatStringArguments(reduceCodes, ['max', 'min', 'sum','mean'])
 
     def _formatStringArguments(self, providedArgs, validArgs = None):
         '''

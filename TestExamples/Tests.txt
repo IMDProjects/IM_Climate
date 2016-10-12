@@ -12,7 +12,7 @@ STATION FINDER
 		sdate = <blank>
 		edate = <blank>
 		
-DATA REQUESTOR
+STATION DATA REQUESTOR - getDailyWxObservations
 	TEST 01 
 		climateStations =  25056
 		climateParameters = 'pcpn', 'avgt', 'obst', 'mint', 'maxt'
@@ -34,6 +34,16 @@ DATA REQUESTOR
 		climateParameters = <blank>
 		sdate = '2015-08-01'
 		edate = '20150804'
+		
+STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
+	TEST 01 
+		climateStations =  '61193, 26215'
+		climateParameters = None
+		reduceCodes = None
+		sdate = '201401'
+		edate = '201501'
+        maxMissing = None
+		
 		
 GRID REQUESTOR
 	TEST 01

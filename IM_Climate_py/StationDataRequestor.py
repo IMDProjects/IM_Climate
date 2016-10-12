@@ -136,8 +136,8 @@ class StationDataRequestor(ACIS):
                                         Note that ACIS vernacular for climate parameter is element.
 
         reduceCodes (optional)          The method used to summarize the daily observations into monthly
-                                        values. Current options inlcude max, min, sum
-                                        mean, and stddev. If none are provided, then all are returned.
+                                        values. Current options inlcude max, min, sum and
+                                        mean. If none are provided, then all are returned.
 
         sdate (optional)                Start Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
 
@@ -158,7 +158,10 @@ class StationDataRequestor(ACIS):
         self.duration = 'mly'
         self.interval = 'mly'
         self.reduceCodes = self._formatReduceCodes(reduceCodes)
-        self.maxMissing =  maxMissing
+        if not maxMissing:
+            self.maxMissing = 1
+        else:
+            self.maxMissing =  maxMissing
         self.filePathAndName = filePathAndName
         self.add = 'mcnt'
 
