@@ -132,7 +132,7 @@ class DailyStationDict(dict):
 
     def _export(self, dumpMethod, filePathAndName, format):
         '''
-        Generlized method to export station meta or station data to a fille.
+        Generalized method to export station meta or station data to a fille.
         '''
         self._filePathAndName = filePathAndName
         dumpMethod()
@@ -200,8 +200,8 @@ class DailyStationDict(dict):
         '''
         Method to add a station to the StationDict object.
         '''
-        self[stationID] = self.StationClass()
-        self[stationID]._set(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
+        self[int(stationID)] = self.StationClass()
+        self[int(stationID)]._set(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
 
     @property
     def stationIDs(self):
@@ -391,5 +391,7 @@ if __name__ == '__main__':
     wx = MonthlyStationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max'])
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
     #print (wx.stationNames)
-    print (wx)
-    wx.export(r'C:\TEMP\monthlyStationDicTest.csv')
+    #print (wx)
+    #wx.export(r'C:\TEMP\monthlyStationDicTest.csv')
+    a = wx[66180]
+    print a

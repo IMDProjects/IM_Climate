@@ -74,11 +74,18 @@ print (wxData[25047].data['mint']['2012-01-01'])
 #*GET MONTHLY WEATHER SUMMARY BY YEAR
 
 #get monthly summary for minimum and maximum temperature for two climate stations
-# from January 2012 to most current record. Use default of maximum missing days of 1.
+# from January 2015 to most current record. Use default of maximum missing days of 1.
 wxData = dr.getMonthlyWxSummaryByYear(climateStations = '66176, 31746',
-    climateParameters = 'mint, maxt', reduceCodes = 'min', sdate = '2012-01')
+    climateParameters = 'mint, maxt', reduceCodes = 'min', sdate = '2015-01')
 
+#print the response object
 print (wxData)
+
+#print the minimum monthly value and #missing values of minimum temperature for October 2016
+print (wxData[66176].data['mint_min']['2016-10'])
+
+#print the minimum monthly value of minimum temperature for October 2016
+print (wxData[66176].data['mint_min']['2016-10'].wxOb)
 
 #******************************************************************************
 #*****************************************************************************

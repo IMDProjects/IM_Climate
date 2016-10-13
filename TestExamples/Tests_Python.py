@@ -175,6 +175,17 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+    def test02(self):
+        self.climateStations =  26215
+        self.climateParameters = 'pcpn'
+        self.reduceCodes = 'min'
+        self.sdate = None
+        self.edate = '2016-09s'
+        self.maxMissing = None
+        self.refDataFile = 'Test02_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
 
 
 class Test_GridRequestor(unittest.TestCase):

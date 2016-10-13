@@ -110,6 +110,8 @@ class StationDataRequestor(ACIS):
         self.interval = 'dly'
         self.stationIDs = self._extractStationIDs(climateStations)
         self.climateParameters = self._formatClimateParameters(climateParameters)
+        sdate = self._formatDate(sdate)
+        edate = self._formatDate(edate)
         self.reduceCodes = None
         self.maxMissing = 0
         self.filePathAndName = filePathAndName
@@ -155,6 +157,8 @@ class StationDataRequestor(ACIS):
 
         '''
         self.StationDictClass = MonthlyStationDict
+        sdate = self._formatDate(sdate)
+        edate = self._formatDate(edate)
         self.duration = 'mly'
         self.interval = 'mly'
         self.reduceCodes = self._formatReduceCodes(reduceCodes)

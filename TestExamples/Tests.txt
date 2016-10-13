@@ -43,8 +43,14 @@ STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
 		sdate = '201401'
 		edate = '201501'
         maxMissing = None
-		
-		
+	TEST 02
+	    climateStations =  26215
+        climateParameters = 'pcpn'
+        reduceCodes = 'min'
+        sdate = None
+        edate = '2016-09'
+        maxMissing = None
+				
 GRID REQUESTOR
 	TEST 01
 		sdate = '2015-01-01'

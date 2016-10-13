@@ -118,6 +118,10 @@ class ACIS(object):
             providedArgs = providedArgs.split(',')
         return providedArgs
 
+    def _formatDate(self, date):
+        if not date:
+            date = 'por'
+        return date
 
 if __name__ == '__main__':
     c = ACIS()
