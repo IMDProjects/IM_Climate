@@ -60,7 +60,7 @@ wxData = dr.getDailyWxObservations(climateStations = [66176, 31746],
 
 #get daily data using wxStations object (from Example #1) for average termperature
 wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = 'mint, maxt'
-                            ,sdate = '2012-01-01', edate = '2012-02-01')
+    ,sdate = '2012-01-01', edate = '2012-02-01')
 
 #view data
 print (wxData)
@@ -80,6 +80,9 @@ wxData = dr.getMonthlyWxSummaryByYear(climateStations = '66176, 31746',
 
 #print the response object
 print (wxData)
+
+#save the data locally
+wxData.export(filePathAndName = localFolder + 'monthlyData.csv')
 
 #print the minimum monthly value and #missing values of minimum temperature for October 2016
 print (wxData[66176].data['mint_min']['2016-10'])
