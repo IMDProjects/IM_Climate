@@ -74,13 +74,16 @@ print (wxData[25047].data['mint']['2012-01-01'])
 #*GET MONTHLY WEATHER SUMMARY BY YEAR
 
 #get a a list of all weather stations within Yellowstone NP
+#that are collecting minimum and maximum temperature between 2014 and 2015
 sf = StationFinder()
-YELL_Stations = sf.findStation(unitCode = 'YELL')
+YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt'
+        ,sdate = '2014-01-01', edate = '2015-12-31')
 
 #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
-# from January 2015 to most current record. Use default of maximum missing days of 1.
+# from January 2014 to December 2015. Use default of maximum missing days of 1.
 wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
-    climateParameters = 'mint, maxt', reduceCodes = 'min', sdate = '2015-01')
+    climateParameters = 'mint, maxt', reduceCodes = 'min', sdate = '2014-01',
+    edate = '2015-12')
 
 #print the response object
 print (wxData)
@@ -88,11 +91,11 @@ print (wxData)
 #save the data locally
 wxData.export(filePathAndName = localFolder + 'monthlyData.csv')
 
-#print the minimum monthly value and #missing values of minimum temperature for October 2016
-print (wxData[66176].data['mint_min']['2016-10'])
+#print the minimum monthly value and #missing values of minimum temperature for October 2015
+print (wxData[33658].data['mint_min']['2015-10'])
 
 #print the minimum monthly value of minimum temperature for October 2016
-print (wxData[66176].data['mint_min']['2016-10'].wxOb)
+print (wxData[33658].data['mint_min']['2015-10'].wxOb)
 
 #******************************************************************************
 #*****************************************************************************
