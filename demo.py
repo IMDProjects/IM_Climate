@@ -73,9 +73,13 @@ print (wxData[25047].data['mint']['2012-01-01'])
 
 #*GET MONTHLY WEATHER SUMMARY BY YEAR
 
-#get monthly summary for minimum and maximum temperature for two climate stations
+#get a a list of all weather stations within Yellowstone NP
+sf = StationFinder()
+YELL_Stations = sf.findStation(unitCode = 'YELL')
+
+#get monthly summary for minimum and maximum temperature for the Yellowstone Stations
 # from January 2015 to most current record. Use default of maximum missing days of 1.
-wxData = dr.getMonthlyWxSummaryByYear(climateStations = '66176, 31746',
+wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
     climateParameters = 'mint, maxt', reduceCodes = 'min', sdate = '2015-01')
 
 #print the response object

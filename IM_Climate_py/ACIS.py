@@ -123,6 +123,13 @@ class ACIS(object):
             date = 'por'
         return date
 
+
+    def _checkResponseForErrors(self, response):
+        '''
+        Raises an exception if the ACIS response is an Error
+        '''
+        if response.get('error', None):
+            raise Exception('ACIS Service Error: ' + str(response['error']))
 if __name__ == '__main__':
     c = ACIS()
 

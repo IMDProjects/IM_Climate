@@ -1,6 +1,4 @@
 from ACIS import ACIS
-import StationDict
-reload(StationDict)
 from StationDict import DailyStationDict, MonthlyStationDict
 
 
@@ -56,15 +54,17 @@ class StationDataRequestor(ACIS):
             cp = self.climateParameters[:]
 
         #Instantiate the station dictionary object
-        sd = self.StationDictClass(queryParameters = None, dateInterval = self.duration,
-            aggregation = self.reduceCodes, climateParameters = cp)
+        sd = self.StationDictClass(climateParameters = cp, queryParameters = None
+            , dateInterval = self.duration, aggregation = self.reduceCodes)
 
         #Iterate over all stationIDs and query ACIS for data. Add the response
         for uid in self.stationIDs:
             response = self._call_ACIS(uid = uid, elems = elems,
                  meta = metaElements, **kwargs)
+            self._checkResponseForErrors(response)
             sd._addStation(stationID = uid, stationMeta = response['meta']
-                , stationData = response.get('data', 'error'))
+                    , stationData = response.get('data', 'error'))
+
 
         #Export data to a file if the file path and name are provided
         if self.filePathAndName:
@@ -191,9 +191,11 @@ class StationDataRequestor(ACIS):
 
 if __name__=='__main__':
 
+    from StationFinder import StationFinder
     stationIDs = '66180, 67175'
 
     dr = StationDataRequestor()
+
 
     ###########################################################################
     #MONTHLY DATA
@@ -202,6 +204,20 @@ if __name__=='__main__':
         , sdate = '2012-01-01', edate = '2013-01-01' )
     print (monthlyData)
     monthlyData.export(r'C:\TEMP\data.csv')
+
+
+    sf = StationFinder()
+    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
+        sdate = '2015-01-01', edate = '2015-03-31')
+
+    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
+    # from January 2015 to March 2015. Use default of maximum missing days of 1.
+    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
+        climateParameters = 'mint, maxt', reduceCodes = 'min'
+        , sdate = '2015-01', edate = '2015-03')
+
+    print (wxData)
+
 
     ###########################################################################
     #DAILY DATA
@@ -218,10 +234,7 @@ if __name__=='__main__':
     print (dailyData)
 
     #get data for stations returned in station search
-    from StationFinder import StationFinder
-    sf = StationFinder()
-    stationList = sf.findStation(unitCode = 'AGFO', distance = 10)
-    dr = StationDataRequestor()
+    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
     wxData = dr.getDailyWxObservations(climateStations = stationList,
         climateParameters = 'pcpn'
         ,sdate = '2015-08-01', edate = '2015-08-04')

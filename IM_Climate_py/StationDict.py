@@ -24,7 +24,7 @@ class DailyStationDict(dict):
         self._dataTags = ['uid', 'name', 'longitude', 'latitude', 'sid1', 'sid1_type',
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
             'elev'] #station metadata to include with data export
-        self.StationClass = DailyStation
+        self.StationClass = DailyStation    #The station class to be used by the DailyStationDict class
 
     def _writeToCSV(self):
         '''
@@ -240,7 +240,7 @@ class DailyStationDict(dict):
 
 class MonthlyStationDict(DailyStationDict):
     def __init__(self, *args, **kwargs):
-        super(MonthlyStationDict,self).__init__(*args, **kwargs)
+        super(MonthlyStationDict,self).__init__( *args, **kwargs)
         self.StationClass = MonthlyStation
 
     def _dumpDataToList(self):
@@ -277,86 +277,87 @@ class MonthlyStationDict(DailyStationDict):
 
 
 if __name__ == '__main__':
-##    climateParams = ['mint']
-##    stations =  {'meta': [{'elev': 10549.9,
-##            'll': [-106.17, 39.49],
-##            'name': 'Copper Mountain',
-##            'valid_daterange': [['1983-01-12', '2016-04-05']],
-##            'sids': ['USS0006K24S 6'],
-##            'state': 'CO',
-##            'uid': 67175},
-##           {'elev': 10520.0,
-##            'll': [-106.42, 39.86],
-##            'name': 'Elliot Ridge',
-##            'valid_daterange': [['1983-01-12', '2016-04-05']],
-##            'sids': ['USS0006K29S 6'],
-##            'state': 'CO',
-##            'uid': 77459}]}
-##    queryParams = {'Example':'ExampleData'}
-##    sl = DailyStationDict(queryParameters = queryParams, climateParameters =  climateParams)
-##    for s in stations['meta']:
-##        sl._addStation(stationID = s['uid'],  stationMeta =  s)
-##    print(sl.stationIDs)
-##    print(sl.stationNames)
-##    print(sl.queryParameters)
-##    sl.export(r'C:\TEMP\test2.csv')
-##    for station in sl:
-##        print station.latitude
-##    print sl[77459].name
-##    print sl
-##
-##    #################################
-##
-##    climateParams = ['mint', 'maxt']
-##    queryParameters = {'query':'params'}
-##    dateInterval = 'mly'
-##    aggregation = 'avg'
-##
-##    #Station #1
-##    wxObs = {u'data': [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
-##           [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
-##           [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
-##           [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
-##           [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
-## u'meta': {u'elev': 9600.1,
-##           u'll': [-105.9864, 39.56],
-##           u'name': u'SODA CREEK COLORADO',
-##           u'sids': [u'USR0000CSOD 6'],
-##           u'uid': 66180}}
-##
-##    #Station #2,
-##    moreWxObs = {u'data': [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
-##           [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
-##           [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
-##           [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
-##           [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
-## u'meta': {u'elev': 9600.1,
-##           u'll': [-105.9864, 39.56],
-##           u'name': u'ILL CREEK COLORADO',
-##           u'sids': [u'USR0000CSOD 6'],
-##           u'uid': 1233}}
-##
-##    wx = DailyStationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
-##    wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
-##    wx._addStation(stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
-##    print wx._dumpDataToList()
-##    print wx.climateParameters
-##    print wx.stationIDs
-##    wx.export(filePathAndName = r'test.csv')
-##    print wx
-##
-##    #StationDict is indexable
-##    print wx[66180].data['maxt']['2012-01-01'].wxOb
-##
-##    #Iterate through each station, parameter and weather observation
-##    for station in wx:
-##        for p in station.data:
-##            print p
-##            for ob in p:
-##                print ob
-##    print wx.stationNames
-##    print wx.stationCounts
+    climateParams = ['mint']
+    stations =  {'meta': [{'elev': 10549.9,
+            'll': [-106.17, 39.49],
+            'name': 'Copper Mountain',
+            'valid_daterange': [['1983-01-12', '2016-04-05']],
+            'sids': ['USS0006K24S 6'],
+            'state': 'CO',
+            'uid': 67175},
+           {'elev': 10520.0,
+            'll': [-106.42, 39.86],
+            'name': 'Elliot Ridge',
+            'valid_daterange': [['1983-01-12', '2016-04-05']],
+            'sids': ['USS0006K29S 6'],
+            'state': 'CO',
+            'uid': 77459}]}
+    queryParams = {'Example':'ExampleData'}
+    sl = DailyStationDict(queryParameters = queryParams, climateParameters =  climateParams)
+    for s in stations['meta']:
+        sl._addStation(stationID = s['uid'],  stationMeta =  s)
+    print(sl.stationIDs)
+    print(sl.stationNames)
+    print(sl.queryParameters)
+    sl.export(r'C:\TEMP\test2.csv')
+    for station in sl:
+        print station.latitude
+    print sl[77459].name
+    print sl
 
+    #################################
+
+    climateParams = ['mint', 'maxt']
+    queryParameters = {'query':'params'}
+    dateInterval = 'mly'
+    aggregation = 'avg'
+
+    #Station #1
+    wxObs = {u'data': [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
+           [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
+           [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
+ u'meta': {u'elev': 9600.1,
+           u'll': [-105.9864, 39.56],
+           u'name': u'SODA CREEK COLORADO',
+           u'sids': [u'USR0000CSOD 6'],
+           u'uid': 66180}}
+
+    #Station #2,
+    moreWxObs = {u'data': [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
+           [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
+           [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
+           [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]],
+ u'meta': {u'elev': 9600.1,
+           u'll': [-105.9864, 39.56],
+           u'name': u'ILL CREEK COLORADO',
+           u'sids': [u'USR0000CSOD 6'],
+           u'uid': 1233}}
+
+    wx = DailyStationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
+    wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
+    wx._addStation(stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
+    print wx._dumpDataToList()
+    print wx.climateParameters
+    print wx.stationIDs
+    wx.export(filePathAndName = r'test.csv')
+    print wx
+
+    #StationDict is indexable
+    print wx[66180].data['maxt']['2012-01-01'].wxOb
+
+    #Iterate through each station, parameter and weather observation
+    for station in wx:
+        for p in station.data:
+            print p
+            for ob in p:
+                print ob
+    print wx.stationNames
+    print wx.stationCounts
+#######################################
+## MONTHLY STATION DICT
     #Monthly Station Dict
     climateParams = 'avgt, mint'
     queryParameters = {'query':'params'}
@@ -388,10 +389,12 @@ if __name__ == '__main__':
            u'sids': [u'USR0000CSOD 6'],
            u'state': u'CO',
            u'uid': 66180}}
-    wx = MonthlyStationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max'])
+    wx = MonthlyStationDict(climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max']
+        , queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg')
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
-    #print (wx.stationNames)
-    #print (wx)
-    #wx.export(r'C:\TEMP\monthlyStationDicTest.csv')
+    print (wx.stationNames)
+    print (wx)
+    wx.export(r'C:\TEMP\monthlyStationDicTest.csv')
     a = wx[66180]
     print a
+

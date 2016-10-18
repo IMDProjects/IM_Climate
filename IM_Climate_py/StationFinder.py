@@ -1,8 +1,6 @@
 import json
 import urllib2
 
-import StationDict
-reload(StationDict)
 from StationDict import DailyStationDict
 from ACIS import ACIS
 import common
@@ -58,6 +56,7 @@ class StationFinder(ACIS):
         results =  self._call_ACIS(elems = climateParameters
             ,bbox = bbox, sDate = sdate, eDate = edate
             ,meta = metadata)
+        self._checkResponseForErrors(results)
 
         #adds unitCode to input_dict following the call to ACIS
         if unitCode:

@@ -21,6 +21,7 @@ class GridRequestor(ACIS):
         projection = self.gridSources[self.gridSource]['projection']
         grids =  self._call_ACIS(elems = elems
             ,bbox = bbox, sDate = self.sdate, eDate = self.edate, grid = gridSourceCode, meta='ll')
+        self._checkResponseForErrors(grids)
         latValues = grids['meta']['lat']
         lonValues = grids['meta']['lon']
         gs = GridStack(gridSource = self.gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
