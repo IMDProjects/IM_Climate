@@ -154,6 +154,8 @@ class DailyStationDict(dict):
             self._dataAsList.append(station._dumpMetaToList())
         return self._dataAsList
 
+    def _extendHeader(self, p):
+        self._header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
 
     def _dumpDataToList(self):
         '''
@@ -167,21 +169,22 @@ class DailyStationDict(dict):
         for the same date range.
         '''
 
+        #confirm there are stations before proceeding. If no stations, then exit
         self._dataAsList = None
         try:
             self.stationIDs
         except:
-            self._dataAsList = None
             return
 
-        #Create header row
-        header = self._dataTags
-        header.extend(['date'])
+        #Create header row and add date field
+        self._header = self._dataTags[:] #set header to copy of _dataTags values
+        self._header.extend(['date'])
 
-        for p in self.climateParameters:
-            header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
+        #Extend the header by the parameters and their associated columns
+        for param in self.climateParameters:
+            self._extendHeader(param)
 
-        self._dataAsList = [header]
+        self._dataAsList = [self._header]
         for station in self:
             if station.hasWxData:
                 for date in station.data.observationDates:
@@ -190,9 +193,13 @@ class DailyStationDict(dict):
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
                     for param in self.climateParameters:
-                        a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
+                        a = self._extendData(a, station, param, date)
                     self._dataAsList.append(a)
         return self._dataAsList
+
+    def _extendData(self, a, station, param, date ):
+        a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
+        return a
 
 
 
@@ -238,43 +245,18 @@ class DailyStationDict(dict):
             a = map(str,a)
         return '\n'.join(a)
 
+
 class MonthlyStationDict(DailyStationDict):
     def __init__(self, *args, **kwargs):
         super(MonthlyStationDict,self).__init__( *args, **kwargs)
         self.StationClass = MonthlyStation
 
-    def _dumpDataToList(self):
-        self._dataAsList = None
+    def _extendData(self, a, station, param, date ):
+        a.extend([station.data[param][date].wxOb, station.data[param][date].countMissing, ])
+        return a
 
-        #dump data to list only if there are station IDs. If no data, then just exit
-        try:
-            self.stationIDs
-        except:
-            return
-
-        #Create header row
-        header = self._dataTags[:] #set header to copy of _dataTags values
-        header.extend(['date'])
-
-        for p in self.climateParameters:
-            header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_CountMissing'])
-
-        #Iterate through all stations. For those with WxData, iterate through
-        #each date and extend a list of the data
-        self._dataAsList = [header]
-        for station in self:
-            if station.hasWxData:
-                for date in station.data.observationDates:
-                    a = [station.uid, station.name, station.longitude, station.latitude,
-                         station.sid1, station.sid1_type, station.sid2,
-                         station.sid2_type, station.sid3, station.sid3_type,
-                         station.state,  station.elev, date]
-                    for param in self.climateParameters:
-                        a.extend([station.data[param][date].wxOb, station.data[param][date].countMissing, ])
-                    self._dataAsList.append(a)
-        return self._dataAsList
-
-
+    def _extendHeader(self, p):
+        self._header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_CountMissing'])
 
 if __name__ == '__main__':
     climateParams = ['mint']
