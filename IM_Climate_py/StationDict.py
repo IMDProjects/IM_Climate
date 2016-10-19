@@ -181,9 +181,12 @@ class DailyStationDict(dict):
         self._header.extend(['date'])
 
         #Extend the header by the parameters and their associated columns
+        #the extendHeader method is class/sub-class specific
         for param in self.climateParameters:
             self._extendHeader(param)
 
+        #Iterate through all stations, params, and dates to add data to a 2-d list
+        #Stations without weather data are ignored
         self._dataAsList = [self._header]
         for station in self:
             if station.hasWxData:
@@ -193,15 +196,17 @@ class DailyStationDict(dict):
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
                     for param in self.climateParameters:
+                        #the extendData method is class/sub-class specific
                         a = self._extendData(a, station, param, date)
                     self._dataAsList.append(a)
         return self._dataAsList
 
-    def _extendData(self, a, station, param, date ):
+    def _extendData(self, a, station, param, date):
+        '''
+        Sub-class specific method to assist in dumping data to the _dateAsList propertu
+        '''
         a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
         return a
-
-
 
     def _addStation(self, stationID, stationMeta, stationData = None):
         '''

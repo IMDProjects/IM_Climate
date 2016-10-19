@@ -1,4 +1,4 @@
-The IM_Climate Toolkit is a utility package for finding climate stations and downloading climate parameter data for a station or stations.  
+The IM_Climate Toolkit is a utility package for finding climate stations and downloading climate parameter data for a station, stations or grids.  
 
 #### Overview ####
 
@@ -19,10 +19,15 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 	#### Development Roadmap ####
 	Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
+	#### Version 1.3 ####
+	Release Date: Planned for 12/1/2016
+	Functionality: Get monthly gridded data (PRISM only)
+	v1.3 Documentation: In Development
+	
 	#### Version 1.2 ####
 	Release Date: Planned for 11/1/2016
 	Functionality: Get monthly station summary by year for station data
-	v1.2 Documentation: In Development
+	v1.2 Documentation: https://drive.google.com/open?id=1T5YrI6GYDeTGnTqlQWOBl8uJ5f1BAhncnfc094Dtrgc
 	
 	#### Version 1.1 ####
 	Release Date: 10/1/2016
