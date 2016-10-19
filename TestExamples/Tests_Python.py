@@ -180,7 +180,7 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.climateParameters = 'pcpn'
         self.reduceCodes = 'min'
         self.sdate = None
-        self.edate = '2016-09s'
+        self.edate = '2016-09'
         self.maxMissing = None
         self.refDataFile = 'Test02_Py.csv'
         self.confirmContent()

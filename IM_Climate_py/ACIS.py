@@ -128,7 +128,7 @@ class ACIS(object):
         '''
         Raises an exception if the ACIS response is an Error
         '''
-        if response.get('error', None):
+        if response.get('error', None) and response.get('error', None) != 'no data available':
             raise Exception('ACIS Service Error: ' + str(response['error']))
 if __name__ == '__main__':
     c = ACIS()
