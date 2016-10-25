@@ -196,17 +196,9 @@ class DailyStationDict(dict):
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
                     for param in self.climateParameters:
-                        #the extendData method is class/sub-class specific
-                        a = self._extendData(a, station, param, date)
+                        a = station.data[param][date].toList()
                     self._dataAsList.append(a)
         return self._dataAsList
-
-    def _extendData(self, a, station, param, date):
-        '''
-        Sub-class specific method to assist in dumping data to the _dateAsList propertu
-        '''
-        a.extend([station.data[param][date].wxOb, station.data[param][date].ACIS_Flag, station.data[param][date].sourceFlag])
-        return a
 
     def _addStation(self, stationID, stationMeta, stationData = None):
         '''

@@ -21,16 +21,6 @@ class Observation(dict):
             if len(value.strip()) == 0:
                 self[index] = missingValue
 
-class MonthlyWxOb(Observation):
-    def __init__(self, values):
-        super(MonthlyWxOb, self).__init__(values)
-        self['countMissing'] = values[2]
-
-    @property
-    def countMissing(self):
-        return self['countMissing']
-
-
 class DailyWxOb(Observation):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
@@ -54,6 +44,21 @@ class DailyWxOb(Observation):
     def sourceFlag(self):
         return self['sourceFlag']
 
+    def toList(self):
+        return [self.date, self.wxOb, self.ACIS_Flag, self.sourceFlag]
+
+class MonthlyWxOb(Observation):
+    def __init__(self, values):
+        super(MonthlyWxOb, self).__init__(values)
+        self['countMissing'] = values[2]
+
+    @property
+    def countMissing(self):
+        return self['countMissing']
+
+    def toList(self):
+        return [self.date, self.wxOb, self.countMissing]
+
 if __name__=='__main__':
 
     #Daily data
@@ -65,3 +70,4 @@ if __name__=='__main__':
     data = [u'2012-01', u'22.60', 0]
     dmonth = MonthlyWxOb(data)
     print dmonth
+    print dmonth.toList()
