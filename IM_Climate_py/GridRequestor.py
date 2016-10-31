@@ -21,6 +21,7 @@ class GridRequestor(ACIS):
         projection = self.gridSources[self.gridSource]['projection']
         grids =  self._call_ACIS(elems = elems
             ,bbox = bbox, sDate = self.sdate, eDate = self.edate, grid = gridSourceCode, meta='ll')
+        self._checkResponseForErrors(grids)
         latValues = grids['meta']['lat']
         lonValues = grids['meta']['lon']
         gs = GridStack(gridSource = self.gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
@@ -36,7 +37,7 @@ class GridRequestor(ACIS):
         '''
         elems = []
         for p in self.climateParameters:
-            elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': 1})
+            elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': self.precision})
         return elems
 
     def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0,
@@ -84,16 +85,16 @@ if __name__ == '__main__':
     unitCode = 'YELL'
     distance = 0
 
-##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
-##        unitCode = unitCode, distance = distance,
-##        climateParameters = climateParameters, filePath = filePath )
-##    print data.climateParameters
-##    print data.dates
-##    data.export(filePath = filePath)
-##    print data['mint']['2015-01-03']
-##    print data.dates
-##    print data.climateParameters
-##    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+        unitCode = unitCode, distance = distance,
+        climateParameters = climateParameters, filePath = filePath )
+    print data.climateParameters
+    print data.dates
+    data.export(filePath = filePath)
+    print data['mint']['2015-01-03']
+    print data.dates
+    print data.climateParameters
+    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
 
     #Test 02
     unitCode = 'OLYM'

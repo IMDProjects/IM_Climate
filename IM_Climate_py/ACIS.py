@@ -23,6 +23,7 @@ class ACIS(object):
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
         self._getACISLookups()
+        self.precision = 1
 
     def _getACISLookups(self):
         '''
@@ -84,29 +85,51 @@ class ACIS(object):
 
     def _formatClimateParameters(self, climateParameters):
         '''
-        Formats the climate parameters
+        Formats the climate parameters.
+        If None, then default to all supported climate parameters
         '''
         return self._formatStringArguments(climateParameters
             , ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt'])
 
     def _formatReduceCodes(self, reduceCodes):
-        return self._formatStringArguments(reduceCodes
-            , ['max', 'min', 'sum','mean','stdev'])
+        '''
+        Formats reduce codes consistently.
+        If None, then default to all supported reduce codes
+        '''
+        return self._formatStringArguments(reduceCodes, ['max', 'min', 'sum','mean'])
 
-    def _formatStringArguments(self, providedArgs, validArgs):
+    def _formatStringArguments(self, providedArgs, validArgs = None):
         '''
-        Formats arguments to handle None, lists and strings
+        Formats arguments to handle None, lists and strings.
+        Defaults to the valid arguments if the provided arguments are None
         '''
+        #if no provided arguements, then default to valid arguments
         if not providedArgs:
             providedArgs = validArgs
+        #if provided arguments are a list, then do nothing
         elif type(providedArgs) == list:
             pass
+
+        #otherwise, assume that provided arguments are a string(-like) and can be
+        # split using a comma as the delimiter
         else:
+            providedArgs = str(providedArgs)
             providedArgs = providedArgs.replace(' ','')
             providedArgs = providedArgs.split(',')
         return providedArgs
 
+    def _formatDate(self, date):
+        if not date:
+            date = 'por'
+        return date
 
+
+    def _checkResponseForErrors(self, response):
+        '''
+        Raises an exception if the ACIS response is an Error
+        '''
+        if response.get('error', None) and response.get('error', None) != 'no data available':
+            raise Exception('ACIS Service Error: ' + str(response['error']))
 if __name__ == '__main__':
     c = ACIS()
 

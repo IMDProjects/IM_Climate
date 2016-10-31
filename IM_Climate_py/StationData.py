@@ -1,16 +1,23 @@
-from ParameterSeries import ParameterSeries
+from ParameterSeries import DailyParameterSeries
+from ParameterSeries import MonthlyParameterSeries
 
-class StationData(dict):
+class DailyStationData(dict):
     '''
     Dictionary(-like) object containing all climate parameter data (i.e., one or more
     parameter series) for a specific station.
     Station Data is indexable by weather parameter and has been extended to iterate
     over all parameters like a list
     '''
-    def __init__(self, stationData, climateParameters):
+    def __init__(self):
+        self.ParameterSeriesClass = DailyParameterSeries
+
+
+    def _set(self, stationData, climateParameters):
         self.observationDates = tuple([d[0] for d in stationData])
         for index, p in enumerate(climateParameters):
-            self[p] = ParameterSeries(([d[index+1] for d in stationData]), dates = self.observationDates, parameter = p)
+            self[p] = self.ParameterSeriesClass()
+            self[p]._set(([d[index+1] for d in stationData]), dates = self.observationDates, parameter = p)
+
     @property
     def climateParameters(self):
         '''
@@ -25,16 +32,20 @@ class StationData(dict):
         for param in self.keys():
             yield self[param]
 
+class MonthlyStationData(DailyStationData):
+    def __init__(self):
+        self.ParameterSeriesClass = MonthlyParameterSeries
+
+
 if __name__ == '__main__':
 
-    ############################################################################
-    ############################################################################
-    #StationData
+    #DailyStationData
     data = [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
          [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
          [u'2012-01-03', [u'32.0', u' ', u'U'], [u'19', u' ', u'U']],
          [u'2012-01-04', [u'27.5', u' ', u'U'], [u'12', u' ', u'U']],
          [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     parameters = ['maxt', 'mint']
-    sd = StationData(data,parameters)
+    sd = DailyStationData()
+    sd._set(data,parameters)
     print sd
