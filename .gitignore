@@ -105,6 +105,7 @@ ENV/
 
 # Output files from R CMD check
 /*.Rcheck/
+.Ruserdata
 
 # RStudio files
 .Rproj.user/
@@ -137,12 +138,10 @@ vignettes/*.pdf
 /IM_Climate_py/GUI/__init__.pyc
 /IM_Climate_py/StationInfo.pyc
 /IM_Climate_py/Metadata.py
-<<<<<<< HEAD
+
 /AdditionDemo.py
 /IM_Climate_py/dataObjects.py
-=======
-.Rproj.user
->>>>>>> c6f8a91e653692823219acf425748a55739eea50
+
 /IM_Climate_py/WxData.py
 /IM_Climate_py/xxxACIS_Station.py
 /IM_Climate_py/xxxACIS_StationDateRange.py
