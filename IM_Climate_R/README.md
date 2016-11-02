@@ -15,10 +15,12 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
 #### Release 1.0 - 20160906 ####
 
-#### Release 1.1 ####
+#### Release 1.1 - 20161006 ####
 
-In development - access daily PRISM gridded data from ACIS
-  
+#### Release 1.2 - ####
+
+In development - Get monthly station summary by year for station data
+
 #### R - Installing the IM_Climate Package ####
 
 The package can be installed from this GitHub repository by first installing and loading the [devtools](https://github.com/hadley/devtools) library from CRAN. __If you are on the NPS network__, run the

@@ -38,7 +38,9 @@ getDailyWxObservations <-
     webServiceSource <- "StnData"
     # Parameter flags: f = ACIS flag, s = source flag
     paramFlags <- c("f,s")
-    lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
+    lookups <- 
+      fromJSON(system.file("ACISLookups.json", package = "IMClimateR"), flatten = TRUE) # assumes placement in package inst subfolder
+    #lookups <- fromJSON("ACISLookups.json", flatten = TRUE)
     luElements  <- lookups$element
     
     # If climateParameters is NULL, default to all parameters except degree days.
