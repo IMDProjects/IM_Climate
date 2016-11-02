@@ -35,6 +35,246 @@ getStationSubtype <- function(testType, testSid) {
   return(typeDesc)
 }
 
+#' formatWxObservations converts get*WxObservation response to a data frame, iterating by date and value
+#' @param responseContent list of response arrays containing name/value pairs: meta (default), data (date, values) 
+#' @param duration station data duration specified in calling source 
+#' @param climateParameters A list of one or more climate parameters defined in calling source
+#' @param reduceCodes A list of one or more reduce codes defined in calling source
+#' @param luElements lookup values defined in calling source
+#' @export
+#'
+formatWxObservations  <- function(rList, duration, climateParameters, reduceCodes, luElements) {
+  # Initialize return object (table or dataFrame)
+  df <- NULL
+  dfResponse <- NULL
+  # Initialize vectors for SID type
+  sid1_type = c()
+  sid2_type = c()
+  sid3_type = c()
+  
+  dfDate <-
+    as.data.frame(cbind(unlist(lapply(
+      rList$data, "[", 1
+    )[][])))
+  colnames(dfDate) <- "date"
+  if(duration == "dly") {
+    dfDate$date <- as.Date(as.character(as.vector(dfDate$date)), "%Y-%m-%d")
+  }
+  else {
+    dfDate$date <- as.Date(as.character(as.vector(dfDate$date)), "%Y-%m")
+  }
+  
+  # Populate 'metadata' i.e. station info; accommodate missing and unordered items
+  dfMetaInit <-  t(as.data.frame(rList$meta))
+  dfMeta <-
+    as.data.frame(as.character(as.vector(strsplit(
+      dfMetaInit[, 1], " "
+    )$uid)))
+  #dfMeta <- as.data.frame(as.character(as.vector(dfMetaInit[1, ])))
+  colnames(dfMeta)[1]  <- "uid"
+  #dfMeta$uid <- as.numeric(dfMeta$uid)
+  
+  dfMeta  <-
+    cbind(dfMeta, as.data.frame(as.character(as.vector(
+      paste(strsplit(dfMetaInit[, 1], " ")$name, collapse = " ")
+    ))))
+  colnames(dfMeta)[2]  <- "name"
+  dfMeta  <-
+    cbind(dfMeta, as.data.frame(as.numeric(as.vector(
+      rList$meta$ll[1]
+    ))))
+  #dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[2, ]))))
+  colnames(dfMeta)[3]  <- "longitude"
+  dfMeta  <-
+    cbind(dfMeta, as.data.frame(as.numeric(as.vector(
+      rList$meta$ll[2]
+    ))))
+  #dfMeta  <- cbind(dfMeta, as.data.frame(as.numeric(as.vector(dfMetaInit[3, ]))))
+  colnames(dfMeta)[4]  <- "latitude"
+  
+  # Assumes sids element contains 3 members (even if 2 are empty)
+  # Suppress warnings from getStationSubtype(): raised due to conversion necessary because data.frame vector access technique does not recognize column name
+  dfMeta  <-
+    cbind(dfMeta, as.data.frame(as.character(as.vector(
+      rList$meta$sids[1]
+    ))))
+  #dfMeta  <- cbind(dfMeta, as.data.frame(as.character(as.vector(dfMetaInit[4, ]))))
+  colnames(dfMeta)[5]  <- "sid1"
+  dfMeta$sid1  <- as.character(dfMeta$sid1)
+  sid1_type <-
+    suppressWarnings(getStationSubtype(unlist(strsplit(
+      unlist(dfMeta$sid1), " "
+    ))[2], substr(unlist(
+      strsplit(unlist(dfMeta$sid1), " ")
+    )[1], 1, 3)))
+  dfMeta  <-
+    cbind(dfMeta, as.data.frame(as.character(as.vector(sid1_type))))
+  colnames(dfMeta)[6]  <- "sid1_type"
+  if (identical(dim(dfMetaInit), as.integer(c(9, 1)))) {
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.character(as.vector(
+        dfMetaInit[5,]
+      ))))
+    colnames(dfMeta)[7]  <- "sid2"
+    dfMeta$sid2  <- as.character(dfMeta$sid2)
+    sid2_type <-
+      suppressWarnings(getStationSubtype(unlist(strsplit(
+        unlist(dfMeta$sid2), " "
+      ))[2], substr(unlist(
+        strsplit(unlist(dfMeta$sid2), " ")
+      )[1], 1, 3)))
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.character(as.vector(sid2_type))))
+    colnames(dfMeta)[8]  <- "sid2_type"
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.character(as.vector(
+        dfMetaInit[6,]
+      ))))
+    colnames(dfMeta)[9]  <- "sid3"
+    dfMeta$sid3  <- as.character(dfMeta$sid3)
+    sid3_type <-
+      suppressWarnings(getStationSubtype(unlist(strsplit(
+        unlist(dfMeta$sid3), " "
+      ))[2], substr(unlist(
+        strsplit(unlist(dfMeta$sid3), " ")
+      )[1], 1, 3)))
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.character(as.vector(sid3_type))))
+    colnames(dfMeta)[10]  <- "sid3_type"
+  }
+  else {
+    # missing one or more sid elements
+    if (identical(dim(dfMetaInit), as.integer(c(8, 1)))) {
+      dfMeta  <-
+        cbind(dfMeta, as.data.frame(as.character(as.vector(
+          dfMetaInit[5,]
+        ))))
+      colnames(dfMeta)[7]  <- "sid2"
+      dfMeta$sid2  <- as.character(dfMeta$sid2)
+      sid2_type <-
+        suppressWarnings(getStationSubtype(unlist(strsplit(
+          unlist(dfMeta$sid2), " "
+        ))[2], substr(unlist(
+          strsplit(unlist(dfMeta$sid2), " ")
+        )[1], 1, 3)))
+      dfMeta  <-
+        cbind(dfMeta, as.data.frame(as.character(as.vector(
+          sid2_type
+        ))))
+      colnames(dfMeta)[8]  <- "sid2_type"
+    }
+    else {
+      # no sid2 value
+      dfMeta  <- cbind(dfMeta, as.data.frame(NA))
+      dfMeta[7] <- setNames(dfMeta[7],"sid2")
+      colnames(dfMeta)[7]  <- "sid2"
+      sid2_type <-  as.data.frame(NA)
+      #dfMeta  <- cbind(dfMeta, as.character(sid2_type))
+      dfMeta  <-
+        cbind(dfMeta, as.data.frame(as.character(as.vector(
+          sid2_type
+        ))))
+      colnames(dfMeta)[8]  <- "sid2_type"
+    } # no sid3 value
+    dfMeta  <- cbind(dfMeta, as.data.frame(NA))
+    colnames(dfMeta)[9]  <- "sid3"
+    #dfMeta$sid3  <- as.character(dfMeta$sid3)
+    sid3_type <-  as.data.frame(NA)
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.character(as.vector(sid3_type))))
+    colnames(dfMeta)[10]  <- "sid3_type"
+  }
+  
+  if (!is.null(strsplit(dfMetaInit[, 1], " ")$state)) {
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.character(as.vector(
+        strsplit(dfMetaInit[, 1], " ")$state
+      ))))
+  }
+  else {
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(NA))
+  }
+  colnames(dfMeta)[11]  <- "state"
+  
+  if (!is.null(strsplit(dfMetaInit[, 1], " ")$elev)) {
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(as.numeric(as.vector(
+        strsplit(dfMetaInit[, 1], " ")$elev
+      ))))
+  }
+  else {
+    dfMeta  <-
+      cbind(dfMeta, as.data.frame(NA))
+  }
+  colnames(dfMeta)[12]  <- "elev"
+  df$elev <- as.numeric(df$elev)
+  
+  # For whatever reason, this conversion has to be re-forced again!
+  dfMeta$uid <- as.numeric(as.character(dfMeta$uid))
+  options(digits = 1)
+  dfMeta$elev <- as.numeric(as.character(dfMeta$elev))
+  options(digits = 7)
+  df <- cbind(dfMeta, dfDate)
+  
+  # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
+  # Get parameter units from lookup file
+  rangeBase <- length(rList$data[[1]])
+  if(duration == 'dly') {range <- rangeBase - 1}
+  else {range <- rangeBase}
+  #for (i in 2:(length(rList$data[[1]])) - 1)  {
+  for (i in 2:(length(rList$data[[1]])) - 1)  {  
+    #  == count of parameters
+    vUnit <-
+      luElements[which(luElements$code == climateParameters[i]),]$unitabbr
+    
+    if(duration == 'dly') {
+      vName <- paste(climateParameters[i], vUnit, sep = "_")
+      fName <- paste(climateParameters[i], "acis_flag", sep = "_")
+      valueArray <-
+        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 3, byrow = TRUE)[, 1]
+      flagArray <-
+        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 3, byrow = TRUE)[, 2]
+      sName <-
+        paste(climateParameters[i], "source_flag", sep = "_")
+      sourceFlagArray <-
+        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 3, byrow = TRUE)[, 3]
+      df[[vName]] <- as.numeric(valueArray)
+      df[[fName]] <-
+        as.character(replace(flagArray, flagArray == " ", NA))
+      df[[sName]] <-
+        as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
+    }
+    else {
+      vReduce <- unlist(reduceCodes[i])
+      vName <- paste(paste(climateParameters[i], vUnit, sep = "_"), vReduce, sep = "_")
+      fName <- paste(vName, "countMissing", sep = "_")
+      valueArray <-
+        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 1]
+      flagArray <-
+        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 2]
+      df[[vName]] <- as.numeric(valueArray)
+      df[[fName]] <-
+        as.character(replace(flagArray, flagArray == " ", NA))
+    }
+  }
+  
+  # Convert factors and booleans to character vectors
+  fc  <- sapply(df, is.factor)
+  lc <- sapply(df, is.logical)
+  df[, fc]  <- sapply(df[, fc], as.character)
+  df[, lc]  <- sapply(df[, lc], as.character)
+  
+  # Create output object
+  if (is.data.frame(dfResponse)) {
+    dfResponse <- rbind(dfResponse, df)
+  }
+  else {
+    dfResponse <- df
+  }
+  return(dfResponse)
+}
+
 #' stripEscapes strips escape characters from input string
 #' @param inputStr input from which escape characters are to be stripped
 #' @export

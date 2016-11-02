@@ -13,13 +13,13 @@ getMonthlyWxObservations(climateStations, climateParameters = NULL,
 
 \item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
 
-\item{reduceCodes}{(optional) A list of one or more reduce codes. If missing, defaults to min, max, sum, and mean.}
+\item{reduceCodes}{(optional) A list of one or more reduce codes and includes a count of missing values in the reduction period. If missing, defaults to min, max, sum, and mean.}
 
 \item{sdate}{(optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.}
 
 \item{edate}{(optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.}
 
-\item{maxMissing}{(optional) Maximum number of missing days within a month before the aggregate is not calculated. If missing, defaults to 1 (~3.3% missing days/month).}
+\item{maxMissing}{(optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3% missing days/month).}
 
 \item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }
