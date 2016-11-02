@@ -73,8 +73,8 @@ class StationDataRequestor(ACIS):
         return sd
 
 
-    def getDailyWxObservations(self, climateStations, climateParameters = None, sdate = 'por',
-            edate = 'por', filePathAndName = None):
+    def getDailyWxObservations(self, climateStations, climateParameters = None
+            , sdate = 'por', edate = 'por', filePathAndName = None):
         '''
         INFO
         -----
@@ -121,8 +121,9 @@ class StationDataRequestor(ACIS):
         return self._fetchStationDataFromACIS(sdate = str(sdate),
             edate = str(edate))
 
-    def getMonthlyWxSummaryByYear(self, climateStations, climateParameters = None, reduceCodes = None
-            ,sdate = 'por', edate = 'por', maxMissing = 1, filePathAndName = None):
+    def getMonthlyWxSummaryByYear(self, climateStations, climateParameters = None
+            ,reduceCodes = None, sdate = 'por', edate = 'por', maxMissing = 1
+            ,filePathAndName = None):
         '''
         Returns the monthly summaries/aggregates of weather observations for one or more stations.
         # of observations is returned
