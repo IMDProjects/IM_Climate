@@ -44,9 +44,12 @@ class DailyWxOb(Observation):
     def sourceFlag(self):
         return self['sourceFlag']
 
-    def toList(self):
-        return [self.date, self.wxOb, self.ACIS_Flag, self.sourceFlag]
 
+    def toList(self, includeDate = True):
+        l = [self.wxOb, self.ACIS_Flag, self.sourceFlag]
+        if includeDate:
+            l.insert(0, self.date)
+        return l
 class MonthlyWxOb(Observation):
     def __init__(self, values):
         super(MonthlyWxOb, self).__init__(values)
@@ -56,8 +59,11 @@ class MonthlyWxOb(Observation):
     def countMissing(self):
         return self['countMissing']
 
-    def toList(self):
-        return [self.date, self.wxOb, self.countMissing]
+    def toList(self, includeDate = True):
+        l = [self.wxOb, self.countMissing]
+        if includeDate:
+            l.insert(0, self.date)
+        return l
 
 if __name__=='__main__':
 

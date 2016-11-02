@@ -9,10 +9,10 @@ class DailyStationDict(dict):
     '''
     Object containing all station metadata and associated data
     StationDict is composed of the following nested objects:
-        Station (or derivative subclass)
-            StationData
-                ParameterSeries
-                    WxOb
+        Station (or similar subclass) - All metadata and data for a single station
+            StationData ((or similar subclass) - All of the data for a single stations
+                ParameterSeries - All of the data for a specific station and parameter
+                    WxOb - A single weather observation for the station and parameter
     '''
     def __init__(self, climateParameters, queryParameters = None, dateInterval = None, aggregation = None):
 
@@ -84,9 +84,15 @@ class DailyStationDict(dict):
     @property
     def wxDataExists(self):
         '''
+        INFO
+        -----
         Confirms whether there is wxData for at least one station in the dictionary object
-        True - Yes
-        False - No
+
+
+        RETURNS
+        ------
+        True - Yes (weather data exists for at least one station)
+        False - No (wearther data does not exist at all within stationDict object)
         '''
         for station in self:
             try:
@@ -167,6 +173,10 @@ class DailyStationDict(dict):
         ----
         Method currently assumes that each station has the same set of parameters
         for the same date range.
+
+        RETURNS
+        -------
+        Multi-dimensional list of the data
         '''
 
         #confirm there are stations before proceeding. If no stations, then exit
@@ -196,7 +206,8 @@ class DailyStationDict(dict):
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
                     for param in self.climateParameters:
-                        a = station.data[param][date].toList()
+                        #a = station.data[param][date].toList()
+                        a.extend(station.data[param][date].toList(includeDate = False))
                     self._dataAsList.append(a)
         return self._dataAsList
 
@@ -220,7 +231,6 @@ class DailyStationDict(dict):
         Returns a list of all station IDs
         '''
         return [str(z.name) for z in self]
-
 
     def __iter__(self):
         '''
@@ -248,12 +258,8 @@ class MonthlyStationDict(DailyStationDict):
         super(MonthlyStationDict,self).__init__( *args, **kwargs)
         self.StationClass = MonthlyStation
 
-    def _extendData(self, a, station, param, date ):
-        a.extend([station.data[param][date].wxOb, station.data[param][date].countMissing, ])
-        return a
-
     def _extendHeader(self, p):
-        self._header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_CountMissing'])
+        self._header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_countMissing'])
 
 if __name__ == '__main__':
     climateParams = ['mint']

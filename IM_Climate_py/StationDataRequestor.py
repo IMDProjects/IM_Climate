@@ -57,7 +57,8 @@ class StationDataRequestor(ACIS):
         sd = self.StationDictClass(climateParameters = cp, queryParameters = None
             , dateInterval = self.duration, aggregation = self.reduceCodes)
 
-        #Iterate over all stationIDs and query ACIS for data. Add the response
+        #Iterate over all stationIDs and query ACIS for data. Add the station response
+        #to the station dictionary object
         for uid in self.stationIDs:
             response = self._call_ACIS(uid = uid, elems = elems,
                  meta = metaElements, **kwargs)
