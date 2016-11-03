@@ -8,6 +8,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * findStation
   * requestData
+  * getDailyGrids
 
 + Formats outputs consistently regardless of implementation technique (R, Python)
 
@@ -15,7 +16,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
 #### Release 1.0 - 20160906 ####
 
-#### Release 1.1 - 20161006 ####
+#### Release 1.1.1 - 20161031 ####
 
 #### Release 1.2 - ####
 
