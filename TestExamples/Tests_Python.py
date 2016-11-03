@@ -222,7 +222,7 @@ class Test_GridRequestor(unittest.TestCase):
         self.climateParameters = 'mint'
         self.unitCode = 'APPA'
         self.distance = 0
-        self.refDataFile = 'Test01/R_PRISM_mint_dly_20150101.asc'
+        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 

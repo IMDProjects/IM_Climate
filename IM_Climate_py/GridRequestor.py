@@ -85,19 +85,29 @@ if __name__ == '__main__':
     unitCode = 'YELL'
     distance = 0
 
-    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
-        unitCode = unitCode, distance = distance,
-        climateParameters = climateParameters, filePath = filePath )
-    print data.climateParameters
-    print data.dates
-    data.export(filePath = filePath)
-    print data['mint']['2015-01-03']
-    print data.dates
-    print data.climateParameters
-    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+##        unitCode = unitCode, distance = distance,
+##        climateParameters = climateParameters, filePath = filePath )
+##    print data.climateParameters
+##    print data.dates
+##    data.export(filePath = filePath)
+##    print data['mint']['2015-01-03']
+##    print data.dates
+##    print data.climateParameters
+##    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+##
+##    #Test 02
+##    unitCode = 'OLYM'
+##    sdate = '20150615'
+##    edate = '20150615'
+##    climateParameters = 'maxt'
+##    distance = 0
+##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+##    unitCode = unitCode, distance = distance,
+##    climateParameters = climateParameters, filePath = filePath )
 
-    #Test 02
-    unitCode = 'OLYM'
+    #Test 03
+    unitCode = 'APPA'
     sdate = '20150615'
     edate = '20150615'
     climateParameters = 'maxt'
