@@ -195,13 +195,12 @@ class Test_GridRequestor(unittest.TestCase):
         data =  gr.getDailyGrids(sdate = self.sdate, edate = self.edate,
             unitCode = self.unitCode, distance = self.distance,
             climateParameters = self.climateParameters)
-        data.export()
-        testFile = open(self.testDataFile,'r')
+        testDataFile = data.export()[0]
+        testFile = open(testDataFile,'r')
         testData = testFile.read()
         testFile.close()
-        os.remove(self.testDataFile)
-        os.remove(self.testDataFile[:-3] + 'prj')
-
+        os.remove(testDataFile)
+        os.remove(testDataFile[:-3] + 'prj')
         refDataFile = open(Test_GridRequestor.rootFolder + self.refDataFile,'r')
         refData = refDataFile.read()
         refDataFile.close()
@@ -214,7 +213,16 @@ class Test_GridRequestor(unittest.TestCase):
         self.unitCode = 'APPA'
         self.distance = 0
         self.refDataFile = 'Test01/PY_PRISM_mint_dly_20150101.asc'
-        self.testDataFile = 'PRISM_mint_dly_20150101.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
+
+    def test_01_R(self):
+        self.sdate = '2015-01-01'
+        self.edate = '2015-01-01'
+        self.climateParameters = 'mint'
+        self.unitCode = 'APPA'
+        self.distance = 0
+        self.refDataFile = 'Test01/R_PRISM_mint_dly_20150101.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 

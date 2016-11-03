@@ -57,7 +57,11 @@ class GridStack(dict):
         '''
         Export that iterates through the set of grids within the stack and saves
         all individually as ascii grids (with projection file).
+
+        RETURNS
+        List of all exported files
         '''
+        exportedFiles = []
         if not climateParameters:
             climateParameters = self.climateParameters
         if not dates:
@@ -67,6 +71,9 @@ class GridStack(dict):
                 filePathAndName = (filePath + self.gridSource + '_' +  c + '_' +
                     self.aggregation + '_' + d.replace('-','') + '.asc')
                 self[c][d].export(filePathAndName = filePathAndName )
+                exportedFiles.append(filePathAndName)
+        return exportedFiles
+
 
 
 if __name__ == '__main__':
@@ -91,4 +98,4 @@ if __name__ == '__main__':
     gs._addGrid(variable = variable, date = date, grid = grid)
     print gs.climateParameters
     print gs.dates
-    gs.export()
+    print gs.export()
