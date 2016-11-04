@@ -69,7 +69,7 @@ class GridStack(dict):
         for c in climateParameters:
             for d in dates:
                 filePathAndName = (filePath + self.gridSource + '_' +  c + '_' +
-                    self.aggregation + '_' + d.replace('-','') + '.asc')
+                    self.aggregation + '_' + d + '.asc')
                 self[c][d].export(filePathAndName = filePathAndName )
                 exportedFiles.append(filePathAndName)
         return exportedFiles
