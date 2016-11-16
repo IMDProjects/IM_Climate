@@ -79,12 +79,16 @@ getMonthlyWxObservations <-
       r <- list(reduce = unlist(reduceCodes[j]), add = reduceFlags)
       reduceList[[j]] <- r #unlist(c(r))
     }
+    reduceCount <- length(reduceList) #test
+    counter <- 1
   
     # Format POST request for use in httr
     # Iterate parameter list to create elems element:
-    eList <- vector('list', paramCount)
+    # TODO: fix lack of iteration by climateParameter
+    eList <- NULL
+    eList <- vector('list', paramCount*reduceCount)
     for (i in 1:paramCount) {
-      for (j in 1:length(reduceList)) {
+      for (j in 1:reduceCount) { #listJ, listI
         e <-
           list(
             name = unlist(c(climateParameters[i])),
@@ -93,11 +97,13 @@ getMonthlyWxObservations <-
             reduce = c(reduceList[j]), 
             maxmissing = maxMissing #unlist(mmElem)
           )
-        #print(e)
-        eList[[i]] <- e
+          eList[[counter]] <- e
+          counter <- counter + 1
       }
+      print(e)
+      print(length(eList))
     }
-    # Climate parameters as JSON with flags
+    # Climate parameers as JSON with flags
     elems <- toJSON(eList, auto_unbox = TRUE)
     
     # Iterate for each station

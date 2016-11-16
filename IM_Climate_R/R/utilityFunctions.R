@@ -222,6 +222,7 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   rangeBase <- length(rList$data[[1]])
   if(duration == 'dly') {range <- rangeBase - 1}
   else {range <- rangeBase}
+  itemCount <- 1
   #for (i in 2:(length(rList$data[[1]])) - 1)  {
   for (i in 2:(length(rList$data[[1]])) - 1)  {  
     #  == count of parameters
@@ -245,17 +246,25 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
       df[[sName]] <-
         as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
     }
-    else {
-      vReduce <- unlist(reduceCodes[i])
-      vName <- paste(paste(climateParameters[i], vUnit, sep = "_"), vReduce, sep = "_")
-      fName <- paste(vName, "countMissing", sep = "_")
-      valueArray <-
-        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 1]
-      flagArray <-
-        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 2]
-      df[[vName]] <- as.numeric(valueArray)
-      df[[fName]] <-
-        as.character(replace(flagArray, flagArray == " ", NA))
+    else { # TODO: iterate reduceCount to add all response reduce values
+      for (j in 1:length(reduceCodes)) {
+        vReduce <- unlist(reduceCodes[j])
+        vName <- paste(paste(climateParameters[i], vUnit, sep = "_"), vReduce, sep = "_")
+        fName <- paste(vName, "countMissing", sep = "_")
+        #valueArray <-
+        #  matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 1]
+        print(vName)
+        valueArray <-
+          matrix(unlist(lapply(rList$data, "[", itemCount + 1)), ncol = 2, byrow = TRUE)[, 1]
+        flagArray <-
+          matrix(unlist(lapply(rList$data, "[", itemCount + 1)), ncol = 2, byrow = TRUE)[, 2]
+        print(fName)
+        print(valueArray)
+        df[[vName]] <- as.numeric(valueArray)
+        df[[fName]] <-
+          as.character(replace(flagArray, flagArray == " ", NA))
+        itemCount <- itemCount + 1
+      }
     }
   }
   
