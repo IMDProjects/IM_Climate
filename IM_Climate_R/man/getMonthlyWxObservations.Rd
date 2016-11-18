@@ -19,7 +19,7 @@ getMonthlyWxObservations(climateStations, climateParameters = NULL,
 
 \item{edate}{(optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.}
 
-\item{maxMissing}{(optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3% missing days/month).}
+\item{maxMissing}{(optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3 percent missing days/month).}
 
 \item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }

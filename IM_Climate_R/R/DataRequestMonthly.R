@@ -7,7 +7,7 @@
 #' @param reduceCodes (optional) A list of one or more reduce codes. If missing, defaults to min, max, sum, and mean.
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
-#' @param maxMissing (optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3% missing days/month).
+#' @param maxMissing (optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3 percent missing days/month).
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data. Note: date vector is in character format, not date format. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
 #' @examples \dontrun{
@@ -28,6 +28,7 @@
 #' getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=stationDF, sdate="20150801", edate="20150803")
 #' }
 #' @export
+#' 
 getMonthlyWxObservations <-
   function(climateStations,
            climateParameters = NULL,

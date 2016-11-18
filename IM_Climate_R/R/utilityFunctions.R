@@ -324,7 +324,7 @@ stripEscapesGrid <- function(inputStr) {
   return(outputJSON)
 }
 
-#' getBBox retrieves bounding box from IRMA Unit service and buffers it by specified distance
+#' getBBox retrieves bounding box from IRMA/ServCat Unit service and buffers it by specified distance
 #' @param unitCode unitCode One NPS or FWS unit code as a string
 #' @param bboxExpand buffer distance in decimal degrees (assumes WGS984)
 #' @export

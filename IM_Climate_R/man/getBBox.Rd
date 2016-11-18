@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilityFunctions.R
 \name{getBBox}
 \alias{getBBox}
-\title{getBBox retrieves bounding box from IRMA Unit service and buffers it by specified distance}
+\title{getBBox retrieves bounding box from IRMA/ServCat Unit service and buffers it by specified distance}
 \usage{
 getBBox(unitCode, expandBBox)
 }
@@ -12,6 +12,6 @@ getBBox(unitCode, expandBBox)
 \item{bboxExpand}{buffer distance in decimal degrees (assumes WGS984)}
 }
 \description{
-getBBox retrieves bounding box from IRMA Unit service and buffers it by specified distance
+getBBox retrieves bounding box from IRMA/ServCat Unit service and buffers it by specified distance
 }
 
