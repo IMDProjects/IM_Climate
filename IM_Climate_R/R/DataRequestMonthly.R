@@ -22,6 +22,10 @@
 #' All weather observations for a station for its period of record
 #'
 #' getMonthlyWxObservations(climateStations=60903)
+#' 
+#' All weather observations for two stations for a specified date range:
+#' 
+#' getMonthlyWxObservations(climateStations = list(61193, 26215), sdate="201401", edate = "201501", maxMissing = NULL)
 #'
 #' All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
 #'
@@ -154,7 +158,7 @@ getMonthlyWxObservations <-
         rList <- content(dataResponseInit)
         dataResponseError <- rList$error
         if (is.null(dataResponseError)) {
-          dfResponse <-
+          df <-
             formatWxObservations(
               rList,
               duration = duration,
@@ -162,6 +166,13 @@ getMonthlyWxObservations <-
               reduceCodes = reduceCodes,
               luElements = luElements
             )
+          # Create output object
+          if (is.data.frame(dfResponse)) {
+            dfResponse <- rbind(dfResponse, df)
+          }
+          else {
+            dfResponse <- df
+          }
         }
         else {
           dfResponse <- dataResponseError
