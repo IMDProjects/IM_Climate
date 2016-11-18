@@ -9,12 +9,16 @@
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
 #' @param maxMissing (optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3% missing days/month).
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
-#' @return A data frame containing the requested data. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
+#' @return A data frame containing the requested data. Note: date vector is in character format, not date format. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
 #' @examples \dontrun{
 #' Precipitation, temperature weather observations for one station for a specifc date range:
 #'
 #' getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20150831")
 #'
+#' The same request written to a CSV file:
+#' 
+#' getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20160831", filePathAndName = "D:\\temp\\trash\\monthyObs_station25056.csv")
+#'  
 #' All weather observations for a station for its period of record
 #'
 #' getMonthlyWxObservations(climateStations=60903)

@@ -52,6 +52,8 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   sid2_type = c()
   sid3_type = c()
   
+  # R does not support the YYYY-MM format for a Date object. Hence, for monthly observations,
+  # the date vector is in character format
   dfDate <-
     as.data.frame(cbind(unlist(lapply(
       rList$data, "[", 1
@@ -61,7 +63,7 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
     dfDate$date <- as.Date(as.character(as.vector(dfDate$date)), "%Y-%m-%d")
   }
   else {
-    dfDate$date <- as.Date(as.character(as.vector(dfDate$date)), "%Y-%m")
+    dfDate$date <- as.character(as.vector(dfDate$date))
   }
   
   # Populate 'metadata' i.e. station info; accommodate missing and unordered items
@@ -219,13 +221,14 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   
   # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
   # Get parameter units from lookup file
-  rangeBase <- length(rList$data[[1]])
-  if(duration == 'dly') {range <- rangeBase - 1}
-  else {range <- rangeBase}
+  # rangeBase subtraction forces ignoring of first 'column' which is date
+  rangeBase <- length(rList$data[[1]]) - 1
+  #if(duration == 'dly') {range <- rangeBase - 1}
+  #else {range <- rangeBase}
   print(rangeBase)
   itemCount <- 1
   #for (i in 2:(length(rList$data[[1]])) - 1)  {
-  for (i in 2:(length(rList$data[[1]])) - 1)  {  
+  for (i in 1:rangeBase)  {  
     #  == count of parameters
     vUnit <-
       luElements[which(luElements$code == climateParameters[i]),]$unitabbr
