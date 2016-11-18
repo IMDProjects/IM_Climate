@@ -145,7 +145,8 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
     stationList[, lc]  <- sapply(stationList[, lc], as.character)
   }
   else {
-    stationList <- cat("No stations for ", unitCode, "using distance ", distance) 
+    stationList <- NA # per John Paul's request - Issue #49
+    #stationList <- cat("No stations for ", unitCode, "using distance ", distance) 
   }
   # Output file
   if (!is.null(filePathAndName)) {

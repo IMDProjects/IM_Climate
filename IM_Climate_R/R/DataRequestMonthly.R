@@ -55,8 +55,6 @@ getMonthlyWxObservations <-
                flatten = TRUE) # assumes placement in package inst subfolder
     luElements  <- lookups$element
     
-    #TODO: By climateParam: add duration,interval,reduce, add(''mcnt'), and maxMissing
-    
     # If climateParameters is NULL, default to all parameters except degree days.
     if (is.null(climateParameters)) {
       climateParameters <-
@@ -89,7 +87,6 @@ getMonthlyWxObservations <-
   
     # Format POST request for use in httr
     # Iterate parameter list to create elems element:
-    # TODO: fix lack of iteration by climateParameter
     eList <- NULL
     eList <- vector('list', paramCount*reduceCount)
     for (i in 1:paramCount) {
@@ -149,21 +146,26 @@ getMonthlyWxObservations <-
           verbose()
         )
       
-      # Format climate data object
-      rList <- content(dataResponseInit)
-      dataResponseError <- rList$error
-      if (is.null(dataResponseError)) {
-        dfResponse <-
-          formatWxObservations(
-            rList,
-            duration = duration,
-            climateParameters = climateParameters,
-            reduceCodes = reduceCodes,
-            luElements = luElements
-          )
+      if (grepl("data", content(dataResponseInit, "text")) == FALSE) {
+        dfResponse <- content(dataResponseInit, "text")
       }
       else {
-        dfResponse <- dataResponseError
+        # Format climate data object
+        rList <- content(dataResponseInit)
+        dataResponseError <- rList$error
+        if (is.null(dataResponseError)) {
+          dfResponse <-
+            formatWxObservations(
+              rList,
+              duration = duration,
+              climateParameters = climateParameters,
+              reduceCodes = reduceCodes,
+              luElements = luElements
+            )
+        }
+        else {
+          dfResponse <- dataResponseError
+        }
       }
     }
     

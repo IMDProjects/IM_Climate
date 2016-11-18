@@ -250,7 +250,7 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
       df[[sName]] <-
         as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
     }
-    else { # TODO: iterate reduceCount to add all response reduce values
+    else { 
       for (j in 1:length(reduceCodes)) {
         vReduce <- unlist(reduceCodes[j])
         vName <- paste(paste(climateParameters[i], vUnit, sep = "_"), vReduce, sep = "_")
