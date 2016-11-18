@@ -257,7 +257,8 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
         fName <- paste(vName, "countMissing", sep = "_")
         #valueArray <-
         #  matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 1]
-        if (itemCount<=(rangeBase-1)) {
+        #if (itemCount<=(rangeBase-1)) {
+        if (itemCount<=rangeBase) {
           valueArray <-
             matrix(unlist(lapply(rList$data, "[", itemCount + 1)), ncol = 2, byrow = TRUE)[, 1]
           flagArray <-

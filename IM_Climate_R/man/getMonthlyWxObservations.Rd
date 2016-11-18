@@ -13,7 +13,7 @@ getMonthlyWxObservations(climateStations, climateParameters = NULL,
 
 \item{climateParameters}{A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
 
-\item{reduceCodes}{(optional) A list of one or more reduce codes and includes a count of missing values in the reduction period. If missing, defaults to min, max, sum, and mean.}
+\item{reduceCodes}{(optional) A list of one or more reduce codes. If missing, defaults to min, max, sum, and mean.}
 
 \item{sdate}{(optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.}
 
@@ -24,7 +24,7 @@ getMonthlyWxObservations(climateStations, climateParameters = NULL,
 \item{filePathAndName}{(optional) File path and name including extension for output CSV file}
 }
 \value{
-A data frame containing the requested data. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
+A data frame containing the requested data. Note: date vector is in character format, not date format. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
 }
 \description{
 Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
@@ -35,6 +35,10 @@ Precipitation, temperature weather observations for one station for a specifc da
 
 getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20150831")
 
+The same request written to a CSV file:
+
+getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20160831", filePathAndName = "D:\\\\temp\\\\trash\\\\monthyObs_station25056.csv")
+ 
 All weather observations for a station for its period of record
 
 getMonthlyWxObservations(climateStations=60903)
