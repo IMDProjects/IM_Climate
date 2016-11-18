@@ -86,46 +86,47 @@
 	"stationIdType": [{
 		"code": "1",
 		"description": "WBAN",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "2",
 		"description": "COOP",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "3",
 		"description": "FAA",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "4",
 		"description": "WMO",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "5",
 		"description": "ICAO",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "6",
 		"description": "GHCN",
-		"subtypes":
-			{"USC":"COOP",
-			 "USR":"RAWS",
-			 "USS":"SNOTEL"}
+		"subtypes": {
+			"USC": "COOP",
+			"USR": "RAWS",
+			"USS": "SNOTEL"
+		}
 	}, {
 		"code": "7",
 		"description": "NWSLI",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "8",
 		"description": "RCC",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "9",
 		"description": "ThreadEx",
-		"subtypes":""
+		"subtypes": ""
 	}, {
 		"code": "10",
 		"description": "CoCoRaHS",
-		"subtypes":""
+		"subtypes": ""
 	}],
 	"duration": [{
 		"code": "dly",
@@ -134,22 +135,105 @@
 		"code": "mly",
 		"description": "Monthly summary; must specify reduce"
 	}],
-
-		"gridSources":
-	{"NRCC Interpolated": {"code":1, "period": "1950-Present", "area": "Continental US", "missingValue":"-999"},
-            "NRCC Hi-Res": {"code":3,  "area": "US East of Rockies ", "period": "Temperature: 1998-present; Precipitation: 2002-present", "missingValue":"-999"},
-            "CRCM + NCEP": {"code":4,  "area": "Continental US ", "period": "1970-2000", "missingValue":"-999"},
-            "CRCM + CCSM": {"code":5,  "area": "Continental US ", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "CRCM + CGCM3": {"code":6,  "area": "Continental US ", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "MM5I + NCEP": {"code":9,  "area": "Continental US", "period": "1970-2000", "missingValue":"-999"},
-            "MM5I + CCSM": {"code":10,  "area": "Continental US", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "RCM3 + NCEP": {"code":11,  "area": "Continental US", "period": "1970-2000", "missingValue":"-999"},
-            "RCM3 + CGCM3": {"code":12,  "area": "Continental US", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "RCM3 + GFDL": {"code":13,  "area": "Continental US", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "WRFG + NCEP": {"code":14,  "area": "Continental US", "period": "1970-2000", "missingValue":"-999"},
-            "WRFG + CCSM": {"code":15,  "area": "Continental US", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "WRFG + CGCM3": {"code":16,  "area": "Continental US", "period": "1970-2000, 2040-2070", "missingValue":"-999"},
-            "PRISM": {"code":21,  "area": "Continental US ", "period": "Daily: 1981-present; Monthly/Yearly: 1895-present", "missingValue":"-999",
-            "projection":"GEOGCS[\"NAD83\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]]", "cellSize":"0.04166666666667"}}
-
+	"reduceCodes": [{
+		"code": "min",
+		"description": "Minimum value for the period"
+	}, {
+		"code": "max",
+		"description": "Maximum value for the period"
+	}, {
+		"code": "sum",
+		"description": "Sum of the values for the period"
+	}, {
+		"code": "mean",
+		"description": "Average of the values for the period"
+	}],
+	"gridSources": {
+		"NRCC Interpolated": {
+			"code": 1,
+			"period": "1950-Present",
+			"area": "Continental US",
+			"missingValue": "-999"
+		},
+		"NRCC Hi-Res": {
+			"code": 3,
+			"area": "US East of Rockies ",
+			"period": "Temperature: 1998-present; Precipitation: 2002-present",
+			"missingValue": "-999"
+		},
+		"CRCM + NCEP": {
+			"code": 4,
+			"area": "Continental US ",
+			"period": "1970-2000",
+			"missingValue": "-999"
+		},
+		"CRCM + CCSM": {
+			"code": 5,
+			"area": "Continental US ",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"CRCM + CGCM3": {
+			"code": 6,
+			"area": "Continental US ",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"MM5I + NCEP": {
+			"code": 9,
+			"area": "Continental US",
+			"period": "1970-2000",
+			"missingValue": "-999"
+		},
+		"MM5I + CCSM": {
+			"code": 10,
+			"area": "Continental US",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"RCM3 + NCEP": {
+			"code": 11,
+			"area": "Continental US",
+			"period": "1970-2000",
+			"missingValue": "-999"
+		},
+		"RCM3 + CGCM3": {
+			"code": 12,
+			"area": "Continental US",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"RCM3 + GFDL": {
+			"code": 13,
+			"area": "Continental US",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"WRFG + NCEP": {
+			"code": 14,
+			"area": "Continental US",
+			"period": "1970-2000",
+			"missingValue": "-999"
+		},
+		"WRFG + CCSM": {
+			"code": 15,
+			"area": "Continental US",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"WRFG + CGCM3": {
+			"code": 16,
+			"area": "Continental US",
+			"period": "1970-2000, 2040-2070",
+			"missingValue": "-999"
+		},
+		"PRISM": {
+			"code": 21,
+			"area": "Continental US ",
+			"period": "Daily: 1981-present; Monthly/Yearly: 1895-present",
+			"missingValue": "-999",
+			"projection": "GEOGCS[\"NAD83\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]]",
+			"cellSize": "0.04166666666667"
+		}
+	}
 }
