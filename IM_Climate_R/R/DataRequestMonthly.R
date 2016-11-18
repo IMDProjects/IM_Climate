@@ -26,10 +26,13 @@
 #' All weather observations for two stations for a specified date range:
 #' 
 #' getMonthlyWxObservations(climateStations = list(61193, 26215), sdate="201401", edate = "201501", maxMissing = NULL)
+<<<<<<< HEAD
 #'
 #' Weather observations for minimum precipitation for a station from beginning of record through Sept 2016
 #' 
 #' getMonthlyWxObservations(climateStations = list(26215), climateParameters = list('pcpn'), reduceCodes = list('min'), edate= "2016-09", maxMissing = 2)
+=======
+>>>>>>> ca7e3ccd03d1807643fb33f060fbc8ccbb677a88
 #'
 #' All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
 #'
