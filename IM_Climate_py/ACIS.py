@@ -17,6 +17,10 @@ class ACIS(object):
     '''
     Base class for all objects interacting with ACIS web services
     '''
+    defaultParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
+    duration = None
+    gridSource = None
+
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
         self.baseURL = 'http://data.rcc-acis.org/'
@@ -83,13 +87,17 @@ class ACIS(object):
     def gridSources(self):
         return self._acis_lookups['gridSources']
 
-    def _formatClimateParameters(self, climateParameters):
+    def _formatClimateParameters(self):
         '''
         Formats the climate parameters.
         If None, then default to all supported climate parameters
         '''
-        return self._formatStringArguments(climateParameters
-            , ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt'])
+        self.climateParameters =  self._formatStringArguments(self.climateParameters
+            , self.defaultParameters)
+
+        #Accomodates non-traditional way of represented monthly and annual PRISM data
+        if self.duration == 'mly' and self.gridSource == 'PRISM':
+            self.climateParameters = map(lambda p: self.duration + '_' + p, self.climateParameters)
 
     def _formatReduceCodes(self, reduceCodes):
         '''
@@ -106,8 +114,8 @@ class ACIS(object):
         #if no provided arguements, then default to valid arguments
         if not providedArgs:
             providedArgs = validArgs
-        #if provided arguments are a list, then do nothing
-        elif type(providedArgs) == list:
+        #if provided arguments are iterable, then do nothing
+        elif hasattr(providedArgs, '__iter__'):
             pass
 
         #otherwise, assume that provided arguments are a string(-like) and can be
@@ -123,13 +131,13 @@ class ACIS(object):
             date = 'por'
         return date
 
-
     def _checkResponseForErrors(self, response):
         '''
         Raises an exception if the ACIS response is an Error
         '''
         if response.get('error', None) and response.get('error', None) != 'no data available':
             raise Exception('ACIS Service Error: ' + str(response['error']))
+
 if __name__ == '__main__':
     c = ACIS()
 

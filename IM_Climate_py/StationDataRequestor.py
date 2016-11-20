@@ -110,7 +110,8 @@ class StationDataRequestor(ACIS):
         self.duration = 'dly'
         self.interval = 'dly'
         self.stationIDs = self._extractStationIDs(climateStations)
-        self.climateParameters = self._formatClimateParameters(climateParameters)
+        self.climateParameters = climateParameters
+        self._formatClimateParameters()
         sdate = self._formatDate(sdate)
         edate = self._formatDate(edate)
         self.reduceCodes = None
@@ -172,7 +173,8 @@ class StationDataRequestor(ACIS):
         self.add = 'mcnt'
 
         self.stationIDs = self._extractStationIDs(climateStations)
-        self.climateParameters = self._formatClimateParameters(climateParameters)
+        self.climateParameters = climateParameters
+        self._formatClimateParameters()
 
         return self._fetchStationDataFromACIS(sdate = str(sdate),
             edate = str(edate))
