@@ -162,7 +162,7 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         infile.close()
         refDataFile.close()
         os.remove('temp.csv')
-        self.result =  list(numpy.setdiff1d(refData, testData))
+        self.result =  list(numpy.setdiff1d(refData.split(','), testData.split(',')))
 
     def test01(self):
         self.climateStations =  '61193, 26215'
@@ -175,6 +175,17 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+    def test01_R(self):
+        self.climateStations =  '61193, 26215'
+        self.climateParameters = None
+        self.reduceCodes = None
+        self.sdate = '201401'
+        self.edate = '201501'
+        self.maxMissing = None
+        self.refDataFile = 'Test01_R.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
     def test02(self):
         self.climateStations =  26215
         self.climateParameters = 'pcpn'
@@ -183,6 +194,17 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.edate = '2016-09'
         self.maxMissing = 2
         self.refDataFile = 'Test02_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+    def test02_R(self):
+        self.climateStations =  26215
+        self.climateParameters = 'pcpn'
+        self.reduceCodes = 'min'
+        self.sdate = None
+        self.edate = '2016-09'
+        self.maxMissing = 2
+        self.refDataFile = 'Test02_R.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 

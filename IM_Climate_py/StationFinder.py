@@ -49,8 +49,7 @@ class StationFinder(ACIS):
         An object of station metadata (See StationDict.py)
         '''
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
-        self.climateParameters = climateParameters
-        self._formatClimateParameters()
+        self._formatClimateParameters(climateParameters)
 
         bbox = common.getBoundingBox(unitCode, distance)
 

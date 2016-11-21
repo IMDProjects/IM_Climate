@@ -85,11 +85,13 @@ class ACIS(object):
     def gridSources(self):
         return self._acis_lookups['gridSources']
 
-    def _formatClimateParameters(self):
+    def _formatClimateParameters(self, climateParameters = None):
         '''
         Formats the climate parameters.
         If None, then default to all supported climate parameters
         '''
+        if not hasattr(self, 'climateParameters'):
+            self.climateParameters = climateParameters
         self.climateParameters =  self._formatStringArguments(self.climateParameters
             , self.defaultParameters)
 
