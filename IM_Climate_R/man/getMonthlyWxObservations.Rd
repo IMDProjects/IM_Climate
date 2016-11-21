@@ -27,7 +27,7 @@ getMonthlyWxObservations(climateStations, climateParameters = NULL,
 A data frame containing the requested data. Note: date vector is in character format, not date format. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
 }
 \description{
-Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
+Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame. Note: For monthly data, value vectors returned as character format to accommodate missing records ("M")
 }
 \examples{
 \dontrun{

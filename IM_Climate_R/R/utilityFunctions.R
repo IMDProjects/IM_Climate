@@ -220,6 +220,7 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   df <- cbind(dfMeta, dfDate)
   
   # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
+  # For monthly data, value vector returned as character to accommodate missing records ("M")
   # Get parameter units from lookup file
   # rangeBase subtraction forces ignoring of first 'column' which is date
   rangeBase <- length(rList$data[[1]]) - 1
@@ -265,7 +266,8 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
             matrix(unlist(lapply(rList$data, "[", itemCount + 1)), ncol = 2, byrow = TRUE)[, 2]
           print(vName)
           print(valueArray)
-          df[[vName]] <- as.numeric(valueArray)
+          # For monthly data, value vector returned as character to accommodate missing records ("M")
+          df[[vName]] <- valueArray#as.numeric(valueArray)
           df[[fName]] <-
             as.character(replace(flagArray, flagArray == " ", NA))
           itemCount <- itemCount + 1

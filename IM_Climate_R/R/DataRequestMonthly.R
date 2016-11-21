@@ -1,6 +1,6 @@
 #' Get station data for specified parameter(s) and station(s)
 #'
-#' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
+#' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame. Note: For monthly data, value vectors returned as character format to accommodate missing records ("M")
 # @param dataURL URL for ACIS data service vending station data
 #' @param climateStations A list of one or more unique identifiers (uid) for climate stations. Can be a single item, a list of items, or a data frame of the findStation response.
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
