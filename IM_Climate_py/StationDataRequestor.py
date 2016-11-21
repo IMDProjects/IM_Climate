@@ -32,7 +32,7 @@ class StationDataRequestor(ACIS):
         elems = []
         for p in self.climateParameters:
             arguments = {'name': p, 'interval': self.interval, 'add': self.add
-             ,'duration': self.duration,'maxmissing': self.maxMissing, 'prec': self.precision}
+             ,'duration': self.duration,'maxmissing': self.maxMissing}
             elems.append(arguments)
 
         #Update the elems object to add all variations of parameters and reduce
@@ -208,17 +208,17 @@ if __name__=='__main__':
     monthlyData.export(r'C:\TEMP\data.csv')
 
 
-##    sf = StationFinder()
-##    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
-##        sdate = '2015-01-01', edate = '2015-03-31')
-##
-##    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
-##    # from January 2015 to March 2015. Use default of maximum missing days of 1.
-##    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
-##        climateParameters = 'mint, maxt', reduceCodes = 'min'
-##        , sdate = '2015-01', edate = '2015-03')
-##
-##    print (wxData)
+    sf = StationFinder()
+    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
+        sdate = '2015-01-01', edate = '2015-03-31')
+
+    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
+    # from January 2015 to March 2015. Use default of maximum missing days of 1.
+    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
+        climateParameters = 'mint, maxt', reduceCodes = None
+        , sdate = '2015-01', edate = '2015-03')
+
+    print (wxData)
 
 
     ###########################################################################

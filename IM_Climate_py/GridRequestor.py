@@ -4,6 +4,7 @@ from GridStack import GridStack
 
 class GridRequestor(ACIS):
     gridSource = 'PRISM' #ONLY PRISM IS SUPPORTED AT PRESENT
+    precision = 1 #precision is only set for gridded data at present
 
     def __init__(self):
         super(GridRequestor,self).__init__()
@@ -18,7 +19,7 @@ class GridRequestor(ACIS):
         introduce more grid sources
         '''
         #NOTE: These parameters are specific to PRISM
-        return ['mint', 'maxt', 'avgt', 'pcpn']
+        return ['pcpn', 'mint', 'maxt', 'avgt']
 
     def _callForGrids(self):
         '''

@@ -17,7 +17,7 @@ class ACIS(object):
     '''
     Base class for all objects interacting with ACIS web services
     '''
-    defaultParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
+    defaultParameters = ['pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd']
 
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
@@ -25,7 +25,7 @@ class ACIS(object):
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
         self._getACISLookups()
-        self.precision = 1
+
 
     def _getACISLookups(self):
         '''
@@ -100,7 +100,7 @@ class ACIS(object):
         Formats reduce codes consistently.
         If None, then default to all supported reduce codes
         '''
-        return self._formatStringArguments(reduceCodes, ['max', 'min', 'sum','mean'])
+        return self._formatStringArguments(reduceCodes, ['min', 'max', 'sum', 'mean'])
 
     def _formatStringArguments(self, providedArgs, validArgs = None):
         '''

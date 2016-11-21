@@ -206,7 +206,6 @@ class DailyStationDict(dict):
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
                     for param in self.climateParameters:
-                        #a = station.data[param][date].toList()
                         a.extend(station.data[param][date].toList(includeDate = False))
                     self._dataAsList.append(a)
         return self._dataAsList
