@@ -260,7 +260,6 @@ class MonthlyStationDict(DailyStationDict):
     def _extendHeader(self, p):
         pAndU = common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
         self._header.extend([pAndU, pAndU +'_countMissing'])
-        #self._header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_countMissing'])
 
 if __name__ == '__main__':
     climateParams = ['mint']
