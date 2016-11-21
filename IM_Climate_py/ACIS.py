@@ -18,8 +18,6 @@ class ACIS(object):
     Base class for all objects interacting with ACIS web services
     '''
     defaultParameters = ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt']
-    duration = None
-    gridSource = None
 
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
@@ -94,10 +92,6 @@ class ACIS(object):
         '''
         self.climateParameters =  self._formatStringArguments(self.climateParameters
             , self.defaultParameters)
-
-        #Accomodates non-traditional way of represented monthly and annual PRISM data
-        if self.duration == 'mly' and self.gridSource == 'PRISM':
-            self.climateParameters = map(lambda p: self.duration + '_' + p, self.climateParameters)
 
     def _formatReduceCodes(self, reduceCodes):
         '''

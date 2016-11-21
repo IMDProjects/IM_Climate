@@ -128,8 +128,8 @@ class GridRequestor(ACIS):
         '''
         self.interval = 'mly'
         self.duration = 'mly'
-        self.climateParameters = climateParameters
-
+        self.climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
+        self.climateParameters = map(lambda p: self.duration + '_' + p, self.climateParameters)
         self.distance = distance
         self.filePath = filePath
         return self._callForGrids()
@@ -158,44 +158,44 @@ if __name__ == '__main__':
     print data.climateParameters
     data['mly_mint']['1895-01'].export(filePathAndName = filePath + 'test.asc')
 
-##    #Test 02
-##    unitCode = 'OLYM'
-##    sdate = '20150115'
-##    edate = '20150615'
-##    climateParameters = ['maxt']
-##    distance = 0
-##    data =  gr.getMonthlyGrids(sdate = sdate, edate = edate,
-##        unitCode = unitCode, distance = distance,
-##        climateParameters = climateParameters, filePath = filePath )
+    #Test 02
+    unitCode = 'OLYM'
+    sdate = '20150115'
+    edate = '20150615'
+    climateParameters = ['maxt']
+    distance = 0
+    data =  gr.getMonthlyGrids(sdate = sdate, edate = edate,
+        unitCode = unitCode, distance = distance,
+        climateParameters = climateParameters, filePath = filePath )
 
 
-##    ##DAILY GRIDS
-##    #TEST 01
-##    sdate = '2015-01-01'
-##    edate = '2015-01-04'
-##    climateParameters = 'mint, maxt'
-##    unitCode = 'YELL'
-##    distance = 0
-##
-##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
-##        unitCode = unitCode, distance = distance,
-##        climateParameters = climateParameters, filePath = filePath )
-##    print data.climateParameters
-##    print data.dates
-##    data.export(filePath = filePath)
-##    print data['mint']['2015-01-03']
-##    print data.dates
-##    print data.climateParameters
-##    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
-##
-##    #Test 02
-##    unitCode = 'OLYM'
-##    sdate = '20150615'
-##    edate = '20150615'
-##    climateParameters = ['maxt']
-##    distance = 0
-##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
-##    unitCode = unitCode, distance = distance,
-##    climateParameters = climateParameters, filePath = filePath )
+    ##DAILY GRIDS
+    #TEST 01
+    sdate = '2015-01-01'
+    edate = '2015-01-04'
+    climateParameters = 'mint, maxt'
+    unitCode = 'YELL'
+    distance = 0
+
+    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+        unitCode = unitCode, distance = distance,
+        climateParameters = climateParameters, filePath = filePath )
+    print data.climateParameters
+    print data.dates
+    data.export(filePath = filePath)
+    print data['mint']['2015-01-03']
+    print data.dates
+    print data.climateParameters
+    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+
+    #Test 02
+    unitCode = 'OLYM'
+    sdate = '20150615'
+    edate = '20150615'
+    climateParameters = ['maxt']
+    distance = 0
+    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
+    unitCode = unitCode, distance = distance,
+    climateParameters = climateParameters, filePath = filePath )
 
 
