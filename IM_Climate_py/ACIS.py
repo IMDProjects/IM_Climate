@@ -110,6 +110,7 @@ class ACIS(object):
         #if no provided arguements, then default to valid arguments
         if not providedArgs:
             providedArgs = validArgs
+
         #if provided arguments are iterable, then do nothing
         elif hasattr(providedArgs, '__iter__'):
             pass

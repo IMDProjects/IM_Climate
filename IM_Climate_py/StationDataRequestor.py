@@ -40,8 +40,8 @@ class StationDataRequestor(ACIS):
         # Too bad ACIS just doesn't just ignore reduce codes where not applicable
         if self.reduceCodes:
             rcelems = []
-            for rd in self.reduceCodes:
-                for k in elems:
+            for k in elems:
+                for rd in self.reduceCodes:
                     k['reduce'] = {'reduce': rd, 'add':self.add}
                     rcelems.append(k.copy())
             elems = rcelems

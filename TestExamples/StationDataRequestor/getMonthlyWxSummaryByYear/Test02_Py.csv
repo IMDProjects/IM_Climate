@@ -1,4 +1,4 @@
-"uid","name","longitude","latitude","sid1","sid1_type","sid2","sid2_type","sid3","sid3_type","state","elev","date","pcpn_in_min","pcpn_min_countMissing"
+"uid","name","longitude","latitude","sid1","sid1_type","sid2","sid2_type","sid3","sid3_type","state","elev","date","pcpn_in_min","pcpn_in_min_countMissing"
 26215,"DIABLO DAM",-121.14305,48.71417,"452157 2","COOP","USC00452157 6","COOP","DIAW1 7","NWSLI","WA",891.0,"1914-12","M",23
 26215,"DIABLO DAM",-121.14305,48.71417,"452157 2","COOP","USC00452157 6","COOP","DIAW1 7","NWSLI","WA",891.0,"1915-01","0.00",0
 26215,"DIABLO DAM",-121.14305,48.71417,"452157 2","COOP","USC00452157 6","COOP","DIAW1 7","NWSLI","WA",891.0,"1915-02","0.00",0
