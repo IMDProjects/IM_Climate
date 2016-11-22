@@ -221,26 +221,26 @@ if __name__=='__main__':
     print (wxData)
 
 
-    ###########################################################################
-##    #DAILY DATA
-##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
-##        , climateParameters = 'avgt, mint'
-##        , sdate = '20120101', edate = '2012-01-05' )
-##    dailyData.exportData(filePathAndName = r'dailyData.csv')
-##
-##    #GET DATA for a single station
-##    dailyData = dr.getDailyWxObservations(climateStations = 77572
-##        , sdate = 20160101, edate = '20160105' )
-##
-##    #Print the station data to the screen
-##    print (dailyData)
-##
-##    #get data for stations returned in station search
-##    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
-##    wxData = dr.getDailyWxObservations(climateStations = stationList,
-##        climateParameters = 'pcpn'
-##        ,sdate = '2015-08-01', edate = '2015-08-04')
-##    print (wxData)
-##    print (wxData.stationCounts)
+    #########################################################################
+    #DAILY DATA
+    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
+        , climateParameters = 'avgt, mint'
+        , sdate = '20120101', edate = '2012-01-05' )
+    dailyData.exportData(filePathAndName = r'dailyData.csv')
+
+    #GET DATA for a single station
+    dailyData = dr.getDailyWxObservations(climateStations = 77572
+        , sdate = 20160101, edate = '20160105' )
+
+    #Print the station data to the screen
+    print (dailyData)
+
+    #get data for stations returned in station search
+    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
+    wxData = dr.getDailyWxObservations(climateStations = stationList,
+        climateParameters = 'pcpn'
+        ,sdate = '2015-08-01', edate = '2015-08-04')
+    print (wxData)
+    print (wxData.stationCounts)
 
 
