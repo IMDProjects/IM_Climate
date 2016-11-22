@@ -17,13 +17,15 @@ class ACIS(object):
     '''
     Base class for all objects interacting with ACIS web services
     '''
+    defaultParameters = ['pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd']
+
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
         self.baseURL = 'http://data.rcc-acis.org/'
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
         self._getACISLookups()
-        self.precision = 1
+
 
     def _getACISLookups(self):
         '''
@@ -83,20 +85,22 @@ class ACIS(object):
     def gridSources(self):
         return self._acis_lookups['gridSources']
 
-    def _formatClimateParameters(self, climateParameters):
+    def _formatClimateParameters(self, climateParameters = None):
         '''
         Formats the climate parameters.
         If None, then default to all supported climate parameters
         '''
-        return self._formatStringArguments(climateParameters
-            , ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt'])
+        if not hasattr(self, 'climateParameters'):
+            self.climateParameters = climateParameters
+        self.climateParameters =  self._formatStringArguments(self.climateParameters
+            , self.defaultParameters)
 
     def _formatReduceCodes(self, reduceCodes):
         '''
         Formats reduce codes consistently.
         If None, then default to all supported reduce codes
         '''
-        return self._formatStringArguments(reduceCodes, ['max', 'min', 'sum','mean'])
+        return self._formatStringArguments(reduceCodes, ['min', 'max', 'sum', 'mean'])
 
     def _formatStringArguments(self, providedArgs, validArgs = None):
         '''
@@ -106,8 +110,9 @@ class ACIS(object):
         #if no provided arguements, then default to valid arguments
         if not providedArgs:
             providedArgs = validArgs
-        #if provided arguments are a list, then do nothing
-        elif type(providedArgs) == list:
+
+        #if provided arguments are iterable, then do nothing
+        elif hasattr(providedArgs, '__iter__'):
             pass
 
         #otherwise, assume that provided arguments are a string(-like) and can be
@@ -123,13 +128,13 @@ class ACIS(object):
             date = 'por'
         return date
 
-
     def _checkResponseForErrors(self, response):
         '''
         Raises an exception if the ACIS response is an Error
         '''
-        if response.get('error', None) and response.get('error', None) != 'no data available':
+        if response.get('error', None):
             raise Exception('ACIS Service Error: ' + str(response['error']))
+
 if __name__ == '__main__':
     c = ACIS()
 

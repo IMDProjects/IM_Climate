@@ -206,7 +206,6 @@ class DailyStationDict(dict):
                          station.sid2_type, station.sid3, station.sid3_type,
                          station.state,  station.elev, date]
                     for param in self.climateParameters:
-                        #a = station.data[param][date].toList()
                         a.extend(station.data[param][date].toList(includeDate = False))
                     self._dataAsList.append(a)
         return self._dataAsList
@@ -259,7 +258,8 @@ class MonthlyStationDict(DailyStationDict):
         self.StationClass = MonthlyStation
 
     def _extendHeader(self, p):
-        self._header.extend([common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):], p+'_countMissing'])
+        pAndU = common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
+        self._header.extend([pAndU, pAndU +'_countMissing'])
 
 if __name__ == '__main__':
     climateParams = ['mint']

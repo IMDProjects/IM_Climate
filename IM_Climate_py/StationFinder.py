@@ -49,11 +49,11 @@ class StationFinder(ACIS):
         An object of station metadata (See StationDict.py)
         '''
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
-        climateParameters = self._formatClimateParameters(climateParameters)
+        self._formatClimateParameters(climateParameters)
 
         bbox = common.getBoundingBox(unitCode, distance)
 
-        results =  self._call_ACIS(elems = climateParameters
+        results =  self._call_ACIS(elems = self.climateParameters
             ,bbox = bbox, sDate = sdate, eDate = edate
             ,meta = metadata)
         self._checkResponseForErrors(results)
@@ -62,7 +62,7 @@ class StationFinder(ACIS):
         if unitCode:
             self._input_dict['unitCode'] = unitCode
 
-        si = DailyStationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
+        si = DailyStationDict(queryParameters = self._input_dict, climateParameters = self.climateParameters)
         for station in results['meta']:
             station['unitCode'] = unitCode
             si._addStation(stationID = station['uid'], stationMeta = station)

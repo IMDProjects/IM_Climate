@@ -50,6 +50,7 @@ class DailyWxOb(Observation):
         if includeDate:
             l.insert(0, self.date)
         return l
+
 class MonthlyWxOb(Observation):
     def __init__(self, values):
         super(MonthlyWxOb, self).__init__(values)
@@ -60,7 +61,7 @@ class MonthlyWxOb(Observation):
         return self['countMissing']
 
     def toList(self, includeDate = True):
-        l = [self.wxOb, self.countMissing]
+        l = [self.wxOb, str(self.countMissing)]
         if includeDate:
             l.insert(0, self.date)
         return l
