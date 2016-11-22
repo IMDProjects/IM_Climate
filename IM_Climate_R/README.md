@@ -18,9 +18,9 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
 #### Release 1.1.1 - 20161031 ####
 
-#### Release 1.2 - ####
+#### Release 1.2 - 20161122  ####
 
-In development - Get monthly station summary by year for station data
+In development - Get monthly gridded data (PRISM only)
 
 #### R - Installing the IM_Climate Package ####
 

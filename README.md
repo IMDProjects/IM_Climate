@@ -22,10 +22,10 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 	#### Version 1.3 ####
 	Release Date: Planned for 12/1/2016
 	Functionality: Get monthly gridded data (PRISM only)
-	v1.3 Documentation: In Development
+	v1.3 Documentation: https://docs.google.com/document/d/1P8yfIYoQ6pzL7ikjrfatHQKPq6a-2yL3ys49mntAHGY
 	
 	#### Version 1.2 ####
-	Release Date: Planned for 11/1/2016
+	Release Date: 11/22/2016
 	Functionality: Get monthly station summary by year for station data
 	v1.2 Documentation: https://drive.google.com/open?id=1T5YrI6GYDeTGnTqlQWOBl8uJ5f1BAhncnfc094Dtrgc
 	
