@@ -17,12 +17,15 @@ class ACIS(object):
     '''
     Base class for all objects interacting with ACIS web services
     '''
+    defaultParameters = ['pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd']
+
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
         self.baseURL = 'http://data.rcc-acis.org/'
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
         self._getACISLookups()
+
 
     def _getACISLookups(self):
         '''
@@ -82,30 +85,55 @@ class ACIS(object):
     def gridSources(self):
         return self._acis_lookups['gridSources']
 
-    def _formatClimateParameters(self, climateParameters):
+    def _formatClimateParameters(self, climateParameters = None):
         '''
-        Formats the climate parameters
+        Formats the climate parameters.
+        If None, then default to all supported climate parameters
         '''
-        return self._formatStringArguments(climateParameters
-            , ['pcpn', 'snwd', 'avgt', 'obst', 'mint', 'snow', 'maxt'])
+        if not hasattr(self, 'climateParameters'):
+            self.climateParameters = climateParameters
+        self.climateParameters =  self._formatStringArguments(self.climateParameters
+            , self.defaultParameters)
 
     def _formatReduceCodes(self, reduceCodes):
-        return self._formatStringArguments(reduceCodes
-            , ['max', 'min', 'sum','mean','stdev'])
+        '''
+        Formats reduce codes consistently.
+        If None, then default to all supported reduce codes
+        '''
+        return self._formatStringArguments(reduceCodes, ['min', 'max', 'sum', 'mean'])
 
-    def _formatStringArguments(self, providedArgs, validArgs):
+    def _formatStringArguments(self, providedArgs, validArgs = None):
         '''
-        Formats arguments to handle None, lists and strings
+        Formats arguments to handle None, lists and strings.
+        Defaults to the valid arguments if the provided arguments are None
         '''
+        #if no provided arguements, then default to valid arguments
         if not providedArgs:
             providedArgs = validArgs
-        elif type(providedArgs) == list:
+
+        #if provided arguments are iterable, then do nothing
+        elif hasattr(providedArgs, '__iter__'):
             pass
+
+        #otherwise, assume that provided arguments are a string(-like) and can be
+        # split using a comma as the delimiter
         else:
+            providedArgs = str(providedArgs)
             providedArgs = providedArgs.replace(' ','')
             providedArgs = providedArgs.split(',')
         return providedArgs
 
+    def _formatDate(self, date):
+        if not date:
+            date = 'por'
+        return date
+
+    def _checkResponseForErrors(self, response):
+        '''
+        Raises an exception if the ACIS response is an Error
+        '''
+        if response.get('error', None):
+            raise Exception('ACIS Service Error: ' + str(response['error']))
 
 if __name__ == '__main__':
     c = ACIS()

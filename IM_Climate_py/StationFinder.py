@@ -1,11 +1,8 @@
 import json
 import urllib2
 
-import StationDict
-reload(StationDict)
-from StationDict import StationDict
+from StationDict import DailyStationDict
 from ACIS import ACIS
-from Station import Station
 import common
 
 class StationFinder(ACIS):
@@ -52,19 +49,20 @@ class StationFinder(ACIS):
         An object of station metadata (See StationDict.py)
         '''
         metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
-        climateParameters = self._formatClimateParameters(climateParameters)
+        self._formatClimateParameters(climateParameters)
 
         bbox = common.getBoundingBox(unitCode, distance)
 
-        results =  self._call_ACIS(elems = climateParameters
+        results =  self._call_ACIS(elems = self.climateParameters
             ,bbox = bbox, sDate = sdate, eDate = edate
             ,meta = metadata)
+        self._checkResponseForErrors(results)
 
         #adds unitCode to input_dict following the call to ACIS
         if unitCode:
             self._input_dict['unitCode'] = unitCode
 
-        si =  StationDict(queryParameters = self._input_dict, climateParameters = climateParameters)
+        si = DailyStationDict(queryParameters = self._input_dict, climateParameters = self.climateParameters)
         for station in results['meta']:
             station['unitCode'] = unitCode
             si._addStation(stationID = station['uid'], stationMeta = station)
@@ -96,5 +94,9 @@ if __name__ == '__main__':
     stationList = sf.findStation(unitCode = 'AGFO', distance = 10, climateParameters = 'pcpn'
         ,sdate = '2015-08-01', edate = '2015-08-04')
     print stationList
+
+    wxStations = sf.findStation(unitCode = 'NOCA',
+         sdate = '2014-01-01', edate = '2016-01-01')
+    print wxStations
 
 

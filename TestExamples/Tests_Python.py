@@ -39,7 +39,6 @@ class Test_StationFinder(unittest.TestCase):
             ,test_data[:,Test_StationFinder.testColumns]))
 
     def test01(self):
-        self.maxDiff = None
         self.unitCode = 'ROMO'
         self.distance = 30
         self.climateParameters = 'maxt, mint'
@@ -51,7 +50,6 @@ class Test_StationFinder(unittest.TestCase):
 
     def test01_R(self):
         Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,14]
-        self.maxDiff = None
         self.unitCode = 'ROMO'
         self.distance = 30
         self.climateParameters = 'maxt, mint'
@@ -84,9 +82,9 @@ class Test_StationFinder(unittest.TestCase):
         Test_StationFinder.testColumns = Test_StationFinder.default_columns
         self.assertEquals(self.results, [])
 
-class Test_StationDataRequestor(unittest.TestCase):
+class Test_StationDataRequestor_getDailyWxObs(unittest.TestCase):
 
-    rootFolder = '../TestExamples/DataRequestor/'
+    rootFolder = '../TestExamples/StationDataRequestor/'
     def confirmContent(self):
         '''
         Confirms that all information the same, ignoring record order
@@ -98,15 +96,14 @@ class Test_StationDataRequestor(unittest.TestCase):
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
-        refDataFile = open(Test_StationDataRequestor.rootFolder + self.refDataFile, 'r')
+        refDataFile = open(Test_StationDataRequestor_getDailyWxObs.rootFolder + self.refDataFile, 'r')
         refData = refDataFile.read()
         infile.close()
         refDataFile.close()
         os.remove('temp.csv')
-        self.result =  list(numpy.setdiff1d(refData, testData))
+        self.result =  list(numpy.setdiff1d(refData.split('/n'), testData.split('/n')))
 
     def test01(self):
-        self.maxDiff = None
         self.climateStations =  25056
         self.climateParameters = ['pcpn', 'avgt', 'obst', 'mint', 'maxt']
         self.sdate = '20150801'
@@ -146,6 +143,73 @@ class Test_StationDataRequestor(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
+
+    rootFolder = '../TestExamples/StationDataRequestor/getMonthlyWxSummaryByYear/'
+    def confirmContent(self):
+        '''
+        Confirms that all information is the same, ignoring record order
+        '''
+        dr = StationDataRequestor()
+        wxData =  dr.getMonthlyWxSummaryByYear(climateStations =  self.climateStations,
+            climateParameters = self.climateParameters, reduceCodes = self.reduceCodes
+            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing)
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
+        testData = infile.read()
+        refDataFile = open(Test_StationDataRequestor_getMonthlyWxSummaryByYear.rootFolder + self.refDataFile, 'r')
+        refData = refDataFile.read()
+        infile.close()
+        refDataFile.close()
+        os.remove('temp.csv')
+        self.result =  list(numpy.setdiff1d(refData.split('/n'), testData.split('/n')))
+
+    def test01(self):
+        self.climateStations =  '61193, 26215'
+        self.climateParameters = None
+        self.reduceCodes = None
+        self.sdate = '201401'
+        self.edate = '201501'
+        self.maxMissing = None
+        self.refDataFile = 'Test01_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+    def test01_R(self):
+        self.climateStations =  '61193, 26215'
+        self.climateParameters = None
+        self.reduceCodes = None
+        self.sdate = '201401'
+        self.edate = '201501'
+        self.maxMissing = None
+        self.refDataFile = 'Test01_R.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+    def test02(self):
+        self.climateStations =  26215
+        self.climateParameters = 'pcpn'
+        self.reduceCodes = 'min'
+        self.sdate = None
+        self.edate = '2016-09'
+        self.maxMissing = 2
+        self.refDataFile = 'Test02_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+    def test02_R(self):
+        self.climateStations =  26215
+        self.climateParameters = 'pcpn'
+        self.reduceCodes = 'min'
+        self.sdate = None
+        self.edate = '2016-09'
+        self.maxMissing = 2
+        self.refDataFile = 'Test02_R.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+
+
 class Test_GridRequestor(unittest.TestCase):
     rootFolder = '../TestExamples/GridRequestor/'
     def confirmAsciiGrid(self):
@@ -153,17 +217,16 @@ class Test_GridRequestor(unittest.TestCase):
         data =  gr.getDailyGrids(sdate = self.sdate, edate = self.edate,
             unitCode = self.unitCode, distance = self.distance,
             climateParameters = self.climateParameters)
-        data.export()
-        testFile = open(self.testDataFile,'r')
+        testDataFile = data.export()[0]
+        testFile = open(testDataFile,'r')
         testData = testFile.read()
         testFile.close()
-        os.remove(self.testDataFile)
-        os.remove(self.testDataFile[:-3] + 'prj')
-
+        os.remove(testDataFile)
+        os.remove(testDataFile[:-3] + 'prj')
         refDataFile = open(Test_GridRequestor.rootFolder + self.refDataFile,'r')
         refData = refDataFile.read()
         refDataFile.close()
-        self.result =  list(numpy.setdiff1d(refData,testData))
+        self.result =  list(numpy.setdiff1d(refData.split('/n'),testData.split('/n')))
 
     def test_01(self):
         self.sdate = '2015-01-01'
@@ -171,8 +234,17 @@ class Test_GridRequestor(unittest.TestCase):
         self.climateParameters = 'mint'
         self.unitCode = 'APPA'
         self.distance = 0
-        self.refDataFile = 'Test01/PY_PRISM_mint_dly_20150101.asc'
-        self.testDataFile = 'PRISM_mint_dly_20150101.asc'
+        self.refDataFile = 'Test01/PY_PRISM_mint_dly_2015-01-01.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
+
+    def test_01_R(self):
+        self.sdate = '2015-01-01'
+        self.edate = '2015-01-01'
+        self.climateParameters = 'mint'
+        self.unitCode = 'APPA'
+        self.distance = 0
+        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
