@@ -264,8 +264,6 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
             matrix(unlist(lapply(rList$data, "[", itemCount + 1)), ncol = 2, byrow = TRUE)[, 1]
           flagArray <-
             matrix(unlist(lapply(rList$data, "[", itemCount + 1)), ncol = 2, byrow = TRUE)[, 2]
-          print(vName)
-          print(valueArray)
           # For monthly data, value vector returned as character to accommodate missing records ("M")
           df[[vName]] <- valueArray#as.numeric(valueArray)
           df[[fName]] <-
