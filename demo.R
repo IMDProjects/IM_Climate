@@ -12,9 +12,8 @@ stations <- findStation(unitCode = "AGFO", distance=10)
 getDailyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=stations, sdate="20150801", edate="20150803")
 getDailyGrids(unitCode = list("AGFO"), distance=10, sdate = "20150801", edate = "20150803", climateParameters = list("mint", "maxt"))
 getDailyGrids(unitCode = list("AGFO"), distance=10, sdate = "20150801", edate = "20150803", climateParameters = list("mint", "maxt"), filePath = "D:\\temp\\trash")
-<<<<<<< HEAD
+getDailyGrids(unitCode = list("APPA"), sdate = "20150101", edate = "20150101", climateParameters = list("mint"), distance = 0, filePath="D:\\temp\\trash")
 getMonthlyWxObservations(climateStations = list(61193, 26215), sdate="201401", edate = "201501", maxMissing = NULL, filePathAndName = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\StationDataRequestor\\getMonthlyWxSummaryByYear\\Test01_R.csv")
 getMonthlyWxObservations(climateStations = list(26215), climateParameters = list('pcpn'), reduceCodes = list('min'), edate= "2016-09", maxMissing = 2, filePathAndName = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\StationDataRequestor\\getMonthlyWxSummaryByYear\\Test02_R.csv")
-=======
-getDailyGrids(unitCode = list("APPA"), sdate = "20150101", edate = "20150101", climateParameters = list("mint"), distance = 0, filePath="D:\\temp\\trash")
->>>>>>> 7cf1e2e3cfb29506783f20cd7085eeae19b2ba4f
+
+

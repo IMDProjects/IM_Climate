@@ -17,7 +17,6 @@
 #' }
 #' @export
 #' 
-
 getDailyGrids <-
   function (unitCode = NULL,
             sdate = NULL,
@@ -191,4 +190,17 @@ getDailyGrids <-
     else {
       print(paste("ERROR: ", dataResponseError))
     }
+  }
+
+#' Get monthly climate data grids for specified parameter(s) and NPS unit(s)
+#'
+#' @export
+getMonthlyGrids <-
+  function (unitCode = NULL,
+            sdate = NULL,
+            edate = NULL,
+            distance = NULL,
+            climateParameters = NULL,
+            filePath = NULL) {
+    print("test")
   }

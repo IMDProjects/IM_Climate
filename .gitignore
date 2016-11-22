@@ -146,3 +146,4 @@ vignettes/*.pdf
 /IM_Climate_py/xxxACIS_Station.py
 /IM_Climate_py/xxxACIS_StationDateRange.py
 /.gitignore
+.Rproj.user
