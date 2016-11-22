@@ -39,6 +39,9 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   if (is.null(distance)) {
     bboxExpand  = 0.0
   }
+  else if (distance == 0) {
+    bboxExpand = 0.0
+  }
   else {
     bboxExpand = distance*0.011  # convert km to decimal degrees
   }
@@ -115,23 +118,25 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
         sid3_type[i] <-  as.character(NA)
       }
     }
-    sid1 <- setNames(sid1,"sid1")
+    #sid1 <- setNames(sid1,"sid1")
+    sid1 <- setNames(as.data.frame(sid1),"sid1")
     sid2 <- setNames(as.data.frame(sid2),"sid2")
     sid3 <- setNames(as.data.frame(sid3),"sid3")
     sid1_type <- setNames(as.data.frame(sid1_type),"sid1_type")
     sid2_type <- setNames(as.data.frame(sid2_type),"sid2_type")
     sid3_type <- setNames(as.data.frame(sid3_type),"sid3_type")
+    i <- NULL
     for (i in 1:length(stationListInit$meta$sids)) {
       minDate[i] <- as.Date(range(unlist(stationListInit$meta$valid_daterange[i]))[1], "%Y-%m-%d")
       maxDate[i] <- as.Date(range(unlist(stationListInit$meta$valid_daterange[i]))[2], "%Y-%m-%d")
     }
-    minDate <-  setNames(minDate, "minDate")
-    maxDate <-  setNames(maxDate, "maxDate")
+    minDate <-  setNames(as.data.frame(minDate), "minDate")
+    maxDate <-  setNames(as.data.frame(maxDate), "maxDate")
     # Force elevation to be numeric with precision of 1
     options(digits = 1)
     elev <- as.numeric(stationListInit$meta[,5])
     options(digits = 7)
-    stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
+    stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, longitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
     stationList$unitCode <- unitCode[1]
     # Convert factors to character vectors
     fc  <- sapply(stationList, is.factor)
@@ -140,7 +145,8 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
     stationList[, lc]  <- sapply(stationList[, lc], as.character)
   }
   else {
-    stationList <- cat("No stations for ", unitCode, "using distance ", distance) 
+    stationList <- NA # per John Paul's request - Issue #49
+    #stationList <- cat("No stations for ", unitCode, "using distance ", distance) 
   }
   # Output file
   if (!is.null(filePathAndName)) {

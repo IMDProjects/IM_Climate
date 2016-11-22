@@ -52,11 +52,8 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   sid2_type = c()
   sid3_type = c()
   
-<<<<<<< HEAD
   # R does not support the YYYY-MM format for a Date object. Hence, for monthly observations,
   # the date vector is in character format
-=======
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
   dfDate <-
     as.data.frame(cbind(unlist(lapply(
       rList$data, "[", 1
@@ -66,11 +63,7 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
     dfDate$date <- as.Date(as.character(as.vector(dfDate$date)), "%Y-%m-%d")
   }
   else {
-<<<<<<< HEAD
     dfDate$date <- as.character(as.vector(dfDate$date))
-=======
-    dfDate$date <- as.Date(as.character(as.vector(dfDate$date)), "%Y-%m")
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
   }
   
   # Populate 'metadata' i.e. station info; accommodate missing and unordered items
@@ -227,7 +220,6 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   df <- cbind(dfMeta, dfDate)
   
   # Add the paramter vectors - thanks for the matrix suggestion, Tom!!
-<<<<<<< HEAD
   # For monthly data, value vector returned as character to accommodate missing records ("M")
   # Get parameter units from lookup file
   # rangeBase subtraction forces ignoring of first 'column' which is date
@@ -238,14 +230,6 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   itemCount <- 1
   #for (i in 2:(length(rList$data[[1]])) - 1)  {
   for (i in 1:rangeBase)  {  
-=======
-  # Get parameter units from lookup file
-  rangeBase <- length(rList$data[[1]])
-  if(duration == 'dly') {range <- rangeBase - 1}
-  else {range <- rangeBase}
-  #for (i in 2:(length(rList$data[[1]])) - 1)  {
-  for (i in 2:(length(rList$data[[1]])) - 1)  {  
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
     #  == count of parameters
     vUnit <-
       luElements[which(luElements$code == climateParameters[i]),]$unitabbr
@@ -267,7 +251,6 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
       df[[sName]] <-
         as.character(replace(sourceFlagArray, sourceFlagArray == " ", NA))
     }
-<<<<<<< HEAD
     else { 
       for (j in 1:length(reduceCodes)) {
         vReduce <- unlist(reduceCodes[j])
@@ -290,19 +273,6 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
           itemCount <- itemCount + 1
         }
       }
-=======
-    else {
-      vReduce <- unlist(reduceCodes[i])
-      vName <- paste(paste(climateParameters[i], vUnit, sep = "_"), vReduce, sep = "_")
-      fName <- paste(vName, "countMissing", sep = "_")
-      valueArray <-
-        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 1]
-      flagArray <-
-        matrix(unlist(lapply(rList$data, "[", i + 1)), ncol = 2, byrow = TRUE)[, 2]
-      df[[vName]] <- as.numeric(valueArray)
-      df[[fName]] <-
-        as.character(replace(flagArray, flagArray == " ", NA))
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
     }
   }
   

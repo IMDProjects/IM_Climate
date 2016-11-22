@@ -1,31 +1,20 @@
 #' Get station data for specified parameter(s) and station(s)
 #'
-<<<<<<< HEAD
 #' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame. Note: For monthly data, value vectors returned as character format to accommodate missing records ("M")
-=======
-#' Takes a list of one or more parameters and one or more unique station IDs, requests station data, and returns it as a data frame
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
 # @param dataURL URL for ACIS data service vending station data
 #' @param climateStations A list of one or more unique identifiers (uid) for climate stations. Can be a single item, a list of items, or a data frame of the findStation response.
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
 #' @param reduceCodes (optional) A list of one or more reduce codes. If missing, defaults to min, max, sum, and mean.
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.
 #' @param edate (optional) Default is period of record ("por"). IF specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
-<<<<<<< HEAD
 #' @param maxMissing (optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3 percent missing days/month).
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data. Note: date vector is in character format, not date format. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
-=======
-#' @param maxMissing (optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3% missing days/month).
-#' @param filePathAndName (optional) File path and name including extension for output CSV file
-#' @return A data frame containing the requested data. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
 #' @examples \dontrun{
 #' Precipitation, temperature weather observations for one station for a specifc date range:
 #'
 #' getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20150831")
 #'
-<<<<<<< HEAD
 #' The same request written to a CSV file:
 #' 
 #' getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20160831", filePathAndName = "D:\\temp\\trash\\monthyObs_station25056.csv")
@@ -41,21 +30,13 @@
 #' Weather observations for minimum precipitation for a station from beginning of record through Sept 2016
 #' 
 #' getMonthlyWxObservations(climateStations = list(26215), climateParameters = list('pcpn'), reduceCodes = list('min'), edate= "2016-09", maxMissing = 2)
-=======
-#' All weather observations for a station for its period of record
-#'
-#' getMonthlyWxObservations(climateStations=60903)
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
 #'
 #' All weather observations for all stations (using a findStation response data frame: stationDF) for a specific date range:
 #'
 #' getMonthlyWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=stationDF, sdate="20150801", edate="20150803")
 #' }
 #' @export
-<<<<<<< HEAD
 #' 
-=======
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
 getMonthlyWxObservations <-
   function(climateStations,
            climateParameters = NULL,
@@ -82,11 +63,6 @@ getMonthlyWxObservations <-
                flatten = TRUE) # assumes placement in package inst subfolder
     luElements  <- lookups$element
     
-<<<<<<< HEAD
-=======
-    #TODO: By climateParam: add duration,interval,reduce, add(''mcnt'), and maxMissing
-    
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
     # If climateParameters is NULL, default to all parameters except degree days.
     if (is.null(climateParameters)) {
       climateParameters <-
@@ -114,7 +90,6 @@ getMonthlyWxObservations <-
       r <- list(reduce = unlist(reduceCodes[j]), add = reduceFlags)
       reduceList[[j]] <- r #unlist(c(r))
     }
-<<<<<<< HEAD
     reduceCount <- length(reduceList) #test
     counter <- 1
   
@@ -124,14 +99,6 @@ getMonthlyWxObservations <-
     eList <- vector('list', paramCount*reduceCount)
     for (i in 1:paramCount) {
       for (j in 1:reduceCount) { #listJ, listI
-=======
-  
-    # Format POST request for use in httr
-    # Iterate parameter list to create elems element:
-    eList <- vector('list', paramCount)
-    for (i in 1:paramCount) {
-      for (j in 1:length(reduceList)) {
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
         e <-
           list(
             name = unlist(c(climateParameters[i])),
@@ -140,7 +107,6 @@ getMonthlyWxObservations <-
             reduce = c(reduceList[j]), 
             maxmissing = maxMissing #unlist(mmElem)
           )
-<<<<<<< HEAD
           eList[[counter]] <- e
           counter <- counter + 1
       }
@@ -148,13 +114,6 @@ getMonthlyWxObservations <-
       print(length(eList))
     }
     # Climate parameers as JSON with flags
-=======
-        #print(e)
-        eList[[i]] <- e
-      }
-    }
-    # Climate parameters as JSON with flags
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
     elems <- toJSON(eList, auto_unbox = TRUE)
     
     # Iterate for each station
@@ -195,7 +154,6 @@ getMonthlyWxObservations <-
           verbose()
         )
       
-<<<<<<< HEAD
       if (grepl("data", content(dataResponseInit, "text")) == FALSE) {
         dfResponse <- content(dataResponseInit, "text")
       }
@@ -223,23 +181,6 @@ getMonthlyWxObservations <-
         else {
           dfResponse <- dataResponseError
         }
-=======
-      # Format climate data object
-      rList <- content(dataResponseInit)
-      dataResponseError <- rList$error
-      if (is.null(dataResponseError)) {
-        dfResponse <-
-          formatWxObservations(
-            rList,
-            duration = duration,
-            climateParameters = climateParameters,
-            reduceCodes = reduceCodes,
-            luElements = luElements
-          )
-      }
-      else {
-        dfResponse <- dataResponseError
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
       }
     }
     

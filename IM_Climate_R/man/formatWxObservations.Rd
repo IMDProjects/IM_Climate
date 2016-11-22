@@ -4,7 +4,6 @@
 \alias{formatWxObservations}
 \title{formatWxObservations converts get*WxObservation response to a data frame, iterating by date and value}
 \usage{
-<<<<<<< HEAD
 formatWxObservations(rList, duration, climateParameters, reduceCodes,
   luElements)
 }
@@ -17,11 +16,6 @@ formatWxObservations(rList, duration, climateParameters, reduceCodes,
 
 \item{luElements}{lookup values defined in calling source}
 
-=======
-formatWxObservations(rList)
-}
-\arguments{
->>>>>>> fe6c4ea028bfdf0f376014d1d8890db78b2a38be
 \item{responseContent}{list of response arrays containing name/value pairs: meta (default), data (date, values)}
 }
 \description{
