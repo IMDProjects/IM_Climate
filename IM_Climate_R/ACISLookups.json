@@ -51,24 +51,24 @@
 		"unitabbr": ""
 	}, {
 		"code": "mly_maxt",
-		"description": "Monthly mean maximum temperature (F)",
+		"description": "Monthly mean maximum temperature (°F)",
 		"unit": "",
-		"unitabbr": "F"
+		"unitabbr": ""
 	}, {
 		"code": "mly_mint",
-		"description": "Monthly mean minimum temperature (F)",
+		"description": "Monthly mean minimum temperature (°F)",
 		"unit": "",
-		"unitabbr": "F"
+		"unitabbr": ""
 	}, {
 		"code": "mly_avgt",
-		"description": "Monthly mean average temperature (F)",
+		"description": "Monthly mean average temperature (°F)",
 		"unit": "",
-		"unitabbr": "F"
+		"unitabbr": ""
 	}, {
 		"code": "mly_pcpn",
 		"description": "Monthly precipitation sum (inches)",
 		"unit": "",
-		"unitabbr": "in"
+		"unitabbr": ""
 	}],
 	"addCode": [{
 		"code": "f",

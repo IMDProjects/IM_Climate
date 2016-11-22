@@ -203,7 +203,7 @@ if __name__=='__main__':
     #MONTHLY DATA
     monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
         reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
-        , sdate = 'por', edate = 'por' )
+        , sdate = '2005-01-01', edate = '2016-05-01' )
     print (monthlyData)
     monthlyData.export(r'C:\TEMP\data.csv')
 
@@ -215,17 +215,13 @@ if __name__=='__main__':
     #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
     # from January 2015 to March 2015. Use default of maximum missing days of 1.
     wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
-<<<<<<< HEAD
         climateParameters = 'mint, maxt', reduceCodes = None
-=======
-        climateParameters = 'mint, maxt', reduceCodes = 'min'
->>>>>>> 7cf1e2e3cfb29506783f20cd7085eeae19b2ba4f
         , sdate = '2015-01', edate = '2015-03')
 
     print (wxData)
 
 
-    ###########################################################################
+    #########################################################################
     #DAILY DATA
     dailyData = dr.getDailyWxObservations(climateStations = stationIDs
         , climateParameters = 'avgt, mint'

@@ -49,26 +49,6 @@
 		"description": "Degree days above base (default basee 50)",
 		"unit": "",
 		"unitabbr": ""
-	}, {
-		"code": "mly_maxt",
-		"description": "Monthly mean maximum temperature (F)",
-		"unit": "",
-		"unitabbr": "F"
-	}, {
-		"code": "mly_mint",
-		"description": "Monthly mean minimum temperature (F)",
-		"unit": "",
-		"unitabbr": "F"
-	}, {
-		"code": "mly_avgt",
-		"description": "Monthly mean average temperature (F)",
-		"unit": "",
-		"unitabbr": "F"
-	}, {
-		"code": "mly_pcpn",
-		"description": "Monthly precipitation sum (inches)",
-		"unit": "",
-		"unitabbr": "in"
 	}],
 	"addCode": [{
 		"code": "f",

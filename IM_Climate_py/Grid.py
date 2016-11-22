@@ -19,21 +19,19 @@ class Grid(np.ndarray):
         '''
         Export grid to ASCII grid format along with PRJ file
         '''
-        sp = '  '
         outfile = open(filePathAndName,'w')
-        outfile.write ('ncols' + sp + str(self.ncols) + '\n')
-        outfile.write ('nrows'  + sp + str(self.nrows) + '\n')
-        outfile.write ('xllcenter' + sp + str(self.XLLCenter) + '\n')
-        outfile.write ('yllcenter' + sp + str(self.YLLCenter) + '\n')
-        outfile.write ('cellsize' + sp + str(self.cellSize) + '\n')
-        outfile.write ('NODATA_value' + sp + str(self.missingValue))
+        outfile.write ('NCOLS ' + str(self.ncols) + '\n')
+        outfile.write ('NROWS ' + str(self.nrows) + '\n')
+        outfile.write ('XLLCENTER ' + str(self.XLLCenter) + '\n')
+        outfile.write ('YLLCENTER ' + str(self.YLLCenter) + '\n')
+        outfile.write ('CELLSIZE ' + str(self.cellSize) + '\n')
+        outfile.write ('NODATA_VALUE ' + str(self.missingValue) + '\n')
 
         for row in reversed(self):
-            #force -999 - This is rather cludgy - should pursue np.NA options
-            row= [-999 if x == -999.0 else x for x in row]
             outfile.write('\n')
             for ob in row:
-                outfile.write(str(ob) + ' ')
+                outfile.write(str(ob) + '\t')
+
         outfile.close()
 
         #Create PRJ
