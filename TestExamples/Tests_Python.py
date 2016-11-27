@@ -175,16 +175,16 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
-    def test01_R(self):
-        self.climateStations =  '61193, 26215'
-        self.climateParameters = None
-        self.reduceCodes = None
-        self.sdate = '201401'
-        self.edate = '201501'
-        self.maxMissing = None
-        self.refDataFile = 'Test01_R.csv'
-        self.confirmContent()
-        self.assertEqual(self.result,[])
+##    def test01_R(self):
+##        self.climateStations =  '61193, 26215'
+##        self.climateParameters = None
+##        self.reduceCodes = None
+##        self.sdate = '201401'
+##        self.edate = '201501'
+##        self.maxMissing = None
+##        self.refDataFile = 'Test01_R.csv'
+##        self.confirmContent()
+##        self.assertEqual(self.result,[])
 
     def test02(self):
         self.climateStations =  26215
@@ -197,16 +197,16 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
-    def test02_R(self):
-        self.climateStations =  26215
-        self.climateParameters = 'pcpn'
-        self.reduceCodes = 'min'
-        self.sdate = None
-        self.edate = '2016-09'
-        self.maxMissing = 2
-        self.refDataFile = 'Test02_R.csv'
-        self.confirmContent()
-        self.assertEqual(self.result,[])
+##    def test02_R(self):
+##        self.climateStations =  26215
+##        self.climateParameters = 'pcpn'
+##        self.reduceCodes = 'min'
+##        self.sdate = None
+##        self.edate = '2016-09'
+##        self.maxMissing = 2
+##        self.refDataFile = 'Test02_R.csv'
+##        self.confirmContent()
+##        self.assertEqual(self.result,[])
 
 
 
@@ -238,15 +238,15 @@ class Test_GridRequestor(unittest.TestCase):
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
-    def test_01_R(self):
-        self.sdate = '2015-01-01'
-        self.edate = '2015-01-01'
-        self.climateParameters = 'mint'
-        self.unitCode = 'APPA'
-        self.distance = 0
-        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
-        self.confirmAsciiGrid()
-        self.assertEquals(self.result,[])
+##    def test_01_R(self):
+##        self.sdate = '2015-01-01'
+##        self.edate = '2015-01-01'
+##        self.climateParameters = 'mint'
+##        self.unitCode = 'APPA'
+##        self.distance = 0
+##        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
+##        self.confirmAsciiGrid()
+##        self.assertEquals(self.result,[])
 
 if __name__ == '__main__':
     unittest.main()

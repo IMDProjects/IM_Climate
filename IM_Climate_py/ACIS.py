@@ -17,7 +17,7 @@ class ACIS(object):
     '''
     Base class for all objects interacting with ACIS web services
     '''
-    defaultParameters = ['pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd']
+    defaultParameters = ('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
 
     def __init__(self, *args, **kwargs):
         super(ACIS,self).__init__(*args, **kwargs)
@@ -100,7 +100,7 @@ class ACIS(object):
         Formats reduce codes consistently.
         If None, then default to all supported reduce codes
         '''
-        return self._formatStringArguments(reduceCodes, ['min', 'max', 'sum', 'mean'])
+        return self._formatStringArguments(reduceCodes, ('min', 'max', 'sum', 'mean'))
 
     def _formatStringArguments(self, providedArgs, validArgs = None):
         '''
@@ -132,7 +132,7 @@ class ACIS(object):
         '''
         Raises an exception if the ACIS response is an Error
         '''
-        if response.get('error', None):
+        if response.get('error', None) and response.get('error', None) != 'no data available':
             raise Exception('ACIS Service Error: ' + str(response['error']))
 
 if __name__ == '__main__':
