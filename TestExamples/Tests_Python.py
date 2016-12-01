@@ -212,9 +212,10 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
 
 class Test_GridRequestor(unittest.TestCase):
     rootFolder = '../TestExamples/GridRequestor/'
+    gr = GridRequestor()
     def confirmAsciiGrid(self):
-        gr = GridRequestor()
-        data =  gr.getDailyGrids(sdate = self.sdate, edate = self.edate,
+
+        data =  self.method(sdate = self.sdate, edate = self.edate,
             unitCode = self.unitCode, distance = self.distance,
             climateParameters = self.climateParameters)
         testDataFile = data.export()[0]
@@ -229,6 +230,8 @@ class Test_GridRequestor(unittest.TestCase):
         self.result =  list(numpy.setdiff1d(refData.split('/n'),testData.split('/n')))
 
     def test_01(self):
+        #DAILY GRID - PRISM
+        self.method = self.gr.getDailyGrids
         self.sdate = '2015-01-01'
         self.edate = '2015-01-01'
         self.climateParameters = 'mint'
@@ -237,6 +240,7 @@ class Test_GridRequestor(unittest.TestCase):
         self.refDataFile = 'Test01/PY_PRISM_mint_dly_2015-01-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
+
 
 ##    def test_01_R(self):
 ##        self.sdate = '2015-01-01'
@@ -247,6 +251,19 @@ class Test_GridRequestor(unittest.TestCase):
 ##        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
 ##        self.confirmAsciiGrid()
 ##        self.assertEquals(self.result,[])
+
+    def test_02(self):
+        #MONTHLY GRID - PRISM
+        self.method = self.gr.getMonthlyGrids
+        self.sdate = '1900-01'
+        self.edate = '1900-01'
+        self.climateParameters = 'mint'
+        self.unitCode = 'GRKO'
+        self.distance = 0
+        self.refDataFile = 'Test02/PY_PRISM_mly_mint_1900-01.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
+
 
 if __name__ == '__main__':
     unittest.main()

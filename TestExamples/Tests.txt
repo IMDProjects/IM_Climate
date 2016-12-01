@@ -58,3 +58,10 @@ GRID REQUESTOR
 		unitCode = 'APPA'
 		distance = 0
 		climateParameters = 'mint'
+		
+	TEST 02
+		sdate = '1900-01'
+		edate = '1900-01'
+		unitCode = 'GRKO'
+		distance = 0
+		climateParameters = 'mint'
