@@ -11,7 +11,7 @@
 		"unitabbr": "F"
 	}, {
 		"code": "avgt",
-		"description": "Minimum temperature",
+		"description": "Average temperature",
 		"unit": "Fahrenheit",
 		"unitabbr": "F"
 	}, {
@@ -49,26 +49,6 @@
 		"description": "Degree days above base (default basee 50)",
 		"unit": "",
 		"unitabbr": ""
-	}, {
-		"code": "mly_maxt",
-		"description": "Monthly mean maximum temperature (F)",
-		"unit": "",
-		"unitabbr": "F"
-	}, {
-		"code": "mly_mint",
-		"description": "Monthly mean minimum temperature (F)",
-		"unit": "",
-		"unitabbr": "F"
-	}, {
-		"code": "mly_avgt",
-		"description": "Monthly mean average temperature (F)",
-		"unit": "",
-		"unitabbr": "F"
-	}, {
-		"code": "mly_pcpn",
-		"description": "Monthly precipitation sum (inches)",
-		"unit": "",
-		"unitabbr": "in"
 	}],
 	"addCode": [{
 		"code": "f",
@@ -154,7 +134,56 @@
 		"code": "mly",
 		"description": "Monthly summary; must specify reduce"
 	}],
-
+	"elementAggregateGrid": [{
+		"code": "mly_maxt",
+		"duration": "mly",
+		"description": "Monthly mean maximum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "mly_mint",
+		"duration": "mly",
+		"description": "Monthly mean minimum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "mly_avgt",
+		"duration": "mly",
+		"description": "Monthly mean average temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "mly_pcpn",
+		"duration": "mly",
+		"description": "Monthly mean precipitation sum",
+		"unit": "inches",
+		"unitabbr": "in"
+	},
+	{
+		"code": "yly_maxt",
+		"duration": "yly",
+		"description": "Yearly mean maximum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "yly_mint",
+		"duration": "yly",
+		"description": "Yearly mean minimum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "yly_avgt",
+		"duration": "yly",
+		"description": "Yearly mean average temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "yly_pcpn",
+		"duration": "yly",
+		"description": "Yearly mean precipitation sum",
+		"unit": "inches",
+		"unitabbr": "in"
+	}],
 		"gridSources":
 	{"NRCC Interpolated": {"code":1, "period": "1950-Present", "area": "Continental US", "missingValue":"-999"},
             "NRCC Hi-Res": {"code":3,  "area": "US East of Rockies ", "period": "Temperature: 1998-present; Precipitation: 2002-present", "missingValue":"-999"},

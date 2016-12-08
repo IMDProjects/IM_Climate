@@ -446,16 +446,3 @@ outputAscii <-
     return("Success")
   }
 
-#' #' outputRasterStack adds grid(s) to a raster stack (by date) using a spatial reference defined in the lookup configuration file.
-#' #' @param gridResponse grid (dataframe format) returned from ACIS request (by date)
-#' #' @param luSource ACIS lookup source (as dataframe)
-#' #' @param rasterStack Raster stack defined in calling code
-#' #' @export
-#' #'
-#' outputRasterStack <-
-#'   function(gridResponse,
-#'            luSource,
-#'            rasterStack) {
-#'     
-#'     
-#'   }
