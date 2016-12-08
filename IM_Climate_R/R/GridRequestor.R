@@ -6,7 +6,7 @@
 #' @param eDate edate (required) Format as a string (yyyy-mm-dd, yyyymmdd, yyyy-mm, yyyymm, yyyy). The end of the desired date range.
 #' @param distance (optional) Distance (in kilometers) to buffer park bounding box
 #' @param climateParameters (optional) A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt).  If not specified, defaults to all parameters. See the ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
-#' @param filePath filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to the current working directory.
+#' @param filePath filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to an in-memory raster stack (by date).
 #' @return ASCII-formatted grid file for each parameter
 #' @examples \dontrun{
 #' Two daily grids for PRWI for one date: returns one grid for each parameter for each date - 4 grids total
@@ -68,6 +68,9 @@ getDailyGrids <-
     # Configure image output
     fileNameRoot <- unlist(gridElements$gridSource)
     gridElements <- c(gridElements, grid = luElements[[1]]$code)
+    if (is.null(filePath) == TRUE) {
+      rasterStack <- stack()
+    }
     
     bList <- c(bList, output = unlist(gridElements$output))
     bList <- c(bList, grid = unlist(gridElements$grid))
@@ -183,8 +186,28 @@ getDailyGrids <-
             print("INFO: No filePath specified. Output written to console:\n")
             outfile <-
               outputAscii(griddf, "", minLon, minLat, luElements[[1]])
+            if (outfile == "Success") {
+              #outputRaster <- outputRasterStack()
+              r <- raster(griddf)
+              crs(r) <- luElements[[1]]$projectionCRS
+              rasterStack <- stack(rasterStack, r)
+            }
+            else {
+              print(
+                cat(
+                  "ERROR: Unable to create raster(s) for ",
+                  unlist(unitCode),
+                  "using climateParameter=",
+                  unlist(climateParameters)[j]
+                )
+              )
+            }
           }
-        }
+        } # param loop end
+      } # date loop end
+      if (is.null(rasterStack) == FALSE) { 
+        #is.null(filePath) == TRUE
+        return (rasterStack)
       }
     }
     else {

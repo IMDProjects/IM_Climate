@@ -409,7 +409,7 @@ getBBox <- function (unitCode, expandBBox) {
 }
 
 #' outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
-#' @param gridResponse grid (dataframe format) returned from ACIS request
+#' @param gridResponse grid (dataframe format) returned from ACIS request (by date)
 #' @param filePath full file path for ASCII output
 #' @param lonCen longitude of lower left grid cell
 #' @param lonCen latitude of lower left grid cell
@@ -445,3 +445,17 @@ outputAscii <-
     write(luSource$projection, gsub(".asc", ".prj", fullFilePath))
     return("Success")
   }
+
+#' #' outputRasterStack adds grid(s) to a raster stack (by date) using a spatial reference defined in the lookup configuration file.
+#' #' @param gridResponse grid (dataframe format) returned from ACIS request (by date)
+#' #' @param luSource ACIS lookup source (as dataframe)
+#' #' @param rasterStack Raster stack defined in calling code
+#' #' @export
+#' #'
+#' outputRasterStack <-
+#'   function(gridResponse,
+#'            luSource,
+#'            rasterStack) {
+#'     
+#'     
+#'   }
