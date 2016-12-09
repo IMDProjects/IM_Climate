@@ -120,13 +120,6 @@ class GridRequestor(ACIS):
         self.unitCode = unitCode
         self.sdate = sdate
         self.edate = edate
-        '''
-        #NOTE: PRISM Supports MLY: Maximum Temperature, Minimum Temperature, Precipitation
-        mly_maxt	91	Monthly mean maximum temperature (?F)
-        mly_mint	92	Monthly mean minimum temperature (?F)
-        mly_avgt	99	Monthly mean average temperature (?F)
-        mly_pcpn	94	Monthly precipitation sum(inches)
-        '''
         self.interval = 'mly'
         self.duration = 'mly'
         self.climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
