@@ -20,15 +20,15 @@ class Grid(np.ndarray):
         Export grid to ASCII grid format along with PRJ file
         '''
         outfile = open(filePathAndName,'w')
-        outfile.write ('NCOLS ' + str(self.ncols) + '\n')
-        outfile.write ('NROWS ' + str(self.nrows) + '\n')
-        outfile.write ('XLLCENTER ' + str(self.XLLCenter) + '\n')
-        outfile.write ('YLLCENTER ' + str(self.YLLCenter) + '\n')
-        outfile.write ('CELLSIZE ' + str(self.cellSize) + '\n')
-        outfile.write ('NODATA_VALUE ' + str(self.missingValue) + '\n')
+        outfile.write ('ncols  ' + str(self.ncols) + '\n')
+        outfile.write ('nrows  ' + str(self.nrows) + '\n')
+        outfile.write ('xllcenter  ' + str(self.XLLCenter) + '\n')
+        outfile.write ('yllcenter  ' + str(self.YLLCenter) + '\n')
+        outfile.write ('cellsize  ' + str(self.cellSize) + '\n')
+        outfile.write ('NODATA_value  ' + str(self.missingValue) + '\n')
 
         for row in reversed(self):
-            outfile.write('\n')
+            #outfile.write('\n')
             for ob in row:
                 outfile.write(str(ob) + '\t')
 

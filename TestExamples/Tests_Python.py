@@ -20,7 +20,7 @@ class Test_StationFinder(unittest.TestCase):
     rootFolder = '../TestExamples/StationFinder/'
     def confirmContent_NoOrder(self):
         '''
-        Confirms that all information is the same except for the maxRannge field.
+        Confirms that all information is the same except for the maxRange field.
         Order is ignored
         '''
         sf = StationFinder()
@@ -243,6 +243,7 @@ class Test_GridRequestor(unittest.TestCase):
 
 
 ##    def test_01_R(self):
+##        self.method = self.gr.getMonthlyGrids
 ##        self.sdate = '2015-01-01'
 ##        self.edate = '2015-01-01'
 ##        self.climateParameters = 'mint'
@@ -260,9 +261,21 @@ class Test_GridRequestor(unittest.TestCase):
         self.climateParameters = 'mint'
         self.unitCode = 'GRKO'
         self.distance = 0
-        self.refDataFile = 'Test02/PY_PRISM_mly_mint_1900-01.asc'
+        self.refDataFile = 'Test02/PY_PRISM_mly_mint_mly_1900-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
+
+##    def test_02_R(self):
+##        #MONTHLY GRID - PRISM
+##        self.method = self.gr.getMonthlyGrids
+##        self.sdate = '1900-01'
+##        self.edate = '1900-01'
+##        self.climateParameters = 'mint'
+##        self.unitCode = 'GRKO'
+##        self.distance = 0
+##        self.refDataFile = 'Test02/R_PRISM_mly_mint_mly_1900-01.asc'
+##        self.confirmAsciiGrid()
+##        self.assertEquals(self.result,[])
 
 
 if __name__ == '__main__':
