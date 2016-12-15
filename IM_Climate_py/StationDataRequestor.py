@@ -26,7 +26,7 @@ class StationDataRequestor(ACIS):
 
         '''
         #additional metadata elements to request along with the data
-        metaElements = ['uid', 'll', 'name', 'elev', 'sids', 'state']
+        metaElements = ('uid', 'll', 'name', 'elev', 'sids', 'state')
 
         #build the elems objects, which ACIS requires for more complex queries
         elems = []
@@ -221,7 +221,7 @@ if __name__=='__main__':
     print (wxData)
 
 
-    ###########################################################################
+    #########################################################################
 ##    #DAILY DATA
 ##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
 ##        , climateParameters = 'avgt, mint'

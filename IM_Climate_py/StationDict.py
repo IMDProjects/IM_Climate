@@ -21,9 +21,9 @@ class DailyStationDict(dict):
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.climateParameters = climateParameters
-        self._dataTags = ['uid', 'name', 'longitude', 'latitude', 'sid1', 'sid1_type',
+        self._dataTags = ('uid', 'name', 'longitude', 'latitude', 'sid1', 'sid1_type',
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
-            'elev'] #station metadata to include with data export
+            'elev') #station metadata to include with data export
         self.StationClass = DailyStation    #The station class to be used by the DailyStationDict class
 
     def _writeToCSV(self):
@@ -187,7 +187,7 @@ class DailyStationDict(dict):
             return
 
         #Create header row and add date field
-        self._header = self._dataTags[:] #set header to copy of _dataTags values
+        self._header = list(self._dataTags[:]) #set header to copy of _dataTags values
         self._header.extend(['date'])
 
         #Extend the header by the parameters and their associated columns

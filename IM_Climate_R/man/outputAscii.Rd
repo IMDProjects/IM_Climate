@@ -7,7 +7,7 @@
 outputAscii(gridResponse, fullFilePath, lonCen, latCen, luSource)
 }
 \arguments{
-\item{gridResponse}{grid (dataframe format) returned from ACIS request}
+\item{gridResponse}{grid (dataframe format) returned from ACIS request (by date)}
 
 \item{lonCen}{longitude of lower left grid cell}
 

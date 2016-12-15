@@ -8,7 +8,6 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * findStation
   * requestData
-  * getDailyGrids
 
 + Formats outputs consistently regardless of implementation technique (R, Python)
 
@@ -16,7 +15,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
 #### Release 1.0 - 20160906 ####
 
-#### Release 1.1.1 - 20161031 ####
+#### Release 1.1 - 20161006 ####
 
 #### Release 1.2 - 20161122  ####
 
@@ -42,3 +41,10 @@ library(devtools)
 install_github("IMDProjects/IM_Climate/IM_Climate_R")
 ```
 operation to grab the package code and install it locally.
+
+#### Disclaimer ####
+This software is in the public domain because it contains materials from the U.S. National Park Service, an agency of the United States Department of Interior.
+
+Although this software package has been used by the U.S. National Park Service (NPS), no warranty, expressed or implied, is made by the NPS or the U.S. Government as to the accuracy and functioning of the package and related program material nor shall the fact of distribution constitute any such warranty, and no responsibility is assumed by the NPS in connection therewith.
+
+This software is provided "AS IS."

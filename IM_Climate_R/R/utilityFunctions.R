@@ -35,6 +35,46 @@ getStationSubtype <- function(testType, testSid) {
   return(typeDesc)
 }
 
+#' formatRequest generates the JSON-formatted request to send to ACIS
+#' @param requestType type of request: getDailyWxObservations, getMonthlyWxObservations, getDailyGrids, getMonthlyGrids, (findStation)
+#' @param climateParameters A list of one or more climate parameters defined in calling source
+#' @param luElements lookup values defined in calling source
+#' @param duration (optional) station data duration specified in calling source; used for getWxObservations and getGrids
+#' @export
+#' 
+formatRequest <- function(requestType, climateParameters, luElements, duration=NULL) {
+  print(requestType)
+  
+  # Hard-coded request elements
+  # Parameter flags: f = ACIS flag, s = source flag
+  paramFlags <- c("f,s")
+  # Metadata elements (not used explicitly)
+  metaElements <-
+    list('uid', 'll', 'name', 'elev', 'sids', 'state')
+  
+  # Daily grid elements
+  gridElements <-
+    list(
+      interval = "dly", 
+      duration = "dly", 
+      gridSource = "PRISM",
+      dataPrecision = 1,
+      output = "json",
+      meta = "ll"
+    )
+  
+  # Reduce flags: mcnt = count of missing values in the reduction period
+  reduceFlags <- c("mcnt")
+  
+  # Build elems list
+  # Iterate parameter list to create elems element:
+  eList <- NULL
+  
+  # Build body (bList)
+  
+  # Return request JSON
+}
+
 #' formatWxObservations converts get*WxObservation response to a data frame, iterating by date and value
 #' @param responseContent list of response arrays containing name/value pairs: meta (default), data (date, values) 
 #' @param duration station data duration specified in calling source 
@@ -367,7 +407,7 @@ getBBox <- function (unitCode, expandBBox) {
 }
 
 #' outputAscii formats grid(s) as ASCII (*.asc) with headers and projection (*.prj)
-#' @param gridResponse grid (dataframe format) returned from ACIS request
+#' @param gridResponse grid (dataframe format) returned from ACIS request (by date)
 #' @param filePath full file path for ASCII output
 #' @param lonCen longitude of lower left grid cell
 #' @param lonCen latitude of lower left grid cell
@@ -403,3 +443,4 @@ outputAscii <-
     write(luSource$projection, gsub(".asc", ".prj", fullFilePath))
     return("Success")
   }
+

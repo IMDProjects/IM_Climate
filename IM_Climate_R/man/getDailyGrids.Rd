@@ -2,7 +2,7 @@
 % Please edit documentation in R/GridRequestor.R
 \name{getDailyGrids}
 \alias{getDailyGrids}
-\title{Get daily climate data grids for specified parameter(s) and NPS unit(s)}
+\title{Get daily climate data grids for specified parameter(s) and NPS or FWS unit(s)}
 \usage{
 getDailyGrids(unitCode = NULL, sdate = NULL, edate = NULL,
   distance = NULL, climateParameters = NULL, filePath = NULL)
@@ -14,17 +14,17 @@ getDailyGrids(unitCode = NULL, sdate = NULL, edate = NULL,
 
 \item{climateParameters}{(optional) A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt).  If not specified, defaults to all parameters. See the ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html}
 
-\item{filePath}{filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to the current working directory.}
+\item{filePath}{filePath (optional) Folder path for output ASCII grid(s). If specified, grid(s) are saved to the folder. Otherwise, grid(s) are saved to an in-memory raster stack (by date).}
 
 \item{sDate}{sdate (required) Format as a string (yyyy-mm-dd, yyyymmdd, yyyy-mm, yyyymm, yyyy). The beginning of the desired date range.}
 
 \item{eDate}{edate (required) Format as a string (yyyy-mm-dd, yyyymmdd, yyyy-mm, yyyymm, yyyy). The end of the desired date range.}
 }
 \value{
-ASCII-formatted grid file for each parameter
+ASCII-formatted grid file for each parameter for each date or an in-memory raster stack with a layer for each parameter for each date
 }
 \description{
-Takes one park code and a list of one or more climate parameters and requests daily climate data. Returns a grid or grids (by parameter) in ASCII format.
+Takes one park code and a list of one or more climate parameters and requests daily climate data. Returns a grid or grids (by parameter) in ASCII format or an in-memory raster stack.
 }
 \examples{
 \dontrun{
@@ -34,5 +34,8 @@ getDailyGrids(unitCode = list("PRWI"), sdate = "20160615", edate = "20160616", c
 Two daily grids for GRSM for one date: print output to console
 getDailyGrids(unitCode = list("GRSM"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"))
 }
+
+The same request for two daily grids for GRSM for one date: output to in-memory raster stack, t
+t <- getDailyGrids(unitCode = list("GRSM"), sdate = "20160615", edate = "20160616", climateParameters = list("mint", "maxt"))
 }
 
