@@ -145,7 +145,6 @@ class ACIS(object):
 if __name__ == '__main__':
     c = ACIS()
 
-
     c.input_dict = {
         'uid': 3940,
         'sdate': "2008-01",
@@ -163,6 +162,7 @@ if __name__ == '__main__':
         }],
         'meta': "name,state,ll"
     }
+
     c.webServiceSource = 'StnData'
     print (c._acis_lookups.keys())
     print (c.supportedParameters)

@@ -265,10 +265,10 @@ if __name__=='__main__':
 
 ##    ###########################################################################
     #MONTHLY DATA BY YEAR
-##    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
-##        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
-##        , sdate = '2005-01-01', edate = '2016-05-01' )
-##    print (monthlyData)
+    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
+        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
+        , sdate = '2005-01-01', edate = '2016-05-01' )
+    print (monthlyData)
 ##    monthlyData.export(r'C:\TEMP\data.csv')
 ##
 ##
