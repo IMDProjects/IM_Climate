@@ -106,9 +106,10 @@ class ACIS(object):
         '''
         Formats arguments to handle None, lists and strings.
         Defaults to the valid arguments if the provided arguments are None
+        IF [] is passed, the defaults are not assigned
         '''
         #if no provided arguements, then default to valid arguments
-        if not providedArgs:
+        if not providedArgs and providedArgs != []:
             providedArgs = validArgs
 
         #if provided arguments are iterable, then do nothing
@@ -134,6 +135,12 @@ class ACIS(object):
         '''
         if response.get('error', None) and response.get('error', None) != 'no data available':
             raise Exception('ACIS Service Error: ' + str(response['error']))
+
+    def _formatMaxMissing(self, maxMissing):
+        if not maxMissing:
+            self.maxMissing = 1
+        else:
+            self.maxMissing =  maxMissing
 
 if __name__ == '__main__':
     c = ACIS()
