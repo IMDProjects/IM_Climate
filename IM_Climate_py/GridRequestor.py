@@ -21,10 +21,17 @@ class GridRequestor(ACIS):
         #NOTE: These parameters are specific to PRISM
         return ['pcpn', 'mint', 'maxt', 'avgt']
 
-    def _callForGrids(self):
+    def _callForGrids(self, **kwargs):
         '''
         Core method to request grids from ACIS
         '''
+        self.unitCode = kwargs.get('unitCode', None)
+        self.sdate = kwargs.get('sdate', None)
+        self.edate = kwargs.get('edate', None)
+        self.distance = kwargs.get('distance', None)
+        self.filePath = kwargs.get('filePath', None)
+        self.climateParameters = kwargs.get('climateParameters', None)
+
         bbox = '-130, 20,-50,60'
         self._formatClimateParameters()
         bbox = common.getBoundingBox(self.unitCode, self.distance)
@@ -55,7 +62,10 @@ class GridRequestor(ACIS):
 
     def _formatElems(self):
         '''
-        Formats the ACIS request into elements
+        Formats the ACIS request into elements.
+
+        NOTE: THIS METHOD APPEARS TO BE REDUNDANT  with the _formatElems method
+        in the ACIS parent class. Should look at reconciling the two!!!
         '''
         elems = []
         for p in self.climateParameters:
@@ -84,16 +94,11 @@ class GridRequestor(ACIS):
             Dictionary like object (aka GridStack) containing one or more daily grids.
             Grids are indexed first by parameter and then by date
         '''
-        self.unitCode = unitCode
-        self.sdate = sdate
-        self.edate = edate
-        self.climateParameters = climateParameters
-
         self.interval = 'dly'
         self.duration = 'dly'
-        self.distance = distance
-        self.filePath = filePath
-        return self._callForGrids()
+
+        return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate
+            , distance = distance, filePath = filePath, climateParameters = climateParameters )
 
     def getMonthlyGrids(self, sdate, edate, unitCode = None, distance = 0,
         climateParameters = None, filePath = None):
@@ -117,20 +122,62 @@ class GridRequestor(ACIS):
             Dictionary like object (aka GridStack) containing one or more monthly grids.
             Grids are indexed first by parameter and then by date
         '''
-        self.unitCode = unitCode
-        self.sdate = sdate
-        self.edate = edate
         self.interval = 'mly'
         self.duration = 'mly'
-        self.climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
-        self.climateParameters = map(lambda p: self.duration + '_' + p, self.climateParameters)
-        self.distance = distance
-        self.filePath = filePath
-        return self._callForGrids()
+        climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
+        climateParameters = map(lambda p: self.duration + '_' + p, climateParameters)
+
+        return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate
+            , distance = distance, filePath = filePath, climateParameters = climateParameters)
+
+    def getYearlyGrids(self, sdate, edate, unitCode = None, distance = 0,
+        climateParameters = None, filePath = None):
+        '''
+        Method to fetch yearly (annual) grids from ACIS.  Currently only PRISM grids are
+        supported.
+
+        ARGUMENTS
+            sdate               Start date (yyyy-mm,yyyy-mm-dd, yymm, yyyymmdd).
+            edate               End date (yyyy-mm, yyyy-mm-dd, yymm, or yyyymmdd).
+            unitCode (optional) 4-letter unit code. Currently accepts only one.
+            distance (optional) Distance in kilometers for buffering a bounding box of park.
+                                If no distance is specified then 0 is used as the default buffer.
+            climateParameters (optional)    Accepts one or more of the climate parameter codes,
+                                            preferably as a list or tuple
+            filePath (optional)             If provided, one or more ascii grids are saved to the
+                                    working directory. Grid names follow the pattern of
+                                    Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
+
+        RETURNS
+            Dictionary like object (aka GridStack) containing one or more yearly grids.
+            Grids are indexed first by parameter and then by date
+        '''
+        self.interval = 'yly'
+        self.duration = 'yly'
+        climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
+        climateParameters = map(lambda p: self.duration + '_' + p, climateParameters)
+
+        return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate
+            , distance = distance, filePath = filePath, climateParameters = climateParameters)
 
 if __name__ == '__main__':
     gr = GridRequestor()
     filePath = 'C:\\TEMP\\'
+
+    ##YEARLY GRIDS
+
+    #TEST 01
+    sdate = '1915'
+    edate = '1929'
+    climateParameters = ['mint', 'maxt']
+    unitCode = 'LIBO'
+    distance = 10
+
+    data =  gr.getYearlyGrids(sdate = sdate, edate = edate,
+        unitCode = unitCode, distance = distance,
+        climateParameters = climateParameters, filePath = filePath )
+    print data.climateParameters
+    print data.dates
 
     ##MONTHLY GRIDS
 

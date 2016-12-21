@@ -59,34 +59,6 @@ class StationDataRequestor(ACIS):
             sd.exportData(filePathAndName = self.filePathAndName)
         return sd
 
-
-    def _formatElems(self):
-
-        #build the elems objects, which ACIS requires for more complex queries
-        self.elems = []
-        for p in self.climateParameters:
-            arguments = {'name': p, 'interval': self.interval, 'add': self.add
-             ,'duration': self.duration,'maxmissing': self.maxMissing}
-            self.elems.append(arguments)
-
-        #Update the elems object to add all variations of parameters and reduce
-        # codes, where applicable
-        # Too bad ACIS just doesn't just ignore reduce codes where not applicable
-        if self.reduceCodes:
-            rcelems = []
-            for k in self.elems:
-                for rd in self.reduceCodes:
-                    k['reduce'] = {'reduce': rd, 'add':self.add}
-                    rcelems.append(k.copy())
-            self.elems = rcelems
-
-        #Add all variations of climate parameters and reduce codes to a list
-        #This list is used to help instantaite the station dictionary object
-        if self.reduceCodes:
-            self.updatedClimateParameters = [k['name'] + '_' + k['reduce']['reduce'] for k in self.elems]
-        else:
-            self.updatedClimateParameters = self.climateParameters[:]
-
     def getDailyWxObservations(self, climateStations, climateParameters = None
             , sdate = 'por', edate = 'por', filePathAndName = None):
         '''
@@ -221,14 +193,14 @@ class StationDataRequestor(ACIS):
 
         '''
         self.duration = 'mly'
-        self.interval = 'yly'
+        self.interval = "1"
         self.add = 'mcnt'
         self.StationDictClass = MonthlyStationDict
 
 
         return self._fetchStationDataFromACIS(sdate = str(sdate),
-            edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxmissing
-            , filePathAndName = filePathAndName, climateStations = climateStations
+            edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
+            ,filePathAndName = filePathAndName, climateStations = climateStations
             ,climateParameters = climateParameters)
 
 
@@ -256,19 +228,19 @@ if __name__=='__main__':
 
     ###########################################################################
 ##    #MONTHLY DATA
-##    monthlyData = dr.getMonthlyWxSummary(climateStations = stationIDs,
-##        reduceCodes = 'max', climateParameters = 'mint'
-##        , sdate = '2005-01', edate = '2016-05' )
-##    print (monthlyData)
-##    #monthlyData.export(r'C:\TEMP\data.csv')
+    monthlyData = dr.getMonthlyWxSummary(climateStations = stationIDs,
+        reduceCodes = 'max', climateParameters = 'mint'
+        , sdate = '2005-01', edate = '2016-05' )
+    print (monthlyData)
+    #monthlyData.export(r'C:\TEMP\data.csv')
 
 
 ##    ###########################################################################
     #MONTHLY DATA BY YEAR
-    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
-        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
-        , sdate = '2005-01-01', edate = '2016-05-01' )
-    print (monthlyData)
+##    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
+##        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
+##        , sdate = '2005-01-01', edate = '2016-05-01' )
+##    print (monthlyData)
 ##    monthlyData.export(r'C:\TEMP\data.csv')
 ##
 ##
@@ -287,10 +259,10 @@ if __name__=='__main__':
 ##
 ##    #########################################################################
 ##    #DAILY DATA
-    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
-        , climateParameters = 'avgt, mint'
-        , sdate = '20120101', edate = '2012-01-05' )
-    print dailyData
+##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
+##        , climateParameters = 'avgt, mint'
+##        , sdate = '20120101', edate = '2012-01-05' )
+##    print dailyData
 ##    dailyData.exportData(filePathAndName = r'dailyData.csv')
 ##
 ##    #GET DATA for a single station
