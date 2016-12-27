@@ -197,6 +197,7 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+    #THIS IS FAILING BECAUSE OF THE ELEVATION PRECISION
 ##    def test02_R(self):
 ##        self.climateStations =  26215
 ##        self.climateParameters = 'pcpn'
@@ -265,17 +266,17 @@ class Test_GridRequestor(unittest.TestCase):
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
-##    def test_02_R(self):
-##        #MONTHLY GRID - PRISM
-##        self.method = self.gr.getMonthlyGrids
-##        self.sdate = '1900-01'
-##        self.edate = '1900-01'
-##        self.climateParameters = 'mint'
-##        self.unitCode = 'GRKO'
-##        self.distance = 0
-##        self.refDataFile = 'Test02/R_PRISM_mly_mint_mly_1900-01.asc'
-##        self.confirmAsciiGrid()
-##        self.assertEquals(self.result,[])
+    def test_02_R(self):
+        #MONTHLY GRID - PRISM
+        self.method = self.gr.getMonthlyGrids
+        self.sdate = '1900-01'
+        self.edate = '1900-01'
+        self.climateParameters = 'mint'
+        self.unitCode = 'GRKO'
+        self.distance = 0
+        self.refDataFile = 'Test02/R_PRISM_mly_mint_mly_1900-01.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
 
 
 if __name__ == '__main__':

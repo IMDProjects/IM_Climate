@@ -127,7 +127,7 @@ class ACIS(object):
     def _formatDate(self, date):
         if not date:
             date = 'por'
-        return date
+        return str(date)
 
     def _checkResponseForErrors(self, response):
         '''

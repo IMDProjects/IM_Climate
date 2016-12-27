@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import csv
 
 class Grid(np.ndarray):
     def __new__(cls, grid, *args, **kwargs):
@@ -19,18 +20,24 @@ class Grid(np.ndarray):
         '''
         Export grid to ASCII grid format along with PRJ file
         '''
-        outfile = open(filePathAndName,'w')
+        outfile = open(filePathAndName,'wb')
         outfile.write ('ncols  ' + str(self.ncols) + '\n')
         outfile.write ('nrows  ' + str(self.nrows) + '\n')
         outfile.write ('xllcenter  ' + str(self.XLLCenter) + '\n')
         outfile.write ('yllcenter  ' + str(self.YLLCenter) + '\n')
-        outfile.write ('cellsize  ' + str(self.cellSize) + '\n')
+        outfile.write ('cellsize  ' + repr(self.cellSize) + '\n') #repr preserves the precision
         outfile.write ('NODATA_value  ' + str(self.missingValue) + '\n')
 
+        r = csv.writer(outfile, delimiter = ' ', lineterminator='\n')
         for row in reversed(self):
-            #outfile.write('\n')
-            for ob in row:
-                outfile.write(str(ob) + '\t')
+            row = list(row) #convert to a list from a np.array
+            row = map(lambda x: '-999' if x == -999.0 else str(x), row)
+            r.writerow(row)
+
+##            for ob in row:
+##                outfile.write(str(ob) + ' ')
+##            outfile.write('\n')
+
 
         outfile.close()
 
@@ -41,7 +48,7 @@ class Grid(np.ndarray):
         outfile.close()
 
 if __name__ == '__main__':
-    grid = [[1, 2, 3, 4], [5, 6, 7,8], [9, 10, 11, 12]]
+    grid = [[1.5, 2.3, 3.7, 4.12], [5.0, 6.3, 7.7,8.1], [-999.0, 10, 11, 12]]
     XLLCenter = -130
     YLLCenter = 40
     cellSize = 4

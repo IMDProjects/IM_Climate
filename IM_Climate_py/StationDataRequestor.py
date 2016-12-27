@@ -149,7 +149,7 @@ class StationDataRequestor(ACIS):
         self.StationDictClass = MonthlyStationDict
 
 
-        return self._fetchStationDataFromACIS(sdate = str(sdate),
+        return self._fetchStationDataFromACIS(sdate = sdate,
             edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
             , filePathAndName = filePathAndName, climateStations = climateStations
             ,climateParameters = climateParameters)
@@ -254,6 +254,12 @@ if __name__=='__main__':
         climateParameters = 'mint, maxt', reduceCodes = None
         , sdate = '2015-01', edate = '2015-03')
 
+    print (wxData)
+
+    sf = StationFinder()
+    wxData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
+        climateParameters = 'mint, maxt', reduceCodes = None
+        , sdate = None, edate = '2015-03')
     print (wxData)
 
 
