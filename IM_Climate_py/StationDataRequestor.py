@@ -25,18 +25,21 @@ class StationDataRequestor(ACIS):
         StationDict object
 
         '''
-        sdate = self._formatDate(kwargs.get('sdate', None))
-        edate = self._formatDate(kwargs.get('edate', None))
-        self.reduceCodes = self._formatReduceCodes(kwargs.get('reduceCodes', None))
-        self._formatMaxMissing(kwargs.get('maxmissing', None))
-        self.filePathAndName =  kwargs.get('filePathAndName', None)
-        self.stationIDs = self._extractStationIDs(kwargs.get('climateStations'))
-        self._formatClimateParameters(kwargs.get('climateParameters'))
+        #clean up some of the kwargs
+        kwargs['sdate'] = self._formatDate(kwargs.get('sdate', None))
+        kwargs['edate'] = self._formatDate(kwargs.get('edate', None))
+        kwargs['maxmissing'] = self._formatMaxMissing(kwargs.get('maxmissing', None))
+
+        #pop some of the kwargs that are not used directly in the ACIS call
+        self.reduceCodes = self._formatReduceCodes(kwargs.pop('reduceCodes', None))
+        self.filePathAndName =  kwargs.pop('filePathAndName', None)
+        self.stationIDs = self._extractStationIDs(kwargs.pop('climateStations'))
+        self._formatClimateParameters(kwargs.pop('climateParameters'))
 
         #additional metadata elements to request along with the data
         metaElements = ('uid', 'll', 'name', 'elev', 'sids', 'state')
 
-        #do the compicated formatting of the elems list
+        #do the complicated formatting of the elems list
         self._formatElems()
 
         #Instantiate the station dictionary object
@@ -52,7 +55,6 @@ class StationDataRequestor(ACIS):
             self._checkResponseForErrors(response)
             sd._addStation(stationID = uid, stationMeta = response['meta']
                     , stationData = response.get('data', 'error'))
-
 
         #Export data to a file if the file path and name are provided
         if self.filePathAndName:
@@ -95,8 +97,8 @@ class StationDataRequestor(ACIS):
         self.duration = 'dly'
         self.interval = 'dly'
         self.add = 'f,s'
-        self.reduceCodes = []
         self.StationDictClass = DailyStationDict
+        self.reduceCodes = []
 
         return self._fetchStationDataFromACIS(sdate = str(sdate),
             edate = str(edate), climateStations = climateStations,
@@ -148,7 +150,7 @@ class StationDataRequestor(ACIS):
 
 
         return self._fetchStationDataFromACIS(sdate = str(sdate),
-            edate = str(edate), reduceCodes = reduceCodes, maxMissing = maxMissing
+            edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
             , filePathAndName = filePathAndName, climateStations = climateStations
             ,climateParameters = climateParameters)
 
@@ -197,7 +199,6 @@ class StationDataRequestor(ACIS):
         self.add = 'mcnt'
         self.StationDictClass = MonthlyStationDict
 
-
         return self._fetchStationDataFromACIS(sdate = str(sdate),
             edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
             ,filePathAndName = filePathAndName, climateStations = climateStations
@@ -228,56 +229,55 @@ if __name__=='__main__':
 
     ###########################################################################
 ##    #MONTHLY DATA
-    monthlyData = dr.getMonthlyWxSummary(climateStations = stationIDs,
-        reduceCodes = 'max', climateParameters = 'mint'
-        , sdate = '2005-01', edate = '2016-05' )
-    print (monthlyData)
-    #monthlyData.export(r'C:\TEMP\data.csv')
+##    monthlyData = dr.getMonthlyWxSummary(climateStations = stationIDs,
+##        reduceCodes = 'max', climateParameters = 'mint'
+##        , sdate = '2005-01', edate = '2016-05' )
+##    print (monthlyData)
+##    #monthlyData.export(r'C:\TEMP\data.csv')
 
 
 ##    ###########################################################################
     #MONTHLY DATA BY YEAR
-##    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
-##        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
-##        , sdate = '2005-01-01', edate = '2016-05-01' )
-##    print (monthlyData)
-##    monthlyData.export(r'C:\TEMP\data.csv')
-##
-##
-##    sf = StationFinder()
-##    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
-##        sdate = '2015-01-01', edate = '2015-03-31')
-##
-##    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
-##    # from January 2015 to March 2015. Use default of maximum missing days of 1.
-##    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
-##        climateParameters = 'mint, maxt', reduceCodes = None
-##        , sdate = '2015-01', edate = '2015-03')
-##
-##    print (wxData)
-##
-##
+    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
+        reduceCodes = 'mean, max', climateParameters = 'avgt, mint'
+        , sdate = '2005-01-01', edate = '2016-05-01' )
+    print (monthlyData)
+
+
+    sf = StationFinder()
+    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
+        sdate = '2015-01-01', edate = '2015-03-31')
+
+    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
+    # from January 2015 to March 2015. Use default of maximum missing days of 1.
+    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
+        climateParameters = 'mint, maxt', reduceCodes = None
+        , sdate = '2015-01', edate = '2015-03')
+
+    print (wxData)
+
+
 ##    #########################################################################
-##    #DAILY DATA
-##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
-##        , climateParameters = 'avgt, mint'
-##        , sdate = '20120101', edate = '2012-01-05' )
-##    print dailyData
-##    dailyData.exportData(filePathAndName = r'dailyData.csv')
-##
-##    #GET DATA for a single station
-##    dailyData = dr.getDailyWxObservations(climateStations = 77572
-##        , sdate = 20160101, edate = '20160105' )
-##
-##    #Print the station data to the screen
-##    print (dailyData)
-##
-##    #get data for stations returned in station search
-##    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
-##    wxData = dr.getDailyWxObservations(climateStations = stationList,
-##        climateParameters = 'pcpn'
-##        ,sdate = '2015-08-01', edate = '2015-08-04')
-##    print (wxData)
-##    print (wxData.stationCounts)
+    #DAILY DATA
+    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
+        , climateParameters = 'avgt, mint'
+        , sdate = '20120101', edate = '2012-01-05' )
+    print dailyData
+
+    #GET DATA for a single station
+    dailyData = dr.getDailyWxObservations(climateStations = 77572
+        , sdate = 20160101, edate = '20160105' )
+
+    #Print the station data to the screen
+    print (dailyData)
+
+    #get data for stations returned in station search
+    sf = StationFinder()
+    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
+    wxData = dr.getDailyWxObservations(climateStations = stationList,
+        climateParameters = 'pcpn'
+        ,sdate = '2015-08-01', edate = '2015-08-04')
+    print (wxData)
+    print (wxData.stationCounts)
 
 
