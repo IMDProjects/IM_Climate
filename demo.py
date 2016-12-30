@@ -103,7 +103,8 @@ print (wxData[33658].data['mint_min']['2015-10'].wxOb)
 
 gr = GridRequestor()
 
-#get daily PRISM grids for GRKO and 10-km buffer for minimum temperature
+# #### DAILY GRIDS
+#get daily grids (PRISM only) for GRKO and 10-km buffer for minimum temperature
 grids=  gr.getDailyGrids(sdate = '2015-01-01', edate = '2015-01-10', unitCode = 'GRKO'
     ,distance = 10, climateParameters = 'mint')
 
@@ -124,3 +125,12 @@ grids.export(filePath = localFolder)
 
 #export a single grid - note that filename is required. The prj file is automatically created
 grids['mint']['2015-01-01'].export(localFolder + 'GRKO_PRISM_mint_20150101.asc')
+
+# #### MONTHLY GRIDS
+#get monthly grids (PRISM only) for ARPO and a 5-km buffer for 1895
+grids=  gr.getMonthlyGrids(sdate = '1895-01', edate = '1895-12', unitCode = 'ARPO'
+    ,distance = 5, climateParameters = 'pcpn')
+
+# #### YEARLY GRIDS
+grids=  gr.getYearlyGrids(sdate = '1895', edate = '1895', unitCode = 'ARPO'
+    ,distance = 5, climateParameters = 'pcpn')

@@ -44,7 +44,8 @@ class ACIS(object):
 
         Returns python dictionary by de-serializing json response
         '''
-        self._formatInputDict(**kwargs)
+        #self._formatInputDict(**kwargs)
+        self._input_dict = self._stripNoneValues(**kwargs)
         self.url = self.baseURL + self.webServiceSource
         if pyVersion == 2:      #python 2.x
             params = urllib.urlencode({'params':json.dumps(self._input_dict)})
@@ -58,15 +59,17 @@ class ACIS(object):
             jsonData = req.read().decode()
         return json.loads(jsonData)
 
-    def _formatInputDict(self,**kwargs):
+    def _stripNoneValues(self, d = {}, **kwargs):
         '''
-        Method to pack all arguments into input_dict which used to call the ACIS web
-            service. Filters out all argument of None.
+        Strips out all argument of None from a dictionary and/or a set
+        of keyword arguments
         '''
-        self._input_dict = {}    #Clears the input dictionary
+        data = {}
+        kwargs.update(d)
         for k in kwargs:
             if kwargs[k] and kwargs[k] != 'None':
-                self._input_dict[k] = kwargs[k]
+                data[k] = kwargs[k]
+        return data
 
     @property
     def supportedParameters(self):
@@ -136,19 +139,13 @@ class ACIS(object):
         if response.get('error', None) and response.get('error', None) != 'no data available':
             raise Exception('ACIS Service Error: ' + str(response['error']))
 
-    def _formatMaxMissing(self, maxMissing):
-        if not maxMissing:
-            self.maxMissing = 1
-        else:
-            self.maxMissing =  maxMissing
-
     def _formatElems(self):
 
         #build the elems objects, which ACIS requires for more complex queries
         self.elems = []
         for p in self.climateParameters:
             arguments = {'name': p, 'interval': self.interval, 'add': self.add
-             ,'duration': self.duration,'maxmissing': self.maxMissing}
+             ,'duration': self.duration,'maxmissing': self.maxMissing, 'normal':  self.normal}
             self.elems.append(arguments)
 
         #Update the elems object to add all variations of parameters and reduce
@@ -161,6 +158,10 @@ class ACIS(object):
                     k['reduce'] = {'reduce': rd, 'add':self.add}
                     rcelems.append(k.copy())
             self.elems = rcelems
+
+        #strip out all None values
+        for e,value in enumerate(self.elems):
+            self.elems[e] = self._stripNoneValues(value)
 
         #Add all variations of climate parameters and reduce codes to a list
         #This list is used to help instantaite the station dictionary object

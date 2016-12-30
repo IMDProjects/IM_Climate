@@ -4,7 +4,7 @@ import common
 from Station import DailyStation
 from Station import MonthlyStation
 
-class DailyStationDict(dict):
+class StationDict(dict):
 
     '''
     Object containing all station metadata and associated data
@@ -14,17 +14,15 @@ class DailyStationDict(dict):
                 ParameterSeries - All of the data for a specific station and parameter
                     WxOb - A single weather observation for the station and parameter
     '''
-    def __init__(self, climateParameters, queryParameters = None, dateInterval = None, aggregation = None):
+    def __init__(self, stationClass, climateParameters, queryParameters = None,
+        dateInterval = None, aggregation = None):
 
         self.dateRequested = date.today().isoformat()
         self.queryParameters = queryParameters
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.climateParameters = climateParameters
-        self._dataTags = ('uid', 'name', 'longitude', 'latitude', 'sid1', 'sid1_type',
-            'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
-            'elev') #station metadata to include with data export
-        self.StationClass = DailyStation    #The station class to be used by the DailyStationDict class
+        self.StationClass = stationClass    #The station class to be used
 
     def _writeToCSV(self):
         '''
@@ -178,36 +176,24 @@ class DailyStationDict(dict):
         -------
         Multi-dimensional list of the data
         '''
+        self._dataAsList = None
 
         #confirm there are stations before proceeding. If no stations, then exit
-        self._dataAsList = None
         try:
             self.stationIDs
         except:
             return
 
-        #Create header row and add date field
-        self._header = list(self._dataTags[:]) #set header to copy of _dataTags values
-        self._header.extend(['date'])
 
-        #Extend the header by the parameters and their associated columns
-        #the extendHeader method is class/sub-class specific
-        for param in self.climateParameters:
-            self._extendHeader(param)
-
-        #Iterate through all stations, params, and dates to add data to a 2-d list
+        #Iterate through all stationsto add data to a 2-d list
         #Stations without weather data are ignored
-        self._dataAsList = [self._header]
+        self._dataAsList = []
+        includeHeader = True
         for station in self:
             if station.hasWxData:
-                for date in station.data.observationDates:
-                    a = [station.uid, station.name, station.longitude, station.latitude,
-                         station.sid1, station.sid1_type, station.sid2,
-                         station.sid2_type, station.sid3, station.sid3_type,
-                         station.state,  station.elev, date]
-                    for param in self.climateParameters:
-                        a.extend(station.data[param][date].toList(includeDate = False))
-                    self._dataAsList.append(a)
+                self._dataAsList.extend(station._dumpDataToList( includeHeader = includeHeader))
+                includeHeader = False
+
         return self._dataAsList
 
     def _addStation(self, stationID, stationMeta, stationData = None):
@@ -252,15 +238,6 @@ class DailyStationDict(dict):
         return '\n'.join(a)
 
 
-class MonthlyStationDict(DailyStationDict):
-    def __init__(self, *args, **kwargs):
-        super(MonthlyStationDict,self).__init__( *args, **kwargs)
-        self.StationClass = MonthlyStation
-
-    def _extendHeader(self, p):
-        pAndU = common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
-        self._header.extend([pAndU, pAndU +'_countMissing'])
-
 if __name__ == '__main__':
     climateParams = ['mint']
     stations =  {'meta': [{'elev': 10549.9,
@@ -278,7 +255,7 @@ if __name__ == '__main__':
             'state': 'CO',
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
-    sl = DailyStationDict(queryParameters = queryParams, climateParameters =  climateParams)
+    sl = StationDict(stationClass = DailyStation, queryParameters = queryParams, climateParameters =  climateParams)
     for s in stations['meta']:
         sl._addStation(stationID = s['uid'],  stationMeta =  s)
     print(sl.stationIDs)
@@ -321,7 +298,7 @@ if __name__ == '__main__':
            u'sids': [u'USR0000CSOD 6'],
            u'uid': 1233}}
 
-    wx = DailyStationDict(queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
+    wx = StationDict(stationClass = DailyStation, queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
     wx._addStation(stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
     print wx._dumpDataToList()
@@ -374,9 +351,10 @@ if __name__ == '__main__':
            u'sids': [u'USR0000CSOD 6'],
            u'state': u'CO',
            u'uid': 66180}}
-    wx = MonthlyStationDict(climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max']
+    wx = StationDict(stationClass = MonthlyStation, climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max']
         , queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg')
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
+    print wx._dumpDataToList()
     print (wx.stationNames)
     print (wx)
     wx.export(r'C:\TEMP\monthlyStationDicTest.csv')

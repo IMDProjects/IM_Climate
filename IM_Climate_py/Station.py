@@ -2,6 +2,7 @@ from StationDateRange import StationDateRange
 from StationData import DailyStationData
 from StationData import MonthlyStationData
 from common import missingValue
+import common
 from ACIS import ACIS
 
 
@@ -13,9 +14,12 @@ class DailyStation(object):
     '''
     def __init__(self):
         self.StationDataClass = DailyStationData
-        self._metaTags = ['uid', 'name','longitude', 'latitude',  'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
+        self._metaTags = ('uid', 'name','longitude', 'latitude',  'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
-            'elev', 'minDate', 'maxDate', 'unitCode']
+            'elev', 'minDate', 'maxDate', 'unitCode')
+        self._dataTags = ('uid', 'name', 'longitude', 'latitude', 'sid1', 'sid1_type',
+            'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
+            'elev') #station metadata to include with data export
         self.missingValue = missingValue
 
     def _set(self, stationMeta, climateParameters, stationData = None ):
@@ -103,11 +107,47 @@ class DailyStation(object):
         except:
             return False
 
+    def _dumpDataToList(self, includeHeader = True):
+        if includeHeader:
+            self._dataAsList = [self._header]
+        else:
+            self._dataAsList = []
+
+        if self.hasWxData:
+            for date in self.data.observationDates:
+                a = [self.uid, self.name, self.longitude, self.latitude,
+                     self.sid1, self.sid1_type, self.sid2,
+                     self.sid2_type, self.sid3, self.sid3_type,
+                     self.state,  self.elev, date]
+                for param in self.climateParameters:
+                    a.extend(self.data[param][date].toList(includeDate = False))
+                self._dataAsList.append(a)
+        return self._dataAsList
+
+    @property
+    def _header(self):
+        #Header as a list
+        header = list(self._dataTags[:]) #set header to copy of _dataTags values
+        header.extend(['date'])
+        for p in self.climateParameters:
+            header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
+        return header
+
 
 class MonthlyStation(DailyStation):
     def __init__(self):
         super(MonthlyStation,self).__init__()
         self.StationDataClass = MonthlyStationData
+
+    @property
+    def _header(self):
+        #Header as a list
+        header = list(self._dataTags[:]) #set header to copy of _dataTags values
+        header.extend(['date'])
+        for p in self.climateParameters:
+            pAndU = common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
+            header.extend([pAndU, pAndU +'_countMissing'])
+        return header
 
 if __name__=='__main__':
 
@@ -121,14 +161,15 @@ if __name__=='__main__':
 
     s = DailyStation()
     s._set(stationMeta = meta, climateParameters = climateParams)
-    print s.name
-    print s.hasWxData
+    #print s.name
+    #print s.hasWxData
 
     s = DailyStation()
     s._set(stationMeta = meta, climateParameters = climateParams, stationData = data)
-    print s.name
-    print s.hasWxData
+    #print s.name
+    #print s.hasWxData
 
+    print s._dumpDataToList(includeHeader = False)
 
 
 
