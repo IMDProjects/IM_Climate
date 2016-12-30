@@ -66,3 +66,11 @@ GRID REQUESTOR - getMonthlyWxObservations
 		unitCode = 'GRKO'
 		distance = 0
 		climateParameters = 'mint'
+		
+GRID REQUESTOR - getYearlyWxObservations		
+	TEST 01
+		sdate = '1970'
+		edate = '1970'
+		unitCode = 'ARPO'
+		distance = 5
+		climateParameters = 'pcpn'

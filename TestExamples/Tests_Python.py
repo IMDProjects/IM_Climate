@@ -230,7 +230,7 @@ class Test_GridRequestor(unittest.TestCase):
         refDataFile.close()
         self.result =  list(numpy.setdiff1d(refData.split('/n'),testData.split('/n')))
 
-    def test_01(self):
+    def test_getDailyGrids_01(self):
         #DAILY GRID - PRISM
         self.method = self.gr.getDailyGrids
         self.sdate = '2015-01-01'
@@ -238,23 +238,23 @@ class Test_GridRequestor(unittest.TestCase):
         self.climateParameters = 'mint'
         self.unitCode = 'APPA'
         self.distance = 0
-        self.refDataFile = 'Test01/PY_PRISM_mint_dly_2015-01-01.asc'
+        self.refDataFile = 'getDailyGrids/Test01/PY_PRISM_mint_dly_2015-01-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
 
-##    def test_01_R(self):
+##    def test_getDailyGrids_01_R(self):
 ##        self.method = self.gr.getMonthlyGrids
 ##        self.sdate = '2015-01-01'
 ##        self.edate = '2015-01-01'
 ##        self.climateParameters = 'mint'
 ##        self.unitCode = 'APPA'
 ##        self.distance = 0
-##        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
+##        self.refDataFile = 'getDailyGrids/Test01/R_PRISM_mint_dly_2015-01-01.asc'
 ##        self.confirmAsciiGrid()
 ##        self.assertEquals(self.result,[])
 
-    def test_02(self):
+    def test_getMonthlyGrids_01(self):
         #MONTHLY GRID - PRISM
         self.method = self.gr.getMonthlyGrids
         self.sdate = '1900-01'
@@ -262,11 +262,11 @@ class Test_GridRequestor(unittest.TestCase):
         self.climateParameters = 'mint'
         self.unitCode = 'GRKO'
         self.distance = 0
-        self.refDataFile = 'Test02/PY_PRISM_mly_mint_mly_1900-01.asc'
+        self.refDataFile = 'getMonthlyGrids/Test01/PY_PRISM_mly_mint_mly_1900-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
-    def test_02_R(self):
+    def test_getMonthlyGrids_01_R(self):
         #MONTHLY GRID - PRISM
         self.method = self.gr.getMonthlyGrids
         self.sdate = '1900-01'
@@ -274,7 +274,20 @@ class Test_GridRequestor(unittest.TestCase):
         self.climateParameters = 'mint'
         self.unitCode = 'GRKO'
         self.distance = 0
-        self.refDataFile = 'Test02/R_PRISM_mly_mint_mly_1900-01.asc'
+        self.refDataFile = 'getMonthlyGrids/Test01/R_PRISM_mly_mint_mly_1900-01.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
+
+
+    def test_getYearlyGrids_01(self):
+        #PRISM
+        self.method = self.gr.getYearlyGrids
+        self.sdate = '1970'
+        self.edate = '1970'
+        self.climateParameters = 'pcpn'
+        self.unitCode = 'ARPO'
+        self.distance = 5
+        self.refDataFile = 'getYearlyGrids/Test01/PY_PRISM_yly_pcpn_yly_1970.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
