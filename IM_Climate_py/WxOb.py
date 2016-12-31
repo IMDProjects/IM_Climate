@@ -1,6 +1,6 @@
 from common import missingValue, getSupportedParameters
 
-class Observation(dict):
+class WxOb(dict):
 
     def __init__(self, values = None):
         if values:
@@ -23,7 +23,7 @@ class Observation(dict):
                 self[index] = missingValue
 
 
-class DailyWxOb(Observation):
+class DailyWxOb(WxOb):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
     WxOb is indexable like a standard dictionary although values can also
@@ -59,7 +59,7 @@ class DailyWxOb(Observation):
         '''
         return [getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag']
 
-class MonthlyWxOb(Observation):
+class MonthlyWxOb(WxOb):
     def __init__(self, values = None):
         super(MonthlyWxOb, self).__init__(values)
         if values:
@@ -82,6 +82,33 @@ class MonthlyWxOb(Observation):
         pAndU = getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
         return [pAndU, pAndU +'_countMissing']
 
+class MonthlyNormalWxOb(WxOb):
+    def __init__(self, values = None):
+        if values:
+            self['month'] = str(values[0].split('-')[1])
+            self['normal'] = str(values[1])
+
+    @property
+    def month(self):
+        return self['month']
+
+    @property
+    def normal(self):
+        return self['normal']
+
+    def _createHeader(self, p):
+        '''
+        Creates the header needed when exporting to a text file
+        '''
+        return [getSupportedParameters()[p]['label'] + '_normal']
+
+    def toList(self, includeDate = True):
+        l = [self.normal]
+        if includeDate:
+            l.insert(0, self.month)
+        return l
+
+
 if __name__=='__main__':
 
     #Daily data
@@ -96,3 +123,11 @@ if __name__=='__main__':
     print dmonth
     print dmonth.toList()
     print dmonth._createHeader('mint_mly')
+
+    #Monthly Normal data
+    data = ['2012-02',u'32.0']
+    wx = MonthlyNormalWxOb(data)
+    print wx.normal
+    print wx.month
+    print wx._createHeader('mint')
+    print wx.toList()
