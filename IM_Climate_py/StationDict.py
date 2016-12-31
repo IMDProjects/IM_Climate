@@ -1,8 +1,8 @@
 import csv
 from datetime import date
 import common
-from Station import DailyStation
-from Station import MonthlyStation
+from Station import Station
+
 
 class StationDict(dict):
 
@@ -14,7 +14,7 @@ class StationDict(dict):
                 ParameterSeries - All of the data for a specific station and parameter
                     WxOb - A single weather observation for the station and parameter
     '''
-    def __init__(self, stationClass, climateParameters, queryParameters = None,
+    def __init__(self, observationClass, climateParameters, queryParameters = None,
         dateInterval = None, aggregation = None):
 
         self.dateRequested = date.today().isoformat()
@@ -22,7 +22,7 @@ class StationDict(dict):
         self.dateInterval = dateInterval
         self.aggregation = aggregation
         self.climateParameters = climateParameters
-        self.StationClass = stationClass    #The station class to be used
+        self.observationClass = observationClass    #The wx observation class to be used
 
     def _writeToCSV(self):
         '''
@@ -200,7 +200,7 @@ class StationDict(dict):
         '''
         Method to add a station to the StationDict object.
         '''
-        self[int(stationID)] = self.StationClass()
+        self[int(stationID)] = Station(observationClass = self.observationClass)
         self[int(stationID)]._set(stationMeta = stationMeta, climateParameters = self.climateParameters, stationData = stationData)
 
     @property
@@ -239,6 +239,7 @@ class StationDict(dict):
 
 
 if __name__ == '__main__':
+    from WxOb import DailyWxOb, MonthlyWxOb
     climateParams = ['mint']
     stations =  {'meta': [{'elev': 10549.9,
             'll': [-106.17, 39.49],
@@ -255,7 +256,7 @@ if __name__ == '__main__':
             'state': 'CO',
             'uid': 77459}]}
     queryParams = {'Example':'ExampleData'}
-    sl = StationDict(stationClass = DailyStation, queryParameters = queryParams, climateParameters =  climateParams)
+    sl = StationDict(observationClass = DailyWxOb, queryParameters = queryParams, climateParameters =  climateParams)
     for s in stations['meta']:
         sl._addStation(stationID = s['uid'],  stationMeta =  s)
     print(sl.stationIDs)
@@ -298,7 +299,7 @@ if __name__ == '__main__':
            u'sids': [u'USR0000CSOD 6'],
            u'uid': 1233}}
 
-    wx = StationDict(stationClass = DailyStation, queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
+    wx = StationDict(observationClass = DailyWxOb, queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg', climateParameters = ['mint','maxt'])
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
     wx._addStation(stationID = wxObs['meta']['uid'], stationMeta =  moreWxObs['meta'], stationData =  moreWxObs['data'])
     print wx._dumpDataToList()
@@ -351,7 +352,7 @@ if __name__ == '__main__':
            u'sids': [u'USR0000CSOD 6'],
            u'state': u'CO',
            u'uid': 66180}}
-    wx = StationDict(stationClass = MonthlyStation, climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max']
+    wx = StationDict(observationClass = MonthlyWxOb, climateParameters = ['mint_min','maxt_min', 'mint_max', 'maxt_max']
         , queryParameters = queryParameters, dateInterval = 'mly', aggregation = 'avg')
     wx._addStation(stationID = wxObs['meta']['uid'],  stationMeta =  wxObs['meta'], stationData = wxObs['data'])
     print wx._dumpDataToList()

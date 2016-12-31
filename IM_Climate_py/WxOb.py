@@ -1,11 +1,12 @@
-from common import missingValue
+from common import missingValue, getSupportedParameters
 
 class Observation(dict):
 
-    def __init__(self, values):
-        self['date'] = values[0].encode()
-        self['wxOb']  = values[1].encode()
-        self._replaceBlanks()
+    def __init__(self, values = None):
+        if values:
+            self['date'] = values[0].encode()
+            self['wxOb']  = values[1].encode()
+            self._replaceBlanks()
 
     @property
     def date(self):
@@ -21,6 +22,7 @@ class Observation(dict):
             if len(value.strip()) == 0:
                 self[index] = missingValue
 
+
 class DailyWxOb(Observation):
     ''''
     A dictionary containing a weather observation for a specific station, parameter and date
@@ -31,11 +33,12 @@ class DailyWxOb(Observation):
         -WxOb.ACIS_Flag
         -WxOb.sourceFlag
     '''
-    def __init__(self, values):
+    def __init__(self, values = None):
 
-        self['ACIS_Flag'] = values[2].encode()
-        self['sourceFlag'] = values[3].encode()
-        super(DailyWxOb, self).__init__(values)
+        if values:
+            self['ACIS_Flag'] = values[2].encode()
+            self['sourceFlag'] = values[3].encode()
+            super(DailyWxOb, self).__init__(values)
 
     @property
     def ACIS_Flag(self):
@@ -44,17 +47,23 @@ class DailyWxOb(Observation):
     def sourceFlag(self):
         return self['sourceFlag']
 
-
     def toList(self, includeDate = True):
         l = [self.wxOb, self.ACIS_Flag, self.sourceFlag]
         if includeDate:
             l.insert(0, self.date)
         return l
 
+    def _createHeader(self, p):
+        '''
+        Creates the header needed when exporting to a text file
+        '''
+        return [getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag']
+
 class MonthlyWxOb(Observation):
-    def __init__(self, values):
+    def __init__(self, values = None):
         super(MonthlyWxOb, self).__init__(values)
-        self['countMissing'] = values[2]
+        if values:
+            self['countMissing'] = values[2]
 
     @property
     def countMissing(self):
@@ -66,15 +75,24 @@ class MonthlyWxOb(Observation):
             l.insert(0, self.date)
         return l
 
+    def _createHeader(self, p):
+        '''
+        Creates the header needed when exporting to a text file
+        '''
+        pAndU = getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
+        return [pAndU, pAndU +'_countMissing']
+
 if __name__=='__main__':
 
     #Daily data
     data = ['2012-02-01',u'32.0', u' ', u'U']
     wx = DailyWxOb(data)
     print wx
+    print wx._createHeader('mint')
 
     #Monthly data
     data = [u'2012-01', u'22.60', 0]
     dmonth = MonthlyWxOb(data)
     print dmonth
     print dmonth.toList()
+    print dmonth._createHeader('mint_mly')

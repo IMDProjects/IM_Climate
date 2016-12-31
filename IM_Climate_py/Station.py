@@ -1,19 +1,16 @@
 from StationDateRange import StationDateRange
-from StationData import DailyStationData
-from StationData import MonthlyStationData
+from StationData import StationData
 from common import missingValue
-import common
 from ACIS import ACIS
 
 
-
-class DailyStation(object):
+class Station(object):
     '''
     Class for all daily wx station objects.
     Object containing all station metadata (e.g., uid, elev, sids, etc) and weather data by parameter
     '''
-    def __init__(self):
-        self.StationDataClass = DailyStationData
+    def __init__(self, observationClass):
+        self.observationClass = observationClass
         self._metaTags = ('uid', 'name','longitude', 'latitude',  'sid1', 'sid1_type', #tags defining order of metadata elements to show when presenting stationMetadata
             'sid2', 'sid2_type', 'sid3', 'sid3_type', 'state',
             'elev', 'minDate', 'maxDate', 'unitCode')
@@ -54,11 +51,9 @@ class DailyStation(object):
         self.longitude = stationInfo.get('ll', default)[0]
         self.state = stationInfo.get('state', default).encode()
         self.elev = stationInfo.get('elev', default)
-
         self.uid = int(stationInfo.get('uid'))
         self.sids = str(stationInfo.get('sids', default)).encode()
         self.unitCode = stationInfo.get('unitCode', default)
-
         self.validDateRange = StationDateRange(stationInfo.get('valid_daterange', self.missingValue), self.climateParameters)
         self.maxDate = self.validDateRange.maxRange
         self.minDate = self.validDateRange.minRange
@@ -91,7 +86,7 @@ class DailyStation(object):
         Method to add weather data to Station object
         '''
         if stationData <> 'error':
-            self.data = self.StationDataClass()
+            self.data = StationData(observationClass = self.observationClass)
             self.data._set(stationData, self.climateParameters)
 
     @property
@@ -127,30 +122,18 @@ class DailyStation(object):
     @property
     def _header(self):
         #Header as a list
+        oClass = self.observationClass()
         header = list(self._dataTags[:]) #set header to copy of _dataTags values
         header.extend(['date'])
         for p in self.climateParameters:
-            header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
+            #header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
+            header.extend(oClass._createHeader(p))
         return header
 
-
-class MonthlyStation(DailyStation):
-    def __init__(self):
-        super(MonthlyStation,self).__init__()
-        self.StationDataClass = MonthlyStationData
-
-    @property
-    def _header(self):
-        #Header as a list
-        header = list(self._dataTags[:]) #set header to copy of _dataTags values
-        header.extend(['date'])
-        for p in self.climateParameters:
-            pAndU = common.getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
-            header.extend([pAndU, pAndU +'_countMissing'])
-        return header
 
 if __name__=='__main__':
 
+    from WxOb import DailyWxOb
     meta= {'name': 'Elliot Ridge', 'll': [-106.42, 39.86], 'sids': [u'USS0006K29S 6'], 'state': 'CO', 'valid_daterange': [['1983-01-12', '2016-04-05']], 'uid': 77459}
     data =  [[u'2012-01-01', [u'21.5', u' ', u'U'], [u'5', u' ', u'U']],
            [u'2012-01-02', [u'29.5', u' ', u'U'], [u'12', u' ', u'U']],
@@ -159,17 +142,17 @@ if __name__=='__main__':
            [u'2012-01-05', [u'35.5', u' ', u'U'], [u'18', u' ', u'U']]]
     climateParams = ['maxt', 'mint' ]
 
-    s = DailyStation()
+    s = Station(observationClass = DailyWxOb)
     s._set(stationMeta = meta, climateParameters = climateParams)
-    #print s.name
-    #print s.hasWxData
+    print s.name
+    print s.hasWxData
 
-    s = DailyStation()
+    s = Station(observationClass = DailyWxOb)
     s._set(stationMeta = meta, climateParameters = climateParams, stationData = data)
-    #print s.name
-    #print s.hasWxData
+    print s.name
+    print s.hasWxData
 
-    print s._dumpDataToList(includeHeader = False)
+    print s._dumpDataToList(includeHeader = True)
 
 
 
