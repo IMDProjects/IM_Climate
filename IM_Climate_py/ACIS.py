@@ -1,4 +1,5 @@
 import json
+import copy
 
 try:    #python 2.x
     import urllib2, urllib
@@ -145,7 +146,7 @@ class ACIS(object):
         self.elems = []
         for p in self.climateParameters:
             arguments = {'name': p, 'interval': self.interval, 'add': self.add
-             ,'duration': self.duration,'maxmissing': self.maxMissing, 'normal':  self.normal}
+             ,'duration': self.duration,'maxmissing': self.maxMissing}
             self.elems.append(arguments)
 
         #Update the elems object to add all variations of parameters and reduce
@@ -157,11 +158,7 @@ class ACIS(object):
                 for rd in self.reduceCodes:
                     k['reduce'] = {'reduce': rd, 'add':self.add}
                     rcelems.append(k.copy())
-            self.elems = rcelems
-
-        #strip out all None values
-        for e,value in enumerate(self.elems):
-            self.elems[e] = self._stripNoneValues(value)
+            self.elems = rcelems[:]
 
         #Add all variations of climate parameters and reduce codes to a list
         #This list is used to help instantaite the station dictionary object
@@ -169,6 +166,37 @@ class ACIS(object):
             self.updatedClimateParameters = [k['name'] + '_' + k['reduce']['reduce'] for k in self.elems]
         else:
             self.updatedClimateParameters = self.climateParameters[:]
+
+        #update climate parameters to include normals
+        np = []
+        if self.includeNormals:
+            for cp in self.updatedClimateParameters:
+                np.append(cp)
+                z = cp[:]
+                np.append(z + '_normal')
+            self.updatedClimateParameters = np[:]
+
+        #Add additional request of normals to elems dictionary
+        if self.includeNormals:
+            rcelems = []
+            for k in self.elems:
+                rcelems.append(k)
+                n = copy.deepcopy(k)
+                n['normal']=1
+                try:
+                    n.pop('add')  #remove the add argument, if present
+                except:
+                    pass
+                rcelems.append(n)
+            self.elems = rcelems[:]
+
+        #strip out all None values
+        for e,value in enumerate(self.elems):
+            self.elems[e] = self._stripNoneValues(value)
+
+
+
+
 
 if __name__ == '__main__':
     c = ACIS()

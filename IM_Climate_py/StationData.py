@@ -13,7 +13,11 @@ class StationData(dict):
     def _set(self, stationData, climateParameters):
         self.observationDates = tuple([d[0] for d in stationData])
         for index, p in enumerate(climateParameters):
-            self[p] = ParameterSeries(observationClass = self.observationClass)
+            if p.find('normal') != -1:
+                isNormal = True
+            else:
+                isNormal = False
+            self[p] = ParameterSeries(observationClass = self.observationClass, isNormal = isNormal)
             self[p]._set(([d[index+1] for d in stationData]), dates = self.observationDates, parameter = p)
 
     @property

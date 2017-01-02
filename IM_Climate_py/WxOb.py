@@ -5,7 +5,7 @@ class WxOb(dict):
     def __init__(self, values = None):
         if values:
             self['date'] = values[0].encode()
-            self['wxOb']  = values[1].encode()
+
             self._replaceBlanks()
 
     @property
@@ -33,22 +33,34 @@ class DailyWxOb(WxOb):
         -WxOb.ACIS_Flag
         -WxOb.sourceFlag
     '''
-    def __init__(self, values = None):
+    def __init__(self, values = None,  isNormal = False):
 
         if values:
-            self['ACIS_Flag'] = values[2].encode()
-            self['sourceFlag'] = values[3].encode()
+            self['wxOb']  = values[1]
+            if not isNormal:
+                self['ACIS_Flag'] = values[2].encode()
+                self['sourceFlag'] = values[3].encode()
             super(DailyWxOb, self).__init__(values)
+            self.isNormal = isNormal
 
     @property
     def ACIS_Flag(self):
-        return self['ACIS_Flag']
+        if not self.isNormal:
+            return self['ACIS_Flag']
+        else:
+            return 'NA'
     @property
     def sourceFlag(self):
-        return self['sourceFlag']
+        if not self.isNormal:
+            return self['sourceFlag']
+        else:
+            return 'NA'
 
     def toList(self, includeDate = True):
-        l = [self.wxOb, self.ACIS_Flag, self.sourceFlag]
+        if not self.isNormal:
+            l = [self.wxOb, self.ACIS_Flag, self.sourceFlag]
+        else:
+            l = [self.wxOb]
         if includeDate:
             l.insert(0, self.date)
         return l
@@ -57,20 +69,40 @@ class DailyWxOb(WxOb):
         '''
         Creates the header needed when exporting to a text file
         '''
-        return [getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag']
+        if not self.isNormal:
+            return [getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag']
+        else:
+            return [getSupportedParameters()[p.split('_')[0]]['label'] + '_' + p.split('_')[1]]
 
 class MonthlyWxOb(WxOb):
-    def __init__(self, values = None):
+    '''
+    Class to handle monthly weather observations a a list in the format of
+    [u'2012-01', u'22.60', 0] or [Date, observation, count missing]
+
+    If count missing is missing, the monthly weather observation is assumed to
+    be a published normal
+
+    '''
+    def __init__(self, values = None, isNormal = False):
         super(MonthlyWxOb, self).__init__(values)
         if values:
-            self['countMissing'] = values[2]
+            self['wxOb']  = values[1].encode()
+            if not isNormal:
+                self['countMissing'] = values[2]
+        self.normal = isNormal
 
     @property
     def countMissing(self):
-        return self['countMissing']
+        if not self.normal:
+            return self['countMissing']
+        else:
+            return 'NA'
 
     def toList(self, includeDate = True):
-        l = [self.wxOb, str(self.countMissing)]
+        if self.normal:
+            l = [self.wxOb]
+        else:
+            l = [self.wxOb, str(self.countMissing)]
         if includeDate:
             l.insert(0, self.date)
         return l
@@ -80,33 +112,10 @@ class MonthlyWxOb(WxOb):
         Creates the header needed when exporting to a text file
         '''
         pAndU = getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
-        return [pAndU, pAndU +'_countMissing']
-
-class MonthlyNormalWxOb(WxOb):
-    def __init__(self, values = None):
-        if values:
-            self['month'] = str(values[0].split('-')[1])
-            self['normal'] = str(values[1])
-
-    @property
-    def month(self):
-        return self['month']
-
-    @property
-    def normal(self):
-        return self['normal']
-
-    def _createHeader(self, p):
-        '''
-        Creates the header needed when exporting to a text file
-        '''
-        return [getSupportedParameters()[p]['label'] + '_normal']
-
-    def toList(self, includeDate = True):
-        l = [self.normal]
-        if includeDate:
-            l.insert(0, self.month)
-        return l
+        if self.normal:
+            return [pAndU]
+        else:
+            return [pAndU, pAndU +'_countMissing']
 
 
 if __name__=='__main__':
@@ -124,10 +133,10 @@ if __name__=='__main__':
     print dmonth.toList()
     print dmonth._createHeader('mint_mly')
 
-    #Monthly Normal data
-    data = ['2012-02',u'32.0']
-    wx = MonthlyNormalWxOb(data)
-    print wx.normal
-    print wx.month
-    print wx._createHeader('mint')
-    print wx.toList()
+    #Monthly normal data
+    data = [u'2012-01', u'22.60']
+    dmonth = MonthlyWxOb(data, isNormal = True)
+    print dmonth
+    print dmonth.toList()
+    print dmonth._createHeader('mint_mly_normal')
+

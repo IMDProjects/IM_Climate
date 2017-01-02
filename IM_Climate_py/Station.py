@@ -121,13 +121,15 @@ class Station(object):
 
     @property
     def _header(self):
-        #Header as a list
+        '''
+        returns a header as a list by calling the parameter series object to create
+        a header
+        '''
         oClass = self.observationClass()
         header = list(self._dataTags[:]) #set header to copy of _dataTags values
         header.extend(['date'])
         for p in self.climateParameters:
-            #header.extend([common.getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag'])
-            header.extend(oClass._createHeader(p))
+            header.extend(self.data[p]._createHeader())
         return header
 
 

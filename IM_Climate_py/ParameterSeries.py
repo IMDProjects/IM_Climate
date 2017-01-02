@@ -1,5 +1,4 @@
-from WxOb import DailyWxOb
-from WxOb import MonthlyWxOb
+
 
 class ParameterSeries(dict):
     '''
@@ -8,16 +7,19 @@ class ParameterSeries(dict):
     ParameterSeries has been extended to be iterable like a list
     '''
 
-    def __init__(self, observationClass):
+    def __init__(self, observationClass, isNormal = False):
         self.observationClass = observationClass
+        self.isNormal = isNormal
 
     def _set(self, pData, dates, parameter):
         self.parameter = parameter
         for index, value in enumerate(pData):
             date = [dates[index]]
-            wo = date
+            wo = date[:]
+            if type(value) == unicode:
+                value = [value.encode()]
             wo.extend(value)
-            self[date[0]] = self.observationClass(wo)
+            self[date[0]] = self.observationClass(wo, isNormal = self.isNormal)
 
     def __iter__(self):
         '''
@@ -26,10 +28,15 @@ class ParameterSeries(dict):
         for k in sorted(self.keys()):
             yield self[k]
 
+    def _createHeader(self):
+        d = self.keys()[0]
+        return self[d]._createHeader(self.parameter)
+
 
 if __name__ == '__main__':
 
-
+    from WxOb import DailyWxOb
+    from WxOb import MonthlyWxOb
     data = [[u'21.5', u' ', u'U'],
          [u'29.5', u' ', u'U'],
          [u'32.0', u' ', u'U'],
@@ -40,3 +47,16 @@ if __name__ == '__main__':
     ps = ParameterSeries(observationClass = DailyWxOb)
     ps._set(data,dates,parameter)
     print ps
+
+    #MONTHLY
+    parameter = 'maxt_mly'
+    data = [[u'21.5', '0'],
+         [u'29.5', '0'],
+         [u'32.0', '0'],
+         [u'27.5', '0'],
+         [u'35.5', '4']]
+
+    ps = ParameterSeries(observationClass = MonthlyWxOb)
+    ps._set(data,dates,parameter)
+    print ps
+    print ps._createHeader()
