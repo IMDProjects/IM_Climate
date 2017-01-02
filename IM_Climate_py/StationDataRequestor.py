@@ -37,6 +37,7 @@ class StationDataRequestor(ACIS):
         self.stationIDs = self._extractStationIDs(kwargs.pop('climateStations'))
         self._formatClimateParameters(kwargs.pop('climateParameters'))
         self.includeNormals = kwargs.pop('includeNormals', None)
+        self.includeNormalDepartures = kwargs.pop('includeNormalDepartures', None)
         self.maxMissing = (kwargs.pop('maxmissing', None))
 
         #additional metadata elements to request along with the data
@@ -65,7 +66,8 @@ class StationDataRequestor(ACIS):
         return sd
 
     def getDailyWxObservations(self, climateStations, climateParameters = None
-            , sdate = 'por', edate = 'por', includeNormals = False, filePathAndName = None):
+            ,sdate = 'por', edate = 'por', includeNormals = False
+            ,includeNormalDepartures = False, filePathAndName = None):
         '''
         INFO
         -----
@@ -89,8 +91,9 @@ class StationDataRequestor(ACIS):
 
         edate (optional)                End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
 
-        includeNormals (optional)       If True, then include the daily normal along
-                                        with the monthly aggregate.
+        includeNormals (optional)       If True, then include the daily normals
+
+        includeNormalDepartures (opt)   If True, then include the daily departues from normal
 
         filePathAndName (optional)      Location and name of CSV text file to save
 
@@ -110,11 +113,11 @@ class StationDataRequestor(ACIS):
             edate = str(edate), climateStations = climateStations,
             climateParameters = climateParameters,
             filePathAndName = filePathAndName, reduceCodes = self.reduceCodes,
-            includeNormals = includeNormals)
+            includeNormals = includeNormals, includeNormalDepartures = includeNormalDepartures)
 
     def getMonthlyWxSummaryByYear(self, climateStations, climateParameters = None
             ,reduceCodes = None, sdate = 'por', edate = 'por', maxMissing = None
-            ,includeNormals = False, filePathAndName = None):
+            ,includeNormals = False, includeNormalDepartures = False, filePathAndName = None):
         '''
         Returns the monthly summaries/aggregates of weather observations for one or more stations
         by month over 1 or more years
@@ -142,8 +145,9 @@ class StationDataRequestor(ACIS):
                                         before a missing value is returned (default is 1, or approximately
                                         3.3% missing days within a month)
 
-        includeNormals (optional)       If True, then include the monthly normal along
-                                        with the monthly aggregate.
+        includeNormals (optional)       If True, then include the monthly normals
+
+        includeNormalDepartures (opt)   If True, then include the monthly departues from normal
 
         filePathAndName (optional)      Location and name of CSV text file to save
 
@@ -159,10 +163,11 @@ class StationDataRequestor(ACIS):
         self.observationClass = MonthlyWxOb
 
 
-        return self._fetchStationDataFromACIS(sdate = sdate,
-            edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
-            , filePathAndName = filePathAndName, climateStations = climateStations
-            ,climateParameters = climateParameters, includeNormals = includeNormals)
+        return self._fetchStationDataFromACIS(sdate = sdate
+            ,edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
+            ,filePathAndName = filePathAndName, climateStations = climateStations
+            ,climateParameters = climateParameters, includeNormals = includeNormals
+            ,includeNormalDepartures = includeNormalDepartures)
 
 
     def getMonthlyWxSummary(self, climateStations, climateParameters = None
@@ -256,7 +261,8 @@ if __name__=='__main__':
     #INCLUDE NORMALS
     monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = 29699,
         reduceCodes = 'mean', climateParameters = 'maxt'
-        , sdate = '2003-01', edate = '2004-12', includeNormals = True )
+        , sdate = '2003-01', edate = '2003-01', includeNormals = True
+        ,includeNormalDepartures = True)
     print (monthlyData)
 
 ##
@@ -286,10 +292,11 @@ if __name__=='__main__':
 ##        , sdate = '20120101', edate = '2012-01-05' )
 ##    print dailyData
 
-    #INCLUDE DAILY NORMALS
+##    #INCLUDE DAILY NORMALS
     dailyData = dr.getDailyWxObservations(climateStations = 29699
         , climateParameters = 'mint'
-        , sdate = '20120101', edate = '2012-03-30', includeNormals = True )
+        , sdate = '20120101', edate = '2012-03-30', includeNormals = True,
+        includeNormalDepartures = True )
     print dailyData
 
 ##

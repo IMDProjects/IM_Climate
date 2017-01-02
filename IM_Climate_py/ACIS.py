@@ -169,25 +169,32 @@ class ACIS(object):
 
         #update climate parameters to include normals
         np = []
-        if self.includeNormals:
+        if self.includeNormals or self.includeNormalDepartures:
             for cp in self.updatedClimateParameters:
                 np.append(cp)
-                z = cp[:]
-                np.append(z + '_normal')
+                if self.includeNormals:
+                    z = cp[:]
+                    np.append(z + '_normal')
+                if self.includeNormalDepartures:
+                    z = cp[:]
+                    np.append(z + '_normalDeparture')
             self.updatedClimateParameters = np[:]
 
         #Add additional request of normals to elems dictionary
-        if self.includeNormals:
+        if self.includeNormals or self.includeNormalDepartures:
             rcelems = []
             for k in self.elems:
                 rcelems.append(k)
-                n = copy.deepcopy(k)
-                n['normal']=1
-                try:
-                    n.pop('add')  #remove the add argument, if present
-                except:
-                    pass
-                rcelems.append(n)
+                if self.includeNormals:
+                    n = copy.deepcopy(k)
+                    n['normal']=1
+                    n.pop('add', None)  #remove the add argument, if present
+                    rcelems.append(n)
+                if self.includeNormalDepartures:
+                    n = copy.deepcopy(k)
+                    n['normal'] = "departure"
+                    n.pop('add', None)  #remove the add argument, if present
+                    rcelems.append(n)
             self.elems = rcelems[:]
 
         #strip out all None values
