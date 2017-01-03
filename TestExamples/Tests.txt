@@ -50,7 +50,26 @@ STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
         sdate = None
         edate = '2016-09'
         maxMissing = 2
-				
+STATION DATA REQUESTOR - getYearlyWxSummary
+	TEST 01 
+		climateStations =  '61193, 26215'
+		climateParameters = None
+		reduceCodes = None
+		sdate = '201401'
+		edate = '201501'
+        maxMissing = 1
+
+STATION DATA REQUESTOR - getDailyCountByThreshold
+	TEST 01 
+		climateStations =  29699
+		climateParameters = 'mint'
+		sdate = '200101'
+		edate = '200105'
+        thresholdValue = 90
+        thresholdType = 'gt'
+        timeInterval = 'mly'		
+
+		
 GRID REQUESTOR - getDailyWxObservations
 	TEST 01
 		sdate = '2015-01-01'
