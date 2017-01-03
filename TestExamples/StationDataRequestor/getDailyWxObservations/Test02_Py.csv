@@ -1,0 +1,5 @@
+"uid","name","longitude","latitude","sid1","sid1_type","sid2","sid2_type","sid3","sid3_type","state","elev","date","pcpn_in","pcpn_acis_flag","pcpn_source_flag"
+30433,"HARRISON 23.7 SSE",-103.7547,42.3579,"US10siou005 6","GHCN","NA","NA","NA","NA","NE","NA","2015-08-01","0.00","T","N"
+30433,"HARRISON 23.7 SSE",-103.7547,42.3579,"US10siou005 6","GHCN","NA","NA","NA","NA","NE","NA","2015-08-02","0.00","NA","N"
+30433,"HARRISON 23.7 SSE",-103.7547,42.3579,"US10siou005 6","GHCN","NA","NA","NA","NA","NE","NA","2015-08-03","0.00","NA","N"
+30433,"HARRISON 23.7 SSE",-103.7547,42.3579,"US10siou005 6","GHCN","NA","NA","NA","NA","NE","NA","2015-08-04","0.00","NA","N"
