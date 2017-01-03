@@ -26,11 +26,11 @@ class StationDataRequestor(ACIS):
         StationDict object
 
         '''
-        #clean up some of the kwargs
+        #clean up some of the kwargs used in the ACIS call
         kwargs['sdate'] = self._formatDate(kwargs.get('sdate', None))
         kwargs['edate'] = self._formatDate(kwargs.get('edate', None))
 
-        #pop some of the kwargs that are not used directly in the ACIS call
+        #pop the kwargs that are not used directly in the ACIS call
         self.reduceCodes = self._formatReduceCodes(kwargs.pop('reduceCodes', None))
         self.filePathAndName =  kwargs.pop('filePathAndName', None)
         self.stationIDs = self._extractStationIDs(kwargs.pop('climateStations'))

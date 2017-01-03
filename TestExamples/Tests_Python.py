@@ -84,10 +84,10 @@ class Test_StationFinder(unittest.TestCase):
 
 class Test_StationDataRequestor_getDailyWxObs(unittest.TestCase):
 
-    rootFolder = '../TestExamples/StationDataRequestor/'
+    rootFolder = '../TestExamples/StationDataRequestor/getDailyWxObservations/'
     def confirmContent(self):
         '''
-        Confirms that all information the same, ignoring record order
+        Confirms that all information is the same, ignoring record order
         '''
         dr = StationDataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  self.climateStations,
@@ -153,7 +153,8 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         dr = StationDataRequestor()
         wxData =  dr.getMonthlyWxSummaryByYear(climateStations =  self.climateStations,
             climateParameters = self.climateParameters, reduceCodes = self.reduceCodes
-            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing)
+            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing,
+            includeNormals = self.includeNormals, includeNormalDepartures = self.includeNormalDepartures)
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
@@ -171,6 +172,8 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.sdate = '201401'
         self.edate = '201501'
         self.maxMissing = 1
+        self.includeNormals = False
+        self.includeNormalDepartures = False
         self.refDataFile = 'Test01_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
@@ -182,6 +185,8 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
 ##        self.sdate = '201401'
 ##        self.edate = '201501'
 ##        self.maxMissing = None
+##        self.includeNormals = False
+##        self.includeNormalDepartures = False
 ##        self.refDataFile = 'Test01_R.csv'
 ##        self.confirmContent()
 ##        self.assertEqual(self.result,[])
@@ -193,6 +198,8 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.sdate = None
         self.edate = '2016-09'
         self.maxMissing = 2
+        self.includeNormals = False
+        self.includeNormalDepartures = False
         self.refDataFile = 'Test02_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
@@ -210,6 +217,18 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
 ##        self.assertEqual(self.result,[])
 
 
+    def test03(self):
+        self.climateStations =  29699
+        self.climateParameters = 'maxt'
+        self.reduceCodes = 'mean'
+        self.sdate = '2003-01'
+        self.edate = '2003-02'
+        self.maxMissing = 1
+        self.includeNormals = True
+        self.includeNormalDepartures = True
+        self.refDataFile = 'Test03_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
 
 class Test_GridRequestor(unittest.TestCase):
     rootFolder = '../TestExamples/GridRequestor/'
@@ -291,6 +310,76 @@ class Test_GridRequestor(unittest.TestCase):
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
+
+class Test_StationDataRequestor_getYearlyWxSummary(unittest.TestCase):
+
+    rootFolder = '../TestExamples/StationDataRequestor/getYearlyWxSummary/'
+    def confirmContent(self):
+        '''
+        Confirms that all information is the same, ignoring record order
+        '''
+        dr = StationDataRequestor()
+        wxData =  dr.getYearlyWxSummary(climateStations =  self.climateStations,
+            climateParameters = self.climateParameters, reduceCodes = self.reduceCodes
+            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing,
+            includeNormals = self.includeNormals, includeNormalDepartures = self.includeNormalDepartures)
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
+        testData = infile.read()
+        refDataFile = open(Test_StationDataRequestor_getYearlyWxSummary.rootFolder + self.refDataFile, 'r')
+        refData = refDataFile.read()
+        infile.close()
+        refDataFile.close()
+        os.remove('temp.csv')
+        self.result =  list(numpy.setdiff1d(refData.split('/n'), testData.split('/n')))
+
+    def test01(self):
+        self.climateStations =  29699
+        self.climateParameters = 'mint'
+        self.reduceCodes = 'mean'
+        self.sdate = 2001
+        self.edate = 2005
+        self.maxMissing = 0
+        self.includeNormals = True
+        self.includeNormalDepartures = True
+        self.refDataFile = 'Test01_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+class Test_StationDataRequestor_getDayCountByThreshold(unittest.TestCase):
+
+    rootFolder = '../TestExamples/StationDataRequestor/getDayCountByThreshold/'
+    def confirmContent(self):
+        '''
+        Confirms that all information is the same, ignoring record order
+        '''
+        dr = StationDataRequestor()
+        wxData =  dr.getDayCountByThreshold(climateStations =  self.climateStations,
+            climateParameters = self.climateParameters
+            ,sdate = self.sdate, edate = self.edate, thresholdValue = self.thresholdValue,
+            timeInterval = self.timeInterval, thresholdType = self.thresholdType)
+
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
+        testData = infile.read()
+        refDataFile = open(Test_StationDataRequestor_getDayCountByThreshold.rootFolder + self.refDataFile, 'r')
+        refData = refDataFile.read()
+        infile.close()
+        refDataFile.close()
+        os.remove('temp.csv')
+        self.result =  list(numpy.setdiff1d(refData.split('/n'), testData.split('/n')))
+
+    def test01(self):
+        self.climateStations =  29699
+        self.climateParameters = 'mint'
+        self.sdate = '200101'
+        self.edate = '200105'
+        self.thresholdValue = 90
+        self.thresholdType = 'gt'
+        self.timeInterval = 'mly'
+        self.refDataFile = 'Test01_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
 
 if __name__ == '__main__':
     unittest.main()
