@@ -301,6 +301,18 @@ if __name__=='__main__':
 ##    print (yearlyCounts)
 ##
 ##
+
+
+    yearlyCounts= dr.getDayCountByThreshold(climateStations = 29699,
+         climateParameters = 'mint',  thresholdType = 'le'
+        ,thresholdValue = 10,  timeInterval = 'yly'
+        ,sdate = 1980, edate = 1985)
+    print (yearlyCounts)
+
+
+
+
+
 ##
 ##    ############################################################################
 ##    #YEARLY DATA

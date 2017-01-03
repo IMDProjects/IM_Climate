@@ -68,6 +68,14 @@ STATION DATA REQUESTOR - getDailyCountByThreshold
         thresholdValue = 90
         thresholdType = 'gt'
         timeInterval = 'mly'		
+	TEST 2
+		climateStations =  29699
+		climateParameters = 'mint'
+		sdate = 2001
+		edate = 2010
+        thresholdValue = 10
+        thresholdType = 'le'
+        timeInterval = 'yly'		
 
 		
 GRID REQUESTOR - getDailyWxObservations

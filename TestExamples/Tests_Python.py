@@ -381,5 +381,17 @@ class Test_StationDataRequestor_getDayCountByThreshold(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+    def test02(self):
+        self.climateStations =  29699
+        self.climateParameters = 'mint'
+        self.sdate = 2001
+        self.edate = 2010
+        self.thresholdValue = 10
+        self.thresholdType = 'le'
+        self.timeInterval = 'yly'
+        self.refDataFile = 'Test02_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
 if __name__ == '__main__':
     unittest.main()
