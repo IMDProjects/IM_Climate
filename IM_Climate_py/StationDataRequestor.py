@@ -170,12 +170,77 @@ class StationDataRequestor(ACIS):
             ,includeNormalDepartures = includeNormalDepartures)
 
 
-    def getMonthlyWxSummary(self, climateStations, climateParameters = None
-            ,reduceCodes = None, sdate = 'por', edate = 'por', maxMissing = 1
-            ,filePathAndName = None):
+##    def getMonthlyWxSummary(self, climateStations, climateParameters = None
+##            ,reduceCodes = None, sdate = 'por', edate = 'por', maxMissing = 1
+##            ,filePathAndName = None):
+##        '''
+##        Returns the monthly summaries/aggregates of weather observations
+##        for one or more stations.
+##
+##        ARGUMENTS
+##        ---------
+##
+##        climateStations                 One or more station identifiers (uids)
+##                                        passed either as a list or the response
+##                                        object from the station finder.
+##
+##        climateParameters (optional)    The weather parameters to fetch. Valid parameters
+##                                        can be found by accesssing the supportedParamters property.
+##                                        Note that ACIS vernacular for climate parameter is element.
+##
+##        reduceCodes (optional)          The method used to summarize the daily observations into monthly
+##                                        values. Current options inlcude max, min, sum and
+##                                        mean. If none are provided, then all are returned.
+##
+##        sdate (optional)                Start Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+##
+##        edate (optional)                End Date - YYYY-MM-DD OR YYYYMMDD (default is period of record)
+##
+##        maxMissing (optional)           Maximum number of missing days within a month
+##                                        before a missing value is returned (default is 1, or approximately
+##                                        3.3% missing days within a month)
+##
+##        filePathAndName (optional)      Location and name of CSV text file to save
+##
+##        RETURNS
+##        -------
+##        Returns object that contains station metadata and the weather
+##        summaries by month (total of 12 values per climate parameter)
+##
+##
+##        '''
+##        raise Exception('THIS METHOD IS NOT WORKING')
+##        self.duration = 'mly'
+##        self.interval = "1"
+##        self.add = 'mcnt'
+##        self.observationClass = MonthlyWxOb
+##
+##        return self._fetchStationDataFromACIS(sdate = str(sdate),
+##            edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
+##            ,filePathAndName = filePathAndName, climateStations = climateStations
+##            ,climateParameters = climateParameters)
+
+    def _extractStationIDs(self, stations):
         '''
-        Returns the monthly summaries/aggregates of weather observations
-        for one or more stations.
+        INFO
+        ----
+        If stations is a StationDict object, extracts list of stationIDs.
+        Otherwise, assumes stationIDs to be a list, comma-delimited string,
+        or a single stationID as a string.
+        '''
+        try:
+            return stations.stationIDs
+        except:
+            return self._formatStringArguments(stations)
+
+
+
+    def getYearlyWxSummary(self, climateStations, climateParameters = None
+            ,reduceCodes = None, sdate = 'por', edate = 'por', maxMissing = None
+            ,includeNormals = False, includeNormalDepartures = False, filePathAndName = None):
+        '''
+        Returns the annual/yearly summaries/aggregates of weather observations for one or more stations
+
 
         ARGUMENTS
         ---------
@@ -200,38 +265,78 @@ class StationDataRequestor(ACIS):
                                         before a missing value is returned (default is 1, or approximately
                                         3.3% missing days within a month)
 
+        includeNormals (optional)       If True, then include the monthly normals
+
+        includeNormalDepartures (opt)   If True, then include the monthly departues from normal
+
         filePathAndName (optional)      Location and name of CSV text file to save
 
         RETURNS
         -------
-        Returns object that contains station metadata and the weather
-        summaries by month (total of 12 values per climate parameter)
-
+        Dictionary-like bject that contains station metadata and the annual climate
+        aggregates
 
         '''
-        raise Exception('THIS METHOD IS NOT WORKING')
-        self.duration = 'mly'
-        self.interval = "1"
+        self.duration = 'yly'
+        self.interval = 'yly'
         self.add = 'mcnt'
         self.observationClass = MonthlyWxOb
 
-        return self._fetchStationDataFromACIS(sdate = str(sdate),
-            edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
+
+        return self._fetchStationDataFromACIS(sdate = sdate
+            ,edate = str(edate), reduceCodes = reduceCodes, maxmissing = maxMissing
+            ,filePathAndName = filePathAndName, climateStations = climateStations
+            ,climateParameters = climateParameters, includeNormals = includeNormals
+            ,includeNormalDepartures = includeNormalDepartures)
+
+
+    def getDayCountByThreshold(self, climateStations, climateParameters, thresholdType
+            ,thresholdValue, timeInterval, sdate = 'por', edate = 'por', filePathAndName = None):
+        '''
+        Returns the count of days per year above/below threshold
+
+
+        ARGUMENTS
+        ---------
+
+        climateStations                 One or more station identifiers (uids)
+                                        passed either as a list or the response
+                                        object from the station finder.
+
+        climateParameters               One or more weather parameters (of the same unit - eg., fahrenheit).
+                                        Valid parameters can be found by accesssing the supportedParamters property.
+                                        Note that ACIS vernacular for climate parameter is element.
+
+        thresholdType                   gt (greater than); ge (greater than equal to); lt (less than)
+                                        le (less than equal to); eq (equal to); ne (not equal to)
+
+        thresholdValue                  The method used to summarize the daily observations into monthly
+                                        values. Current options inlcude max, min, sum and
+                                        mean. If none are provided, then all are returned.
+
+        timeInterval                    mly = by month | yly = by year
+
+        sdate (optional)                Start Date - YYYY-MM OR YYYYMM (default is period of record)
+
+        edate (optional)                End Date - YYYY-MM OR YYYYMM (default is period of record)
+
+
+        filePathAndName (optional)      Location and name of CSV text file to save
+
+
+        '''
+
+        self.duration = timeInterval
+        self.interval = timeInterval
+        self.reduceCodes = ['cnt_' +  thresholdType + '_' + thresholdValue]
+        self.observationClass = MonthlyWxOb
+        self.add = 'mcnt'
+
+        return self._fetchStationDataFromACIS(sdate = sdate
+            ,edate = str(edate), reduceCodes = self.reduceCodes
             ,filePathAndName = filePathAndName, climateStations = climateStations
             ,climateParameters = climateParameters)
 
-    def _extractStationIDs(self, stations):
-        '''
-        INFO
-        ----
-        If stations is a StationDict object, extracts list of stationIDs.
-        Otherwise, assumes stationIDs to be a list, comma-delimited string,
-        or a single stationID as a string.
-        '''
-        try:
-            return stations.stationIDs
-        except:
-            return self._formatStringArguments(stations)
 
 if __name__=='__main__':
 
@@ -239,7 +344,23 @@ if __name__=='__main__':
     stationIDs = '66180, 67175'
 
     dr = StationDataRequestor()
+    ############################################################################
+    yearlyCounts= dr.getDayCountByThreshold(climateStations = 29699,
+         climateParameters = 'maxt',  thresholdType = 'eq'
+        ,thresholdValue = '90',  timeInterval = 'yly'
+        ,sdate = '1980', edate = '1985')
+    print (yearlyCounts)
 
+
+
+    ############################################################################
+    #YEARLY DATA
+    #INCLUDE NORMALS
+##    yearlyData = dr.getYearlyWxSummary(climateStations = 29699,
+##        reduceCodes = 'mean', climateParameters = 'maxt'
+##        , sdate = '1980', edate = '2004', includeNormals = True
+##        ,includeNormalDepartures = True)
+##    print (yearlyData)
 
 
     ###########################################################################
@@ -258,12 +379,12 @@ if __name__=='__main__':
 ##        , sdate = '2005-01-01', edate = '2016-05-01' )
 ##    print (monthlyData)
 ##
-    #INCLUDE NORMALS
-    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = 29699,
-        reduceCodes = 'mean', climateParameters = 'maxt'
-        , sdate = '2003-01', edate = '2003-01', includeNormals = True
-        ,includeNormalDepartures = True)
-    print (monthlyData)
+##    #INCLUDE NORMALS
+##    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = 29699,
+##        reduceCodes = 'mean', climateParameters = 'maxt'
+##        , sdate = '2003-01', edate = '2003-01', includeNormals = True
+##        ,includeNormalDepartures = True)
+##    print (monthlyData)
 
 ##
 ##    sf = StationFinder()
@@ -293,11 +414,11 @@ if __name__=='__main__':
 ##    print dailyData
 
 ##    #INCLUDE DAILY NORMALS
-    dailyData = dr.getDailyWxObservations(climateStations = 29699
-        , climateParameters = 'mint'
-        , sdate = '20120101', edate = '2012-03-30', includeNormals = True,
-        includeNormalDepartures = True )
-    print dailyData
+##    dailyData = dr.getDailyWxObservations(climateStations = 29699
+##        , climateParameters = 'mint'
+##        , sdate = '20120101', edate = '2012-03-30', includeNormals = True,
+##        includeNormalDepartures = True )
+##    print dailyData
 
 ##
 ##    #GET DATA for a single station
