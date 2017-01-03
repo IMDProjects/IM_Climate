@@ -42,7 +42,7 @@ STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
 		reduceCodes = None
 		sdate = '201401'
 		edate = '201501'
-        maxMissing = None
+        maxMissing = 1
 	TEST 02
 	    climateStations =  26215
         climateParameters = 'pcpn'

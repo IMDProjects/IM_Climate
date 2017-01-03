@@ -68,7 +68,7 @@ class ACIS(object):
         data = {}
         kwargs.update(d)
         for k in kwargs:
-            if kwargs[k] and kwargs[k] != 'None':
+            if kwargs[k] is not None and kwargs[k] != 'None':
                 data[k] = kwargs[k]
         return data
 
@@ -200,10 +200,6 @@ class ACIS(object):
         #strip out all None values
         for e,value in enumerate(self.elems):
             self.elems[e] = self._stripNoneValues(value)
-
-
-
-
 
 if __name__ == '__main__':
     c = ACIS()

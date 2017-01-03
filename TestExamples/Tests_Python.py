@@ -170,7 +170,7 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.reduceCodes = None
         self.sdate = '201401'
         self.edate = '201501'
-        self.maxMissing = None
+        self.maxMissing = 1
         self.refDataFile = 'Test01_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
