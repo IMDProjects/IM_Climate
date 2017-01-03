@@ -1,0 +1,3 @@
+"uid","name","longitude","latitude","sid1","sid1_type","sid2","sid2_type","sid3","sid3_type","state","elev","date","maxt_F_mean","maxt_F_mean_countMissing","maxt_F_mean_normal","maxt_F_mean_normalDeparture"
+29699,"BURLINGTON WSO AP",-73.15,44.46833,"14742 1","WBAN","431081 2","COOP","BTV 3","FAA","VT",350.0,"2003-01","19.9","0","27.2","-7.3"
+29699,"BURLINGTON WSO AP",-73.15,44.46833,"14742 1","WBAN","431081 2","COOP","BTV 3","FAA","VT",350.0,"2003-02","24.3","0","30.6","-6.3"
