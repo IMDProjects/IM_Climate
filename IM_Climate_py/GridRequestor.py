@@ -61,6 +61,7 @@ class GridRequestor(ACIS):
         ARGUMENTS
             sdate               Start date (yyyy-mm-dd or yyyymmdd).
             edate               End date (yyyy-mm-dd or yyyymmdd).
+            duration            dly | mly | yly (i.e, daily, monthly, or yearly)
             unitCode (optional) 4-letter unit code. Currently accepts only one.
             distance (optional) Distance in kilometers for buffering a bounding box of park.
                                 If no distance is specified then 0 is used as the default buffer.
