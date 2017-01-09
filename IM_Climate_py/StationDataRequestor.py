@@ -300,31 +300,31 @@ if __name__=='__main__':
         , sdate = '2007-01-01', edate = '2007-05-01', maxMissing = 0 )
     print (monthlyData)
 
-##    #INCLUDE NORMALS
-##    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = 29699,
-##        reduceCodes = 'mean', climateParameters = 'maxt'
-##        , sdate = '2003-01', edate = '2003-01', includeNormals = True
-##        ,includeNormalDepartures = True)
-##    print (monthlyData)
-##
-##
-##    sf = StationFinder()
-##    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
-##        sdate = '2015-01-01', edate = '2015-03-31')
-##
-##    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
-##    # from January 2015 to March 2015. Use default of maximum missing days of 1.
-##    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
-##        climateParameters = 'mint, maxt', reduceCodes = None
-##        , sdate = '2015-01', edate = '2015-03')
-##
-##    print (wxData)
-##
-##    sf = StationFinder()
-##    wxData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
-##        climateParameters = 'mint, maxt', reduceCodes = None
-##        , sdate = None, edate = '2015-03')
-##    print (wxData)
+    #INCLUDE NORMALS
+    monthlyData = dr.getMonthlyWxSummaryByYear(climateStations = 29699,
+        reduceCodes = 'mean', climateParameters = 'maxt'
+        , sdate = '2003-01', edate = '2003-01', includeNormals = True
+        ,includeNormalDepartures = True)
+    print (monthlyData)
+
+
+    sf = StationFinder()
+    YELL_Stations = sf.findStation(unitCode = 'YELL', climateParameters = 'mint, maxt',
+        sdate = '2015-01-01', edate = '2015-03-31')
+
+    #get monthly summary for minimum and maximum temperature for the Yellowstone Stations
+    # from January 2015 to March 2015. Use default of maximum missing days of 1.
+    wxData = dr.getMonthlyWxSummaryByYear(climateStations = YELL_Stations,
+        climateParameters = 'mint, maxt', reduceCodes = None
+        , sdate = '2015-01', edate = '2015-03')
+
+    print (wxData)
+
+    sf = StationFinder()
+    wxData = dr.getMonthlyWxSummaryByYear(climateStations = stationIDs,
+        climateParameters = 'mint, maxt', reduceCodes = None
+        , sdate = None, edate = '2015-03')
+    print (wxData)
 
 
     #########################################################################
@@ -333,36 +333,36 @@ if __name__=='__main__':
         , climateParameters = 'avgt, mint'
         , sdate = '20120101', edate = '2012-01-05' )
     print dailyData
-##
-##    #INCLUDE DAILY NORMALS
-##    dailyData = dr.getDailyWxObservations(climateStations = 29699
-##        , climateParameters = 'mint'
-##        , sdate = '20120101', edate = '2012-03-30', includeNormals = True,
-##        includeNormalDepartures = True )
-##    print dailyData
-##
-##
-##    #GET DATA for a single station
-##    dailyData = dr.getDailyWxObservations(climateStations = 77572
-##        , sdate = 20160101, edate = '20160105' )
-##
-##    #Print the station data to the screen
-##    print (dailyData)
-##
-##    #get data for stations returned in station search
-##    sf = StationFinder()
-##    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
-##    wxData = dr.getDailyWxObservations(climateStations = stationList,
-##        climateParameters = 'pcpn'
-##        ,sdate = '2015-08-01', edate = '2015-08-04')
-##    print (wxData)
-##    print (wxData.stationCounts)
-##
-##    #Export Daily data to data.csv
-##    dailyData = dr.getDailyWxObservations(climateStations = '29699'
-##        , climateParameters = 'maxt'
-##        , sdate = '2003-01-01', edate = '2004-12-31' )
-##    print dailyData
-##    dailyData.export(r'C:\TEMP\data.csv')
+
+    #INCLUDE DAILY NORMALS
+    dailyData = dr.getDailyWxObservations(climateStations = 29699
+        , climateParameters = 'mint'
+        , sdate = '20120101', edate = '2012-03-30', includeNormals = True,
+        includeNormalDepartures = True )
+    print dailyData
+
+
+    #GET DATA for a single station
+    dailyData = dr.getDailyWxObservations(climateStations = 77572
+        , sdate = 20160101, edate = '20160105' )
+
+    #Print the station data to the screen
+    print (dailyData)
+
+    #get data for stations returned in station search
+    sf = StationFinder()
+    stationList = sf.findStation(unitCode = 'GRKO', distance = 10)
+    wxData = dr.getDailyWxObservations(climateStations = stationList,
+        climateParameters = 'pcpn'
+        ,sdate = '2015-08-01', edate = '2015-08-04')
+    print (wxData)
+    print (wxData.stationCounts)
+
+    #Export Daily data to data.csv
+    dailyData = dr.getDailyWxObservations(climateStations = '29699'
+        , climateParameters = 'maxt'
+        , sdate = '2003-01-01', edate = '2004-12-31' )
+    print dailyData
+    dailyData.export(r'C:\TEMP\data.csv')
 
 

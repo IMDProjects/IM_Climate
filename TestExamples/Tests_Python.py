@@ -42,45 +42,45 @@ class Test_StationFinder(unittest.TestCase):
         self.unitCode = 'ROMO'
         self.distance = 30
         self.climateParameters = 'maxt, mint'
-        self.sdate = None
-        self.edate = None
+        self.sdate = 'NA'
+        self.edate = 'NA'
         self.refFile = 'SF_Test01.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
-    def test01_R(self):
-        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,14]
-        self.unitCode = 'ROMO'
-        self.distance = 30
-        self.climateParameters = 'maxt, mint'
-        self.sdate = None
-        self.edate = None
-        self.refFile = 'Test01_R.csv'
-        self.confirmContent_NoOrder()
-        Test_StationFinder.testColumns = Test_StationFinder.default_columns
-        self.assertEquals(self.results, [])
+##    def test01_R(self):
+##        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,14]
+##        self.unitCode = 'ROMO'
+##        self.distance = 30
+##        self.climateParameters = 'maxt, mint'
+##        self.sdate = None
+##        self.edate = None
+##        self.refFile = 'Test01_R.csv'
+##        self.confirmContent_NoOrder()
+##        Test_StationFinder.testColumns = Test_StationFinder.default_columns
+##        self.assertEquals(self.results, [])
 
     def test02(self):
         self.unitCode = 'AGFO'
         self.distance = 10
         self.climateParameters = None
-        self.sdate = None
-        self.edate = None
+        self.sdate = 'NA'
+        self.edate = 'NA'
         self.refFile = 'SF_Test02.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
-    def test02_R(self):
-        Test_StationFinder.testColumns = [0,1,2,3,4,5,6,7,8,9,10,12,14]
-        self.unitCode = 'AGFO'
-        self.distance = 10
-        self.climateParameters = None
-        self.sdate = None
-        self.edate = None
-        self.refFile = 'Test02_R.csv'
-        self.confirmContent_NoOrder()
-        Test_StationFinder.testColumns = Test_StationFinder.default_columns
-        self.assertEquals(self.results, [])
+##    def test02_R(self):
+##        Test_StationFinder.testColumns = [0,1,2,3,4,5,6,7,8,9,10,12,14]
+##        self.unitCode = 'AGFO'
+##        self.distance = 10
+##        self.climateParameters = None
+##        self.sdate = None
+##        self.edate = None
+##        self.refFile = 'Test02_R.csv'
+##        self.confirmContent_NoOrder()
+##        Test_StationFinder.testColumns = Test_StationFinder.default_columns
+##        self.assertEquals(self.results, [])
 
 class Test_StationDataRequestor_getDailyWxObs(unittest.TestCase):
 
@@ -178,18 +178,18 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
-##    def test01_R(self):
-##        self.climateStations =  '61193, 26215'
-##        self.climateParameters = None
-##        self.reduceCodes = None
-##        self.sdate = '201401'
-##        self.edate = '201501'
-##        self.maxMissing = None
-##        self.includeNormals = False
-##        self.includeNormalDepartures = False
-##        self.refDataFile = 'Test01_R.csv'
-##        self.confirmContent()
-##        self.assertEqual(self.result,[])
+####    def test01_R(self):
+####        self.climateStations =  '61193, 26215'
+####        self.climateParameters = None
+####        self.reduceCodes = None
+####        self.sdate = '201401'
+####        self.edate = '201501'
+####        self.maxMissing = None
+####        self.includeNormals = False
+####        self.includeNormalDepartures = False
+####        self.refDataFile = 'Test01_R.csv'
+####        self.confirmContent()
+####        self.assertEqual(self.result,[])
 
     def test02(self):
         self.climateStations =  26215
@@ -204,17 +204,17 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
-    #THIS IS FAILING BECAUSE OF THE ELEVATION PRECISION
-##    def test02_R(self):
-##        self.climateStations =  26215
-##        self.climateParameters = 'pcpn'
-##        self.reduceCodes = 'min'
-##        self.sdate = None
-##        self.edate = '2016-09'
-##        self.maxMissing = 2
-##        self.refDataFile = 'Test02_R.csv'
-##        self.confirmContent()
-##        self.assertEqual(self.result,[])
+##    #THIS IS FAILING BECAUSE OF THE ELEVATION PRECISION
+####    def test02_R(self):
+####        self.climateStations =  26215
+####        self.climateParameters = 'pcpn'
+####        self.reduceCodes = 'min'
+####        self.sdate = None
+####        self.edate = '2016-09'
+####        self.maxMissing = 2
+####        self.refDataFile = 'Test02_R.csv'
+####        self.confirmContent()
+####        self.assertEqual(self.result,[])
 
 
     def test03(self):
@@ -232,12 +232,12 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
 
 class Test_GridRequestor(unittest.TestCase):
     rootFolder = '../TestExamples/GridRequestor/'
-    gr = GridRequestor()
-    def confirmAsciiGrid(self):
 
-        data =  self.method(sdate = self.sdate, edate = self.edate,
+    def confirmAsciiGrid(self):
+        gr = GridRequestor()
+        data =  gr.getGrids(sdate = self.sdate, edate = self.edate,
             unitCode = self.unitCode, distance = self.distance,
-            climateParameters = self.climateParameters)
+            climateParameters = self.climateParameters, duration = self.duration)
         testDataFile = data.export()[0]
         testFile = open(testDataFile,'r')
         testData = testFile.read()
@@ -251,7 +251,7 @@ class Test_GridRequestor(unittest.TestCase):
 
     def test_getDailyGrids_01(self):
         #DAILY GRID - PRISM
-        self.method = self.gr.getDailyGrids
+        self.duration = 'dly'
         self.sdate = '2015-01-01'
         self.edate = '2015-01-01'
         self.climateParameters = 'mint'
@@ -275,7 +275,7 @@ class Test_GridRequestor(unittest.TestCase):
 
     def test_getMonthlyGrids_01(self):
         #MONTHLY GRID - PRISM
-        self.method = self.gr.getMonthlyGrids
+        self.duration = 'mly'
         self.sdate = '1900-01'
         self.edate = '1900-01'
         self.climateParameters = 'mint'
@@ -285,22 +285,22 @@ class Test_GridRequestor(unittest.TestCase):
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
-    def test_getMonthlyGrids_01_R(self):
-        #MONTHLY GRID - PRISM
-        self.method = self.gr.getMonthlyGrids
-        self.sdate = '1900-01'
-        self.edate = '1900-01'
-        self.climateParameters = 'mint'
-        self.unitCode = 'GRKO'
-        self.distance = 0
-        self.refDataFile = 'getMonthlyGrids/Test01/R_PRISM_mly_mint_mly_1900-01.asc'
-        self.confirmAsciiGrid()
-        self.assertEquals(self.result,[])
-
-
+##    def test_getMonthlyGrids_01_R(self):
+##        #MONTHLY GRID - PRISM
+##        self.duration = 'mly'
+##        self.sdate = '1900-01'
+##        self.edate = '1900-01'
+##        self.climateParameters = 'mint'
+##        self.unitCode = 'GRKO'
+##        self.distance = 0
+##        self.refDataFile = 'getMonthlyGrids/Test01/R_PRISM_mly_mint_mly_1900-01.asc'
+##        self.confirmAsciiGrid()
+##        self.assertEquals(self.result,[])
+##
+##
     def test_getYearlyGrids_01(self):
         #PRISM
-        self.method = self.gr.getYearlyGrids
+        self.duration = 'yly'
         self.sdate = '1970'
         self.edate = '1970'
         self.climateParameters = 'pcpn'

@@ -97,7 +97,7 @@ class ACIS(object):
         '''
         if not hasattr(self, 'climateParameters'):
             self.climateParameters = climateParameters
-        self.climateParameters =  self._formatStringArguments(self.climateParameters
+        self.climateParameters =  self._formatStringArguments(climateParameters
             , self.defaultParameters)
 
     def _formatReduceCodes(self, reduceCodes):
@@ -155,7 +155,7 @@ class ACIS(object):
         self.elems = []
         for p in self.climateParameters:
             arguments = {'name': p, 'interval': self.interval, 'add': self.add
-             ,'duration': self.duration,'maxmissing': self.maxMissing}
+             ,'duration': self.duration,'maxmissing': self.maxMissing, 'prec': self.precision}
             self.elems.append(arguments)
 
         #Update the elems object to add all variations of parameters and reduce
@@ -171,6 +171,7 @@ class ACIS(object):
 
         #Add all variations of climate parameters and reduce codes to a list
         #This list is used to help instantaite the station dictionary object
+        self.updatedClimateParameters = None #re-initialize these each time
         if self.reduceCodes:
             self.updatedClimateParameters = [k['name'] + '_' + k['reduce']['reduce'] for k in self.elems]
         else:
@@ -212,6 +213,7 @@ class ACIS(object):
 
     def _formatArguments(self, k_dict = {}, **kwargs):
         kwargs.update(k_dict)
+        self.climateParameters = None
         #clean up some of the kwargs used in the ACIS call
         kwargs['sdate'] = self._formatDate(kwargs.get('sdate', None))
         kwargs['edate'] = self._formatDate(kwargs.get('edate', None))
@@ -224,6 +226,8 @@ class ACIS(object):
         self.includeNormals = kwargs.pop('includeNormals', None)
         self.includeNormalDepartures = kwargs.pop('includeNormalDepartures', None)
         self.maxMissing = (kwargs.pop('maxmissing', None))
+        self.filePath= (kwargs.pop('filePath', None))
+        self.precision = (kwargs.pop('precision', None))
         unitCode = (kwargs.pop('unitCode', None))
         distance = (kwargs.pop('distance', None))
 
