@@ -10,8 +10,8 @@ class StationDataRequestor(ACIS):
     Object to request weather data using ACIS web services
 
     '''
-    def __init__(self, *args, **kwargs):
-        super(StationDataRequestor,self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(StationDataRequestor,self).__init__()
         self.webServiceSource = 'StnData'
 
     def _fetchStationDataFromACIS(self, **kwargs):
@@ -26,24 +26,10 @@ class StationDataRequestor(ACIS):
         StationDict object
 
         '''
-        #clean up some of the kwargs used in the ACIS call
-        kwargs['sdate'] = self._formatDate(kwargs.get('sdate', None))
-        kwargs['edate'] = self._formatDate(kwargs.get('edate', None))
-
-        #pop the kwargs that are not used directly in the ACIS call
-        self.reduceCodes = self._formatReduceCodes(kwargs.pop('reduceCodes', None))
-        self.filePathAndName =  kwargs.pop('filePathAndName', None)
-        self.stationIDs = self._extractStationIDs(kwargs.pop('climateStations'))
-        self._formatClimateParameters(kwargs.pop('climateParameters'))
-        self.includeNormals = kwargs.pop('includeNormals', None)
-        self.includeNormalDepartures = kwargs.pop('includeNormalDepartures', None)
-        self.maxMissing = (kwargs.pop('maxmissing', None))
-
         #additional metadata elements to request along with the data
         metaElements = ('uid', 'll', 'name', 'elev', 'sids', 'state')
 
-        #do the complicated formatting of the elems list
-        self._formatElems()
+        kwargs = self._formatArguments(kwargs, meta = metaElements)
 
         #Instantiate the station dictionary object
         sd = StationDict(observationClass = self.observationClass, climateParameters = self.updatedClimateParameters,
@@ -53,8 +39,7 @@ class StationDataRequestor(ACIS):
         #Iterate over all stationIDs and query ACIS for data. Add the station response
         #to the station dictionary object
         for uid in self.stationIDs:
-            response = self._call_ACIS(uid = uid, elems = self.elems,
-                 meta = metaElements, **kwargs)
+            response = self._call_ACIS(uid = uid, kwargs = kwargs)
             self._checkResponseForErrors(response)
             sd._addStation(stationID = uid, stationMeta = response['meta']
                     , stationData = response.get('data', 'error'))
@@ -168,20 +153,6 @@ class StationDataRequestor(ACIS):
             ,climateParameters = climateParameters, includeNormals = includeNormals
             ,includeNormalDepartures = includeNormalDepartures)
 
-    def _extractStationIDs(self, stations):
-        '''
-        INFO
-        ----
-        If stations is a StationDict object, extracts list of stationIDs.
-        Otherwise, assumes stationIDs to be a list, comma-delimited string,
-        or a single stationID as a string.
-        '''
-        try:
-            return stations.stationIDs
-        except:
-            return self._formatStringArguments(stations)
-
-
 
     def getYearlyWxSummary(self, climateStations, climateParameters = None
             ,reduceCodes = None, sdate = 'por', edate = 'por', maxMissing = None
@@ -273,7 +244,6 @@ class StationDataRequestor(ACIS):
 
 
         '''
-
         self.duration = timeInterval
         self.interval = timeInterval
         self.reduceCodes = ['cnt_' +  str(thresholdType) + '_' + str(thresholdValue)]
@@ -285,7 +255,6 @@ class StationDataRequestor(ACIS):
             ,filePathAndName = filePathAndName, climateStations = climateStations
             ,climateParameters = climateParameters)
 
-
 if __name__=='__main__':
 
     from StationFinder import StationFinder
@@ -293,14 +262,14 @@ if __name__=='__main__':
 
     dr = StationDataRequestor()
 ##    ############################################################################
-##    # DAY COUNTS BY THRESHOLD
-##    yearlyCounts= dr.getDayCountByThreshold(climateStations = 29699,
-##         climateParameters = 'maxt',  thresholdType = 'eq'
-##        ,thresholdValue = 90,  timeInterval = 'yly'
-##        ,sdate = 1980, edate = 1985)
-##    print (yearlyCounts)
-##
-##
+    # DAY COUNTS BY THRESHOLD
+    yearlyCounts= dr.getDayCountByThreshold(climateStations = 29699,
+         climateParameters = 'maxt',  thresholdType = 'eq'
+        ,thresholdValue = 90,  timeInterval = 'yly'
+        ,sdate = 1980, edate = 1985)
+    print (yearlyCounts)
+
+
 
 
     yearlyCounts= dr.getDayCountByThreshold(climateStations = 29699,
@@ -315,13 +284,13 @@ if __name__=='__main__':
 
 ##
 ##    ############################################################################
-##    #YEARLY DATA
-##    #INCLUDE NORMALS
-##    yearlyData = dr.getYearlyWxSummary(climateStations = 29699,
-##        reduceCodes = 'mean', climateParameters = 'maxt'
-##        , sdate = '1980', edate = '2004', includeNormals = True
-##        ,includeNormalDepartures = True)
-##    print (yearlyData)
+    #YEARLY DATA
+    #INCLUDE NORMALS
+    yearlyData = dr.getYearlyWxSummary(climateStations = 29699,
+        reduceCodes = 'mean', climateParameters = 'maxt'
+        , sdate = '1980', edate = '2004', includeNormals = True
+        ,includeNormalDepartures = True)
+    print (yearlyData)
 
 
 ##    ###########################################################################
@@ -360,10 +329,10 @@ if __name__=='__main__':
 
     #########################################################################
 ##    #DAILY DATA
-##    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
-##        , climateParameters = 'avgt, mint'
-##        , sdate = '20120101', edate = '2012-01-05' )
-##    print dailyData
+    dailyData = dr.getDailyWxObservations(climateStations = stationIDs
+        , climateParameters = 'avgt, mint'
+        , sdate = '20120101', edate = '2012-01-05' )
+    print dailyData
 ##
 ##    #INCLUDE DAILY NORMALS
 ##    dailyData = dr.getDailyWxObservations(climateStations = 29699

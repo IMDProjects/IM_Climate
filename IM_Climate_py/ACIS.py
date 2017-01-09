@@ -1,5 +1,6 @@
 import json
 import copy
+import common
 
 try:    #python 2.x
     import urllib2, urllib
@@ -20,8 +21,7 @@ class ACIS(object):
     '''
     defaultParameters = ('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
 
-    def __init__(self, *args, **kwargs):
-        super(ACIS,self).__init__(*args, **kwargs)
+    def __init__(self):
         self.baseURL = 'http://data.rcc-acis.org/'
         self._input_dict = {}
         self.webServiceSource = None   #The web service source (e.g., 'StnData')
@@ -39,14 +39,15 @@ class ACIS(object):
         info = lfile.read()
         self._acis_lookups = json.loads(info)
 
-    def _call_ACIS(self, **kwargs):
+    def _call_ACIS(self, kwargs, **moreKwargs):
         '''
         Core method for calling the ACIS services.
 
         Returns python dictionary by de-serializing json response
         '''
         #self._formatInputDict(**kwargs)
-        self._input_dict = self._stripNoneValues(**kwargs)
+        kwargs.update(moreKwargs)
+        self._input_dict = self._stripNoneValues(kwargs)
         self.url = self.baseURL + self.webServiceSource
         if pyVersion == 2:      #python 2.x
             params = urllib.urlencode({'params':json.dumps(self._input_dict)})
@@ -103,6 +104,7 @@ class ACIS(object):
         '''
         Formats reduce codes consistently.
         If None, then default to all supported reduce codes
+        If [], reduce codes are set to None
         '''
         return self._formatStringArguments(reduceCodes, ('min', 'max', 'sum', 'mean'))
 
@@ -129,7 +131,14 @@ class ACIS(object):
         return providedArgs
 
     def _formatDate(self, date):
-        if not date:
+        '''
+        If date is None, then sets value to por
+        If date is NA, then returns None
+        '''
+        if date == 'NA':
+            date = None
+            return date
+        if date is None:
             date = 'por'
         return str(date)
 
@@ -200,6 +209,47 @@ class ACIS(object):
         #strip out all None values
         for e,value in enumerate(self.elems):
             self.elems[e] = self._stripNoneValues(value)
+
+    def _formatArguments(self, k_dict = {}, **kwargs):
+        kwargs.update(k_dict)
+        #clean up some of the kwargs used in the ACIS call
+        kwargs['sdate'] = self._formatDate(kwargs.get('sdate', None))
+        kwargs['edate'] = self._formatDate(kwargs.get('edate', None))
+
+        #pop the kwargs that are not used directly in the ACIS call
+        self.reduceCodes = self._formatReduceCodes(kwargs.pop('reduceCodes', None))
+        self.filePathAndName =  kwargs.pop('filePathAndName', None)
+        self.stationIDs = self._extractStationIDs(kwargs.pop(('climateStations'), None))
+        self._formatClimateParameters(kwargs.pop('climateParameters'))
+        self.includeNormals = kwargs.pop('includeNormals', None)
+        self.includeNormalDepartures = kwargs.pop('includeNormalDepartures', None)
+        self.maxMissing = (kwargs.pop('maxmissing', None))
+        unitCode = (kwargs.pop('unitCode', None))
+        distance = (kwargs.pop('distance', None))
+
+        kwargs['bbox'] = common.getBoundingBox(unitCode, distance)
+##        if unitCode:
+##            self._input_dict['unitCode'] = unitCode
+
+        #do the complicated formatting of the elems list
+        self._formatElems()
+        kwargs['elems'] = self.elems
+        return kwargs
+
+
+    def _extractStationIDs(self, stations):
+        '''
+        INFO
+        ----
+        If stations is a StationDict object, extracts list of stationIDs.
+        Otherwise, assumes stationIDs to be a list, comma-delimited string,
+        or a single stationID as a string.
+        '''
+        if stations is not None:
+            try:
+                return stations.stationIDs
+            except:
+                return self._formatStringArguments(stations)
 
 if __name__ == '__main__':
     c = ACIS()

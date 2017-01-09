@@ -12,7 +12,6 @@ class GridRequestor(ACIS):
         self.duration = None
         self.webServiceSource = 'GridData'
 
-
     def supportedParameters(self):
         '''
         Supported parameters for grids - this will need to be updated as we
@@ -25,21 +24,26 @@ class GridRequestor(ACIS):
         '''
         Core method to request grids from ACIS
         '''
-        self.unitCode = kwargs.get('unitCode', None)
-        self.sdate = kwargs.get('sdate', None)
-        self.edate = kwargs.get('edate', None)
-        self.distance = kwargs.get('distance', None)
-        self.filePath = kwargs.get('filePath', None)
-        self.climateParameters = kwargs.get('climateParameters', None)
 
-        bbox = '-130, 20,-50,60'
-        self._formatClimateParameters()
-        bbox = common.getBoundingBox(self.unitCode, self.distance)
-        elems = self._formatElems()
+##        self.unitCode = kwargs.get('unitCode', None)
+##        self.sdate = kwargs.get('sdate', None)
+##        self.edate = kwargs.get('edate', None)
+##        self.distance = kwargs.get('distance', None)
+##        self.filePath = kwargs.get('filePath', None)
+##        self.climateParameters = kwargs.get('climateParameters', None)
+##        self._formatClimateParameters()
+##        elems = self._formatElems()
+
+##        bbox = '-130, 20,-50,60'
+##        bbox = common.getBoundingBox(self.unitCode, self.distance)
+
+        kwargs = self._formatArguments(kwargs)
+
         gridSourceCode = self.gridSources[self.gridSource]['code']
         missingValue = int(self.gridSources[self.gridSource]['missingValue'])
         cellSize = float(self.gridSources[self.gridSource]['cellSize'])
         projection = self.gridSources[self.gridSource]['projection']
+
         grids =  self._call_ACIS(elems = elems
             ,bbox = bbox, sDate = self.sdate, eDate = self.edate, grid = gridSourceCode, meta='ll')
         self._checkResponseForErrors(grids)
@@ -72,7 +76,7 @@ class GridRequestor(ACIS):
             elems.append({'name':p,'interval':self.interval, 'duration' : self.duration, 'prec': self.precision})
         return elems
 
-    def getDailyGrids(self, sdate, edate, unitCode = None, distance = 0,
+    def getGrids(self, sdate, edate, duration, unitCode = None, distance = 0,
         climateParameters = None, filePath = None):
         '''
         Method to fetch daily grids from ACIS.  Currently only PRISM grids are
@@ -94,71 +98,17 @@ class GridRequestor(ACIS):
             Dictionary like object (aka GridStack) containing one or more daily grids.
             Grids are indexed first by parameter and then by date
         '''
-        self.interval = 'dly'
-        self.duration = 'dly'
+        self.interval = duration
+        self.duration = duration
+
+
+        if self.duration != 'dly':
+            climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
+            climateParameters = map(lambda p: self.duration + '_' + p, climateParameters)
 
         return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate
             , distance = distance, filePath = filePath, climateParameters = climateParameters )
 
-    def getMonthlyGrids(self, sdate, edate, unitCode = None, distance = 0,
-        climateParameters = None, filePath = None):
-        '''
-        Method to fetch monthly grids from ACIS.  Currently only PRISM grids are
-        supported.
-
-        ARGUMENTS
-            sdate               Start date (yyyy-mm,yyyy-mm-dd, yymm, yyyymmdd).
-            edate               End date (yyyy-mm, yyyy-mm-dd, yymm, or yyyymmdd).
-            unitCode (optional) 4-letter unit code. Currently accepts only one.
-            distance (optional) Distance in kilometers for buffering a bounding box of park.
-                                If no distance is specified then 0 is used as the default buffer.
-            climateParameters (optional)    Accepts one or more of the climate parameter codes,
-                                            preferably as a list or tuple
-            filePath (optional)             If provided, one or more ascii grids are saved to the
-                                    working directory. Grid names follow the pattern of
-                                    Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
-
-        RETURNS
-            Dictionary like object (aka GridStack) containing one or more monthly grids.
-            Grids are indexed first by parameter and then by date
-        '''
-        self.interval = 'mly'
-        self.duration = 'mly'
-        climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
-        climateParameters = map(lambda p: self.duration + '_' + p, climateParameters)
-
-        return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate
-            , distance = distance, filePath = filePath, climateParameters = climateParameters)
-
-    def getYearlyGrids(self, sdate, edate, unitCode = None, distance = 0,
-        climateParameters = None, filePath = None):
-        '''
-        Method to fetch yearly (annual) grids from ACIS.  Currently only PRISM grids are
-        supported.
-
-        ARGUMENTS
-            sdate               Start date (yyyy-mm,yyyy-mm-dd, yymm, yyyymmdd).
-            edate               End date (yyyy-mm, yyyy-mm-dd, yymm, or yyyymmdd).
-            unitCode (optional) 4-letter unit code. Currently accepts only one.
-            distance (optional) Distance in kilometers for buffering a bounding box of park.
-                                If no distance is specified then 0 is used as the default buffer.
-            climateParameters (optional)    Accepts one or more of the climate parameter codes,
-                                            preferably as a list or tuple
-            filePath (optional)             If provided, one or more ascii grids are saved to the
-                                    working directory. Grid names follow the pattern of
-                                    Source_parameter_aggregation_YYYYMMDD (e.g., PRISM_mint_dly_20150101)
-
-        RETURNS
-            Dictionary like object (aka GridStack) containing one or more yearly grids.
-            Grids are indexed first by parameter and then by date
-        '''
-        self.interval = 'yly'
-        self.duration = 'yly'
-        climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
-        climateParameters = map(lambda p: self.duration + '_' + p, climateParameters)
-
-        return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate
-            , distance = distance, filePath = filePath, climateParameters = climateParameters)
 
 if __name__ == '__main__':
     gr = GridRequestor()
@@ -166,77 +116,77 @@ if __name__ == '__main__':
 
     ##YEARLY GRIDS
 
-    #TEST 01
-    sdate = '1915'
-    edate = '1929'
-    climateParameters = ['mint', 'maxt']
-    unitCode = 'LIBO'
-    distance = 10
-
-    data =  gr.getYearlyGrids(sdate = sdate, edate = edate,
-        unitCode = unitCode, distance = distance,
-        climateParameters = climateParameters, filePath = filePath )
-    print data.climateParameters
-    print data.dates
-
-    ##MONTHLY GRIDS
-
-    #TEST 01
-    sdate = '1895-01'
-    edate = '1896-12'
-    climateParameters = ['mint', 'maxt']
-    unitCode = 'YELL'
-    distance = 0
-
-    data =  gr.getMonthlyGrids(sdate = sdate, edate = edate,
-        unitCode = unitCode, distance = distance,
-        climateParameters = climateParameters, filePath = filePath )
-    print data.climateParameters
-    print data.dates
-    data.export(filePath = filePath)
-    print data['mly_mint']['1895-01']
-    print data.dates
-    print data.climateParameters
-    data['mly_mint']['1895-01'].export(filePathAndName = filePath + 'test.asc')
-
-    #Test 02
-    unitCode = 'OLYM'
-    sdate = '20150115'
-    edate = '20150615'
-    climateParameters = ['maxt']
-    distance = 0
-    data =  gr.getMonthlyGrids(sdate = sdate, edate = edate,
-        unitCode = unitCode, distance = distance,
-        climateParameters = climateParameters, filePath = filePath )
-
-
-    ##DAILY GRIDS
-    #TEST 01
-    sdate = '2015-01-01'
-    edate = '2015-01-04'
-    climateParameters = 'mint, maxt'
-    unitCode = 'APPA'
-    distance = 0
-
-    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
-        unitCode = unitCode, distance = distance,
-        climateParameters = climateParameters, filePath = filePath )
-    print data.climateParameters
-    print data.dates
-    data.export(filePath = filePath)
-    print data['mint']['2015-01-03']
-    print data.dates
-    print data.climateParameters
-    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
-
+##    #TEST 01
+##    sdate = '1915'
+##    edate = '1929'
+##    climateParameters = ['mint', 'maxt']
+##    unitCode = 'LIBO'
+##    distance = 10
+##
+##    data =  gr.getYearlyGrids(sdate = sdate, edate = edate,
+##        unitCode = unitCode, distance = distance,
+##        climateParameters = climateParameters, filePath = filePath )
+##    print data.climateParameters
+##    print data.dates
+##
+##    ##MONTHLY GRIDS
+##
+##    #TEST 01
+##    sdate = '1895-01'
+##    edate = '1896-12'
+##    climateParameters = ['mint', 'maxt']
+##    unitCode = 'YELL'
+##    distance = 0
+##
+##    data =  gr.getMonthlyGrids(sdate = sdate, edate = edate,
+##        unitCode = unitCode, distance = distance,
+##        climateParameters = climateParameters, filePath = filePath )
+##    print data.climateParameters
+##    print data.dates
+##    data.export(filePath = filePath)
+##    print data['mly_mint']['1895-01']
+##    print data.dates
+##    print data.climateParameters
+##    data['mly_mint']['1895-01'].export(filePathAndName = filePath + 'test.asc')
+##
 ##    #Test 02
 ##    unitCode = 'OLYM'
-##    sdate = '20150615'
+##    sdate = '20150115'
 ##    edate = '20150615'
 ##    climateParameters = ['maxt']
 ##    distance = 0
+##    data =  gr.getMonthlyGrids(sdate = sdate, edate = edate,
+##        unitCode = unitCode, distance = distance,
+##        climateParameters = climateParameters, filePath = filePath )
+##
+##
+##    ##DAILY GRIDS
+##    #TEST 01
+##    sdate = '2015-01-01'
+##    edate = '2015-01-04'
+##    climateParameters = 'mint, maxt'
+##    unitCode = 'APPA'
+##    distance = 0
+##
 ##    data =  gr.getDailyGrids(sdate = sdate, edate = edate,
-##    unitCode = unitCode, distance = distance,
-##    climateParameters = climateParameters, filePath = filePath )
+##        unitCode = unitCode, distance = distance,
+##        climateParameters = climateParameters, filePath = filePath )
+##    print data.climateParameters
+##    print data.dates
+##    data.export(filePath = filePath)
+##    print data['mint']['2015-01-03']
+##    print data.dates
+##    print data.climateParameters
+##    data['mint']['2015-01-03'].export(filePathAndName = filePath + 'test.asc')
+
+##    #Test 02
+    unitCode = 'OLYM'
+    sdate = '20150615'
+    edate = '20150615'
+    climateParameters = ['maxt']
+    distance = 0
+    data =  gr.getGrids(sdate = sdate, edate = edate, duration = 'dly',
+        unitCode = unitCode, distance = distance,
+    climateParameters = climateParameters, filePath = filePath )
 
 

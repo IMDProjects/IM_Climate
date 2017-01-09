@@ -31,7 +31,7 @@ class StationDateRange(dict):
     def climateParameters(self):
         return self.keys()
 
-    def __repr__(self):
+    def __str__(self):
         return  self.validDateRange
 
     @property

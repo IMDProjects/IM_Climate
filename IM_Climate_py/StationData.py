@@ -11,6 +11,10 @@ class StationData(dict):
         self.observationClass = observationClass
 
     def _set(self, stationData, climateParameters):
+
+        '''
+        Method to set the station data for one or more climate parameters
+        '''
         self.observationDates = tuple([d[0] for d in stationData])
         for index, p in enumerate(climateParameters):
             if p.find('normal') != -1:

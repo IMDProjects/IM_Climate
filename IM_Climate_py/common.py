@@ -1,13 +1,8 @@
 import urllib2
 import json
-from ACIS import ACIS
 
 
 missingValue = 'NA' #deines missing value for all modules
-
-def getSupportedParameters():
-    acis = ACIS()
-    return acis.supportedParameters
 
 def getBoundingBox(unitCode = None, distanceKM = 0):
     '''
@@ -46,6 +41,5 @@ def getBoundingBox(unitCode = None, distanceKM = 0):
 
 if __name__=='__main__':
     print (missingValue)
-    print (getSupportedParameters())
     print (getBoundingBox('ACAD',0))
     print (getBoundingBox('FF04RMHC00'))

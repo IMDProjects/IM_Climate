@@ -8,10 +8,18 @@ class ParameterSeries(dict):
     '''
 
     def __init__(self, observationClass, isNormal = False):
+        '''
+        isNormal - is the time series actual observations or the published normals
+        '''
+
         self.observationClass = observationClass
         self.isNormal = isNormal
 
     def _set(self, pData, dates, parameter):
+
+        '''
+        Method to set the data for a a particular parameter series
+        '''
         self.parameter = parameter
         for index, value in enumerate(pData):
             date = [dates[index]]

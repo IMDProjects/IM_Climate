@@ -1,6 +1,15 @@
-from common import missingValue, getSupportedParameters
+from common import missingValue # getSupportedParameters
+from ACIS import ACIS
+from abc import ABCMeta
+
 
 class WxOb(dict):
+
+    '''
+    abstract base class for all other weather observations
+    '''
+    __metaclass__ = ABCMeta
+    acis = ACIS()
 
     def __init__(self, values = None):
         if values:
@@ -70,9 +79,9 @@ class DailyWxOb(WxOb):
         Creates the header needed when exporting to a text file
         '''
         if not self.isNormal:
-            return [getSupportedParameters()[p]['label'], p+'_acis_flag', p+'_source_flag']
+            return [self.acis.supportedParameters[p]['label'], p+'_acis_flag', p+'_source_flag']
         else:
-            return [getSupportedParameters()[p.split('_')[0]]['label'] + '_' + p.split('_')[1]]
+            return [self.acis.supportedParameters[p.split('_')[0]]['label'] + '_' + p.split('_')[1]]
 
 class MonthlyWxOb(WxOb):
     '''
@@ -111,7 +120,7 @@ class MonthlyWxOb(WxOb):
         '''
         Creates the header needed when exporting to a text file
         '''
-        pAndU = getSupportedParameters()[p[0:p.find('_')]]['label'] + p[p.find('_'):]
+        pAndU = self.acis.supportedParameters[p[0:p.find('_')]]['label'] + p[p.find('_'):]
         if self.normal:
             return [pAndU]
         else:
@@ -139,4 +148,6 @@ if __name__=='__main__':
     print dmonth
     print dmonth.toList()
     print dmonth._createHeader('mint_mly_normal')
+
+
 

@@ -20,6 +20,10 @@ class Station(object):
         self.missingValue = missingValue
 
     def _set(self, stationMeta, climateParameters, stationData = None ):
+        '''
+        Method to set up a new station with station metadata and station data
+        for one or more climate parameters
+        '''
         self.climateParameters = climateParameters
         self._setStationMetadata(stationMeta)
         if stationData:
@@ -59,6 +63,11 @@ class Station(object):
         self.minDate = self.validDateRange.minRange
 
     def _setStationType(self, sid):
+        '''
+        Identifies the type of station based on the station ID since ACIS
+        does't do this explicitly.  If the station ID identifies it as being from
+         GHCN, then sub-type is used.
+        '''
         acis = ACIS()
         if sid <> self.missingValue:
             stationType = acis.stationSources[str(sid.split()[1])]['description'].encode()
@@ -72,6 +81,9 @@ class Station(object):
             return self.missingValue
 
     def _dumpMetaToList(self):
+        '''
+        Iterates through all metadata tags to create a list of of tag values
+        '''
         return [self.__dict__[t] for t in self._metaTags]
 
     def __str__(self):
@@ -103,6 +115,9 @@ class Station(object):
             return False
 
     def _dumpDataToList(self, includeHeader = True):
+        '''
+        Dumps all station data to a list by iterating through all climate parameters
+        '''
         if includeHeader:
             self._dataAsList = [self._header]
         else:
