@@ -1,5 +1,5 @@
 from ACIS import ACIS
-import common
+from common import formatStringArguments
 from GridStack import GridStack
 
 class GridRequestor(ACIS):
@@ -80,7 +80,7 @@ class GridRequestor(ACIS):
 
 
         if self.duration != 'dly':
-            climateParameters = self._formatStringArguments(climateParameters, self.supportedParameters)
+            climateParameters = formatStringArguments(climateParameters, self.supportedParameters)
             climateParameters = map(lambda p: self.duration + '_' + p, climateParameters)
 
         return self._callForGrids(unitCode = unitCode, sdate = sdate, edate = edate

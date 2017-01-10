@@ -1,6 +1,6 @@
 import json
 import copy
-import common
+from common import getBoundingBox, formatStringArguments
 
 try:    #python 2.x
     import urllib2, urllib
@@ -97,7 +97,7 @@ class ACIS(object):
         '''
         if not hasattr(self, 'climateParameters'):
             self.climateParameters = climateParameters
-        self.climateParameters =  self._formatStringArguments(climateParameters
+        self.climateParameters =  formatStringArguments(climateParameters
             , self.defaultParameters)
 
     def _formatReduceCodes(self, reduceCodes):
@@ -106,29 +106,8 @@ class ACIS(object):
         If None, then default to all supported reduce codes
         If [], reduce codes are set to None
         '''
-        return self._formatStringArguments(reduceCodes, ('min', 'max', 'sum', 'mean'))
+        return formatStringArguments(reduceCodes, ('min', 'max', 'sum', 'mean'))
 
-    def _formatStringArguments(self, providedArgs, validArgs = None):
-        '''
-        Formats arguments to handle None, lists and strings.
-        Defaults to the valid arguments if the provided arguments are None
-        IF [] is passed, the defaults are not assigned
-        '''
-        #if no provided arguements, then default to valid arguments
-        if not providedArgs and providedArgs != []:
-            providedArgs = validArgs
-
-        #if provided arguments are iterable, then do nothing
-        elif hasattr(providedArgs, '__iter__'):
-            pass
-
-        #otherwise, assume that provided arguments are a string(-like) and can be
-        # split using a comma as the delimiter
-        else:
-            providedArgs = str(providedArgs)
-            providedArgs = providedArgs.replace(' ','')
-            providedArgs = providedArgs.split(',')
-        return providedArgs
 
     def _formatDate(self, date):
         '''
@@ -231,7 +210,7 @@ class ACIS(object):
         unitCode = (kwargs.pop('unitCode', None))
         distance = (kwargs.pop('distance', None))
 
-        kwargs['bbox'] = common.getBoundingBox(unitCode, distance)
+        kwargs['bbox'] = getBoundingBox(unitCode, distance)
 ##        if unitCode:
 ##            self._input_dict['unitCode'] = unitCode
 
@@ -253,7 +232,7 @@ class ACIS(object):
             try:
                 return stations.stationIDs
             except:
-                return self._formatStringArguments(stations)
+                return formatStringArguments(stations)
 
 if __name__ == '__main__':
     c = ACIS()
