@@ -10,10 +10,11 @@ class GridRequestor(ACIS):
 
     def __init__(self):
         super(GridRequestor,self).__init__()
-        self.defaultParameters = self.supportedParameters()
+        self.defaultParameters = self.supportedParameters
         self.duration = None
         self.webServiceSource = 'GridData'
 
+    @property
     def supportedParameters(self):
         '''
         Supported parameters for grids - this will need to be updated as we
@@ -26,13 +27,17 @@ class GridRequestor(ACIS):
         '''
         Core method to request grids from ACIS
         '''
-        kwargs = self._formatArguments(kwargs, meta = 'll', precision = 1)
+        #add the metadata and  precision level to the set of arguments
+        kwargs = self._formatArguments(kwargs, meta = 'll', precision = self.precision)
 
+        #Based on the grid source, get additional metadata values specific to grids
         gridSourceCode = self.gridSources[self.gridSource]['code']
         missingValue = int(self.gridSources[self.gridSource]['missingValue'])
         cellSize = float(self.gridSources[self.gridSource]['cellSize'])
         projection = self.gridSources[self.gridSource]['projection']
 
+        #call ACIS for grids and extract out the latitude and longitude values
+        #from the response
         grids = self._call_ACIS(kwargs, grid = gridSourceCode)
         self._checkResponseForErrors(grids)
         latValues = grids['meta']['lat']
@@ -42,7 +47,7 @@ class GridRequestor(ACIS):
         gs = GridStack(gridSource = self.gridSource, latValues = latValues, lonValues = lonValues, cellSize = cellSize,
                 projection = projection, aggregation = self.interval, missingValue = missingValue)
 
-        #iterate through all of the grids and add them to the stak
+        #iterate through all of the grids and add them to the stack
         for grid in grids['data']:
             for index, variable in enumerate(self.climateParameters):
                 gs._addGrid(variable = variable, date = grid[0].encode(), grid = grid[index+1])

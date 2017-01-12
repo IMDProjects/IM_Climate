@@ -210,7 +210,7 @@ class StationDataRequestor(ACIS):
 
 
     def getDayCountByThreshold(self, climateStations, climateParameters, thresholdType
-            ,thresholdValue, timeInterval, sdate = 'por', edate = 'por', filePathAndName = None):
+            ,thresholdValue, duration, sdate = 'por', edate = 'por', filePathAndName = None):
         '''
         Returns the count of days per year above/below threshold
 
@@ -233,7 +233,7 @@ class StationDataRequestor(ACIS):
                                         values. Current options inlcude max, min, sum and
                                         mean. If none are provided, then all are returned.
 
-        timeInterval                    mly = by month | yly = by year
+        duration                        mly = by month | yly = by year
 
         sdate (optional)                Start Date - YYYY-MM OR YYYYMM (default is period of record)
 
@@ -244,8 +244,8 @@ class StationDataRequestor(ACIS):
 
 
         '''
-        self.duration = timeInterval
-        self.interval = timeInterval
+        self.duration = duration
+        self.interval = duration
         self.reduceCodes = ['cnt_' +  str(thresholdType) + '_' + str(thresholdValue)]
         self.observationClass = MonthlyWxOb
         self.add = 'mcnt'
