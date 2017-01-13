@@ -20,13 +20,12 @@ class ACIS(object):
     Base class for all objects interacting with ACIS web services
     '''
     defaultParameters = ('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
+    baseURL = 'http://data.rcc-acis.org/'
+    _input_dict = {}
+    webServiceSource = None   #The web service source (e.g., 'StnData')
 
     def __init__(self):
-        self.baseURL = 'http://data.rcc-acis.org/'
-        self._input_dict = {}
-        self.webServiceSource = None   #The web service source (e.g., 'StnData')
         self._getACISLookups()
-
 
     def _getACISLookups(self):
         '''
@@ -129,6 +128,9 @@ class ACIS(object):
             raise Exception('ACIS Service Error: ' + str(response['error']))
 
     def _formatElems(self):
+        '''
+        Formats consistently the ELEMs objects used in the ACIS web service calls
+        '''
 
         #build the elems objects, which ACIS requires for more complex queries
         self.elems = []
@@ -191,6 +193,10 @@ class ACIS(object):
             self.elems[e] = self._stripNoneValues(value)
 
     def _formatArguments(self, k_dict = {}, **kwargs):
+        '''
+        Provides a standard way of formatting the ACIS web service arguments
+        '''
+
         kwargs.update(k_dict)
         self.climateParameters = None
         #clean up some of the kwargs used in the ACIS call
@@ -211,8 +217,6 @@ class ACIS(object):
         distance = (kwargs.pop('distance', None))
 
         kwargs['bbox'] = getBoundingBox(unitCode, distance)
-##        if unitCode:
-##            self._input_dict['unitCode'] = unitCode
 
         #do the complicated formatting of the elems list
         self._formatElems()
