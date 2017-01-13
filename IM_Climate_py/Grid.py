@@ -27,6 +27,7 @@ class Grid(np.ndarray):
         NOTE: Currently this method is specific to PRISM data and the ability to represent
         missing values as -999. This should be modified as new data sources are added
         '''
+        #Write the header information at the top of the file
         outfile = open(filePathAndName,'wb')
         outfile.write ('ncols  ' + str(self.ncols) + '\n')
         outfile.write ('nrows  ' + str(self.nrows) + '\n')
