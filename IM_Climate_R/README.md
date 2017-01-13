@@ -13,13 +13,24 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * Limits alteration to data returned from ACIS web services
 
-#### Release 1.0 - 20160906 ####
+#### Release 1.4 - Planned 20170127 ####
 
+Functionality - Get yearly gridded data (PRISM only)
+
+#### Release 1.3 - 20161215 ####
+
+Functionality - Get monthly gridded data (PRISM only)
+  
+#### Release 1.2 - 20161122 ####
+
+Functionality - Get monthly station summary by year for station data
+  
 #### Release 1.1 - 20161006 ####
 
-#### Release 1.2 - ####
+Functionality - Get daily gridded data (PRISM only)
+  
+#### Release 1.0 - 20160906 ####
 
-In development - Get monthly station summary by year for station data
 
 #### R - Installing the IM_Climate Package ####
 
