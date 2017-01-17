@@ -154,6 +154,8 @@ getGrids <-
         # Get the minimum grid center value
         minLon <- min(as.numeric(unlist(resp$meta$lon)))
         minLat <- min(as.numeric(unlist(resp$meta$lat)))
+        maxLon <- max(as.numeric(unlist(resp$meta$lon)))
+        maxLat <- max(as.numeric(unlist(resp$meta$lat)))
         #print(length(resp$data[[i]][[2]])) #count of image rows
         # Get grid data as a matrix; output to file or console
         for (j in 1:length(climateParameters)) {
@@ -211,8 +213,9 @@ getGrids <-
               outputAscii(griddf, "", minLon, minLat, luElements[[1]])
             if (outfile == "Success") {
               #outputRaster <- outputRasterStack()
-              r <- raster(griddf)
+              r <- raster(griddf, xmn=minLon, xmx=maxLon, ymn=minLat, ymx=maxLat)
               crs(r) <- luElements[[1]]$projectionCRS
+              names(r) <- paste(resp$data[[i]][[1]], unlist(climateParameters)[j])
               rasterStack <- stack(rasterStack, r)
             }
             else {
