@@ -38,20 +38,22 @@ getStationSubtype <- function(testType, testSid) {
 #' formatRequest generates the JSON-formatted request to send to ACIS
 #' @param requestType type of request: getDailyWxObservations, getMonthlyWxObservations, getGrids, (findStation)
 #' @param climateParameters A list of one or more climate parameters defined in calling source
+#' @param sdate sdate (required) Start data defined in calling source
+#' @param edate sdate (required) End date defined in calling source
 #' @param cUID (optional) station UID defined in calling source, used for getWXObservation requests
 #' @param duration (optional) station data duration specified in calling source; used for getWxObservations and getGrids requests
 #' @param paramFlags (optional) used for getWxObservations (daily). Parameter flags: f = ACIS flag, s = source flag
-#' @param reduceCodes (optional) used for getWxObservations (monthly). Defaults to min, max, sum, and mean.
+#' @param reduceList (optional) used for getWxObservations (monthly). Defaults to min, max, sum, and mean.
 #' @param maxMissing (optional) used for getWxObservations (monthly). Defaults to 1 (~3.3% missing days/month).
 #' @param gridElements grid request values defined in calling source
 #' @export
 #' 
-formatRequest <- function(requestType, climateParameters, cUID=NULL, duration=NULL, paramFlags=NULL, reduceCodes=NULL, maxMissing=NULL, gridElements=NULL) {
+formatRequest <- function(requestType, climateParameters, sdate, edate, cUid=NULL, duration=NULL, paramFlags=NULL, reduceList=NULL, maxMissing=NULL, gridElements=NULL) {
   print(requestType)
   
   # Hard-coded request elements
   # Parameter flags: f = ACIS flag, s = source flag
-  paramFlags <- c("f,s")
+  #paramFlags <- c("f,s")
   # Metadata elements (not used explicitly)
   metaElements <-
     list('uid', 'll', 'name', 'elev', 'sids', 'state')
@@ -69,8 +71,8 @@ formatRequest <- function(requestType, climateParameters, cUID=NULL, duration=NU
   # Reduce flags: mcnt = count of missing values in the reduction period
   reduceFlags <- c("mcnt")
   paramCount <- length(climateParameters)
-  if (!is.null(reduceCodes)) {
-    reduceCount <- length(reduceCodes)
+  if (!is.null(reduceList)) {
+    reduceCount <- length(reduceList)
   }
   # List of elements
   eList <- NULL
@@ -80,6 +82,7 @@ formatRequest <- function(requestType, climateParameters, cUID=NULL, duration=NU
     # Build elems list
     if (duration == "mly") {
       eList <- vector('list', paramCount*reduceCount)
+      counter <- 1
       # Iterate parameter list to create elems element:
       for (i in 1:paramCount) {
         for (j in 1:reduceCount) { #listJ, listI

@@ -57,20 +57,21 @@ getDailyWxObservations <-
     
     # Format incoming arguments
     dataURL <-  gsub(" ", "", paste(baseURL, webServiceSource))
-    climateElems <- paste(climateParameters, collapse = ",")
-    paramCount <- length(climateParameters)
     
-    # Format POST request for use in httr
-    # Iterate parameter list to create elems element:
-    eList <- vector('list', paramCount)
-    for (i in 1:paramCount) {
-      e <- list(name = unlist(c(climateParameters[i])), add = paramFlags)
-      #print(e)
-      eList[[i]] <- e
-    }
-    
-    # Climate parameters as JSON with flags
-    elems <- toJSON(eList, auto_unbox = TRUE)
+    # climateElems <- paste(climateParameters, collapse = ",")
+    # paramCount <- length(climateParameters)
+    # 
+    # # Format POST request for use in httr
+    # # Iterate parameter list to create elems element:
+    # eList <- vector('list', paramCount)
+    # for (i in 1:paramCount) {
+    #   e <- list(name = unlist(c(climateParameters[i])), add = paramFlags)
+    #   #print(e)
+    #   eList[[i]] <- e
+    # }
+    # 
+    # # Climate parameters as JSON with flags
+    # elems <- toJSON(eList, auto_unbox = TRUE)
     
     # Iterate for each station
     if (is.data.frame(climateStations)) {
@@ -85,18 +86,19 @@ getDailyWxObservations <-
     for (s in 1:length(listStations)) {
       df <- NULL
       cUid <- unlist(listStations[s])
+      body <- formatRequest(requestType = "getWxObservations", climateParameters = climateParameters, sdate, edate, cUid, duration = duration, paramFlags = c("f,s"), )
       
-      bList <-
-        list(
-          uid = cUid,
-          sdate = sdate,
-          edate = edate,
-          elems = elems
-        )
+      # bList <-
+      #   list(
+      #     uid = cUid,
+      #     sdate = sdate,
+      #     edate = edate,
+      #     elems = elems
+      #   )
       #bList <- list(uid = climateStations, sdate = sdate, edate = edate, elems = elems)
       #bList <- list(sid = climateStations, sdate = sdate, edate = edate, elems = elems)
       
-      body  <- stripEscapes(bList)
+     # body  <- stripEscapes(bList)
       
       # This returns the full response - need to use content() and parse
       # content(dataResponseInit) results in a list lacking column names but containing data which needs to be
