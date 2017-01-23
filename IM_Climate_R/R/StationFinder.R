@@ -53,11 +53,13 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # ACIS data services
   baseURL <- "http://data.rcc-acis.org/"
   webServiceSource <- "StnMeta"
+  lookups <- 
+    fromJSON(system.file("ACISLookups.json", package = "IMClimateR"), flatten = TRUE) # assumes placement in package inst subfolder
   
   stationMetadata = c('uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids')
   #stationMetadata <-c('uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids')
   # If climateParameters is NULL, default to all parameters except degree days.
-  parameters <- list('pcpn', 'avgt', 'obst', 'mint', 'maxt', 'snwd', 'snow') 
+  #parameters <- list('pcpn', 'avgt', 'obst', 'mint', 'maxt', 'snwd', 'snow') 
   encode <- c("json")
   config <- add_headers(Accept = "'Accept':'application/json'")
   
@@ -73,7 +75,10 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
 
   # Format GET URL for use in jsonlite request
   if (is.null(climateParameters)) {
-    climateParameters = parameters
+    climateParameters0 <- lookups$element$code
+    # Remove degree days (v1.5); super cheesy... fix at some point
+    climateParameters <- climateParameters0[1:7]
+    #climateParameters = parameters
   }
   stationRequest <- gsub(" ", "%20", paste(paste(paste(stationURL, paste(climateParameters, collapse = ","), sep="?elems="), body, sep="&bbox="), paste(stationMetadata, collapse=","), sep="&meta="))
   #stationRequest <- gsub(" ", "%20", paste(paste(stationURL, paste(climateParameters, collapse = ","), sep="?elems="), body, sep="&bbox="))

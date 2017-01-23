@@ -134,6 +134,27 @@
 		"code": "mly",
 		"description": "Monthly summary; must specify reduce"
 	}],
+	"elementGrid": [{
+		"code": "pcpn",
+		"description": "Precipitation",
+		"unit": "inches",
+		"unitabbr": "in"
+	}, {
+		"code": "maxt",
+		"description": "Maximum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "mint",
+		"description": "Minimum temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}, {
+		"code": "avgt",
+		"description": "Average temperature",
+		"unit": "Fahrenheit",
+		"unitabbr": "F"
+	}],
 	"elementAggregateGrid": [{
 		"code": "mly_maxt",
 		"duration": "mly",

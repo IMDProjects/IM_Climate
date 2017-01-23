@@ -46,7 +46,10 @@ getDailyWxObservations <-
     
     # If climateParameters is NULL, default to all parameters except degree days.
     if (is.null(climateParameters)) {
-      climateParameters <- list('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
+      climateParameters0 <- lookups$element$code
+      # Remove degree days (v1.5); super cheesy... fix at some point
+      climateParameters <- climateParameters0[1:7]
+      #climateParameters <- list('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
     }
     
     # Initialize response object
