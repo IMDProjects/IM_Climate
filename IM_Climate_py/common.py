@@ -1,6 +1,10 @@
 import urllib2
 import json
 
+'''
+All of the other miscellaneous functions and properties that do not fit neatly
+into one of the other classes. Yep, these are the step-kids folks!
+'''
 
 missingValue = 'NA' #deines missing value for all modules
 
