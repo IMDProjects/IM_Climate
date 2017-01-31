@@ -234,7 +234,8 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   dfMeta  <-
     cbind(dfMeta, as.data.frame(as.character(as.vector(sid1_type))))
   colnames(dfMeta)[6]  <- "sid1_type"
-  if (identical(dim(dfMetaInit), as.integer(c(9, 1)))) {
+  # Check if SIDS 3 is present (dim 9,1 or dim 10,1 - 4th SID is ignored)
+  if (identical(dim(dfMetaInit), as.integer(c(9, 1))) || identical(dim(dfMetaInit), as.integer(c(10, 1)))) {
     dfMeta  <-
       cbind(dfMeta, as.data.frame(as.character(as.vector(
         dfMetaInit[5,]
@@ -271,7 +272,9 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
     if (identical(dim(dfMetaInit), as.integer(c(8, 1)))) {
       dfMeta  <-
         cbind(dfMeta, as.data.frame(as.character(as.vector(
-          dfMetaInit[5,]
+          dfMetaInit[4,]
+          #cbind(dfMeta, as.data.frame(as.character(as.vector(
+          #dfMetaInit[5,]
         ))))
       colnames(dfMeta)[7]  <- "sid2"
       dfMeta$sid2  <- as.character(dfMeta$sid2)
