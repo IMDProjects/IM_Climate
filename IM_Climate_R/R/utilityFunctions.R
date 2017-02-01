@@ -89,7 +89,7 @@ formatRequest <- function(requestType, climateParameters, sdate, edate, cUid=NUL
           e <-
             list(
               name = unlist(c(climateParameters[i])),
-              interval = "dly",#interval,
+              interval = duration, #"dly",#interval,
               duration = duration,
               reduce = c(reduceList[j]), 
               maxmissing = maxMissing #unlist(mmElem)
