@@ -139,10 +139,10 @@ getDailyWxObservations <-
 # @param dataURL URL for ACIS data service vending station data
 #' @param climateStations A list of one or more unique identifiers (uid) for climate stations. Can be a single item, a list of items, or a data frame of the findStation response.
 #' @param climateParameters A list of one or more climate parameters (e.g. pcpn, mint, maxt, avgt, obst, snow, snwd).  If not specified, defaults to all parameters except degree days. See Table 3 on ACIS Web Services page: http://www.rcc-acis.org/docs_webservices.html
-#' @param reduceCodes (optional) A list of one or more reduce codes. If missing, defaults to min, max, sum, and mean.
 #' @param sdate (optional) Default is period of record ("por"). If specific start date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The beginning of the desired date range.
 #' @param edate (optional) Default is period of record ("por"). If specific end date is desired, format as a string (yyyy-mm-dd or yyyymmdd). The end of the desired date range.
 #' @param duration (optional) Default is daily ("dly"). Use "mly" for monthly.
+#' @param reduceCodes (optional) For monthly requests, a list of one or more reduce codes. If missing, defaults to min, max, sum, and mean.
 #' @param maxMissing (optional) Maximum number of missing days within a month before the aggregate is not calculated (applied to each parameter). If missing, defaults to 1 (~3.3 percent missing days/month).
 #' @param filePathAndName (optional) File path and name including extension for output CSV file
 #' @return A data frame containing the requested data. Note: date vector is in character format, not date format. See User Guide for more details: https://docs.google.com/document/d/1B0rf0VTEXQNWGW9fqg2LRr6cHR20VQhFRy7PU_BfOeA/
@@ -176,10 +176,10 @@ getDailyWxObservations <-
 getWxObservations <-
   function(climateStations,
            climateParameters = NULL,
-           reduceCodes = NULL,
            sdate = "por",
            edate = "por",
            duration = "dly",
+           reduceCodes = NULL,
            maxMissing = NULL,
            filePathAndName = NULL) {
     # URLs and request parameters:
