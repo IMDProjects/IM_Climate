@@ -268,7 +268,7 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
     colnames(dfMeta)[10]  <- "sid3_type"
   }
   else {
-    # missing one or more sid elements
+    # missing one or more sid elements; first case is sid1 and sid2, no sid3
     if (identical(dim(dfMetaInit), as.integer(c(8, 1)))) {
       dfMeta  <-
         cbind(dfMeta, as.data.frame(as.character(as.vector(
