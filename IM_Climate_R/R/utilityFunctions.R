@@ -53,7 +53,7 @@ formatRequest <- function(requestType, climateParameters, sdate, edate, cUid=NUL
   
   # Hard-coded request elements
   # Parameter flags: f = ACIS flag, s = source flag
-  #paramFlags <- c("f,s")
+  paramFlags <- c("f,s")
   # Metadata elements (not used explicitly)
   metaElements <-
     list('uid', 'll', 'name', 'elev', 'sids', 'state')
