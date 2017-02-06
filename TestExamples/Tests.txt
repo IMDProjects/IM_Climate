@@ -34,6 +34,10 @@ STATION DATA REQUESTOR - getDailyWxObservations
 		climateParameters = <blank>
 		sdate = '2015-08-01'
 		edate = '20150804'
+	
+	TEST 05
+		climateStations = StationFinder.findStation(unitCode = 'CAHA', distance = 10, climateParameters = 'pcpn', 'mint', 'maxt')
+		climateParameters = 'pcpn', 'mint', 'maxt'
 		
 STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
 	TEST 01 
@@ -50,6 +54,7 @@ STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
         sdate = None
         edate = '2016-09'
         maxMissing = 2
+
 STATION DATA REQUESTOR - getYearlyWxSummary
 	TEST 01 
 		climateStations =  '61193, 26215'

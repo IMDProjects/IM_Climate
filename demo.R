@@ -56,6 +56,10 @@ getWxObservations(climateParameters = list('pcpn'), climateStations = ff, sdate 
 ff <- findStation(unitCode = "ACAD", distance=20)
 getWxObservations(climateParameters = NULL, climateStations = ff, sdate = "2015-08-01", edate = "20150804", filePathAndName = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\StationDataRequestor\\getDailyWxObservations\\Test04_R.csv")
 
+# Test 5
+cahaStations  <- findStation(unitCode = "CAHA", distance = 10, climateParameters = list("pcpn", "mint", "maxt"))
+getWxObservations(climateParameters = list("pcpn", "mint", "maxt"), climateStations = cahaStations, filePathAndName = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\StationDataRequestor\\getDailyWxObservations\\Test05_R.csv")
+
 # getMonthlyWxObservations
 # Test 1
 
