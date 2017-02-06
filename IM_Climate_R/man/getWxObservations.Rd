@@ -39,7 +39,7 @@ getWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt')
 
 The same request written to a CSV file:
 
-getWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20160831", filePathAndName = "D:\\\\temp\\\\trash\\\\monthyObs_station25056.csv")
+getWxObservations(climateParameters=list('pcpn', 'avgt', 'obst', 'mint', 'maxt'), climateStations=25056, sdate="20150801", edate="20160831", filePathAndName = "D:\\\\temp\\\\trash\\\\dailyObs_station25056.csv")
  
 All daily weather observations for a station for its period of record
 
@@ -49,7 +49,7 @@ All monthly weather observations for two stations for a specified date range:
 
 getWxObservations(climateStations = list(61193, 26215), sdate="201401", edate = "201501", duration="mly", maxMissing = NULL)
 
-Monthly weather observations for minimum precipitation for a station from beginning of record through Sept 2016
+Monthly weather observations for precipitation for a station from beginning of record through Sept 2016
 
 getWxObservations(climateStations = list(26215), climateParameters = list('pcpn'), reduceCodes = list('min'), edate= "2016-09", duration="mly", maxMissing = 2)
 
