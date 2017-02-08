@@ -71,9 +71,12 @@ getWxObservations(climateStations = list(26215), climateParameters = list('pcpn'
 
 # getDailyGrids
 # Test 1
-getDailyGrids(unitCode = list("APPA"), distance = 0, sdate = "2015-01-01", edate = "2015-01-01", climateParameters = list("mint"), filePath="D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\GridRequestor\\Test01")
+getGrids(unitCode = list("APPA"), distance = 0, sdate = "2015-01-01", edate = "2015-01-01", climateParameters = list("mint"), filePath="D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\GridRequestor\\getDailyGrids\\Test01")
 
 # Test 2  getMonthlyGrids
 
-getMonthlyGrids(unitCode = list("GRKO"), sdate = "1900-01", edate = "1900-01", climateParameters = list("mly_mint"), filePath = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\GridRequestor\\Test02")
+getGrids(unitCode = list("GRKO"), sdate = "1900-01", edate = "1900-01", climateParameters = list("mly_mint"), duration = "mly", filePath = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\GridRequestor\\getMonthlyGrids\\Test01")
 
+# Test 3 getYearlyGrids
+
+getGrids(unitCode = list("ARPO"), sdate = "1900-01", edate = "1900-01", climateParameters = list("yly_pcpn"), duration = "yly", filePath = "D:\\Project_Workspace\\DataMart\\Climate\\IM_Climate_GitHub\\TestExamples\\GridRequestor\\getYearlyGrids\\Test01")
