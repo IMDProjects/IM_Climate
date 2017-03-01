@@ -6,7 +6,7 @@ All of the other miscellaneous functions and properties that do not fit neatly
 into one of the other classes. Yep, these are the step-kids folks!
 '''
 
-missingValue = 'NA' #deines missing value for all modules
+missingValue = 'NA' #defines missing value for all modules
 
 def getBoundingBox(unitCode = None, distanceKM = 0):
     '''
