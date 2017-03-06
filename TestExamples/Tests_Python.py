@@ -143,6 +143,17 @@ class Test_StationDataRequestor_getDailyWxObs(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+    def test05(self):
+        sf = StationFinder()
+        stationList = sf.findStation(unitCode = 'CAHA', distance = 10, climateParameters = ['pcpn', 'mint', 'maxt'])
+        self.climateStations = stationList
+        self.climateParameters = ['pcpn', 'mint', 'maxt']
+        self.sdate = 'por'
+        self.edate = 'por'
+        self.refDataFile = 'Test05_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
 class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
 
     rootFolder = '../TestExamples/StationDataRequestor/getMonthlyWxSummaryByYear/'
