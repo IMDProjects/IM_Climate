@@ -260,14 +260,14 @@ class StationDataRequestor(ACIS):
         filePathAndName = None):
 
         if duration == 'dly':
-            getDailyWxObservations( climateStations = climateStations, climateParameters = climateParameters
+            self.getDailyWxObservations( climateStations = climateStations, climateParameters = climateParameters
                         ,sdate = sdate, edate = edate, filePathAndName = filePathAndName)
         elif duration == 'mly':
-            getMonthlyWxSummaryByYear(climateStations = climateStations, climateParameters = climateParameters
+            self.getMonthlyWxSummaryByYear(climateStations = climateStations, climateParameters = climateParameters
                          ,reduceCodes = reduceCodes, sdate = sdate, edate = edate, maxMissing = maxMissing
                          ,filePathAndName = filePathAndName)
         elif duration == 'yly':
-            getYearlyWxSummary(self, climateStations = climateStations, climateParameters = climateParameters
+            self.getYearlyWxSummary(self, climateStations = climateStations, climateParameters = climateParameters
                          ,reduceCodes = reduceCodes, sdate = sdate, edate = edate, maxMissing = maxMissing
                          ,filePathAndName = filePathAndName)
         else:
