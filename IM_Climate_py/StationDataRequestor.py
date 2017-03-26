@@ -264,12 +264,12 @@ class StationDataRequestor(ACIS):
                         ,sdate = sdate, edate = edate, filePathAndName = filePathAndName)
         elif duration == 'mly':
             getMonthlyWxSummaryByYear(climateStations = climateStations, climateParameters = climateParameters
-                        ,reduceCodes = reduceCodes, sdate = sdate, edate = edate, maxMissing = maxMissing
+                         ,reduceCodes = reduceCodes, sdate = sdate, edate = edate, maxMissing = maxMissing
                          ,filePathAndName = filePathAndName)
         elif duration == 'yly':
             getYearlyWxSummary(self, climateStations = climateStations, climateParameters = climateParameters
-                        ,reduceCodes = reduceCodes, sdate = sdate, edate = edate, maxMissing = maxMissing
-                        , filePathAndName = filePathAndName)
+                         ,reduceCodes = reduceCodes, sdate = sdate, edate = edate, maxMissing = maxMissing
+                         ,filePathAndName = filePathAndName)
         else:
             raise Exception('Invalid duration code: ' + duration )
 
