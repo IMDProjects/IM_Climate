@@ -7,7 +7,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 + Supports basic data request functions using consistent (identical) logic:
 
   * findStation
-  * requestData
+  * requestData (station or gridded)
 
 + Formats outputs consistently regardless of implementation technique (R, Python)
 
