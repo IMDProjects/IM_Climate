@@ -34,6 +34,10 @@ STATION DATA REQUESTOR - getDailyWxObservations
 		climateParameters = <blank>
 		sdate = '2015-08-01'
 		edate = '20150804'
+	
+	TEST 05
+		climateStations = StationFinder.findStation(unitCode = 'CAHA', distance = 10, climateParameters = 'pcpn', 'mint', 'maxt')
+		climateParameters = 'pcpn', 'mint', 'maxt'
 		
 STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
 	TEST 01 
@@ -42,7 +46,7 @@ STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
 		reduceCodes = None
 		sdate = '201401'
 		edate = '201501'
-        maxMissing = None
+        maxMissing = 1
 	TEST 02
 	    climateStations =  26215
         climateParameters = 'pcpn'
@@ -50,18 +54,57 @@ STATION DATA REQUESTOR - getMonthlyWxSummaryByYear
         sdate = None
         edate = '2016-09'
         maxMissing = 2
-				
-GRID REQUESTOR
-	TEST 01
-		sdate = '2015-01-01'
-		edate = '2015-01-01'
-		unitCode = 'APPA'
-		distance = 0
+
+STATION DATA REQUESTOR - getYearlyWxSummary
+	TEST 01 
+		climateStations =  '61193, 26215'
+		climateParameters = None
+		reduceCodes = None
+		sdate = '201401'
+		edate = '201501'
+        maxMissing = 1
+
+STATION DATA REQUESTOR - getDailyCountByThreshold
+	TEST 01 
+		climateStations =  29699
 		climateParameters = 'mint'
+		sdate = '200101'
+		edate = '200105'
+        thresholdValue = 90
+        thresholdType = 'gt'
+        timeInterval = 'mly'		
+	TEST 2
+		climateStations =  29699
+		climateParameters = 'mint'
+		sdate = 2001
+		edate = 2010
+        thresholdValue = 10
+        thresholdType = 'le'
+        timeInterval = 'yly'		
+
 		
-	TEST 02
-		sdate = '1900-01'
-		edate = '1900-01'
-		unitCode = 'GRKO'
-		distance = 0
-		climateParameters = 'mint'
+GRID REQUESTOR
+	GetGrids
+		Daily Grids
+			TEST 01
+				sdate = '2015-01-01'
+				edate = '2015-01-01'
+				unitCode = 'APPA'
+				distance = 0
+				climateParameters = 'mint'
+		
+		Monthly Grids
+			TEST 01
+				sdate = '1900-01'
+				edate = '1900-01'
+				unitCode = 'GRKO'
+				distance = 0
+				climateParameters = 'mint'
+		
+		Yearly Grids
+			TEST 01
+				sdate = '1970'
+				edate = '1970'
+				unitCode = 'ARPO'
+				distance = 5
+				climateParameters = 'pcpn'

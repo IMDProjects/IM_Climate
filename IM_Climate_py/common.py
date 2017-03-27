@@ -1,13 +1,12 @@
 import urllib2
 import json
-from ACIS import ACIS
 
+'''
+All of the other miscellaneous functions and properties that do not fit neatly
+into one of the other classes. Yep, these are the step-kids folks!
+'''
 
-missingValue = 'NA' #deines missing value for all modules
-
-def getSupportedParameters():
-    acis = ACIS()
-    return acis.supportedParameters
+missingValue = 'NA' #defines missing value for all modules
 
 def getBoundingBox(unitCode = None, distanceKM = 0):
     '''
@@ -44,8 +43,30 @@ def getBoundingBox(unitCode = None, distanceKM = 0):
         north+=bufr
     return str(west) + ', ' + str(south) + ',' + str(east) + ',' + str(north)
 
+def formatStringArguments(providedArgs, validArgs = None):
+    '''
+    Formats arguments to handle None, lists and strings.
+    Defaults to the valid arguments if the provided arguments are None
+    IF [] is passed, the defaults are not assigned
+    '''
+    #if no provided arguements, then default to valid arguments
+    if not providedArgs and providedArgs != []:
+        providedArgs = validArgs
+
+    #if provided arguments are iterable, then do nothing
+    elif hasattr(providedArgs, '__iter__'):
+        pass
+
+    #otherwise, assume that provided arguments are a string(-like) and can be
+    # split using a comma as the delimiter
+    else:
+        providedArgs = str(providedArgs)
+        providedArgs = providedArgs.replace(' ','')
+        providedArgs = providedArgs.split(',')
+    return providedArgs
+
+
 if __name__=='__main__':
     print (missingValue)
-    print (getSupportedParameters())
     print (getBoundingBox('ACAD',0))
     print (getBoundingBox('FF04RMHC00'))

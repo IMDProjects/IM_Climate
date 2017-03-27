@@ -1,9 +1,9 @@
 import json
 import urllib2
 
-from StationDict import DailyStationDict
+from StationDict import StationDict
+from WxOb import WxOb
 from ACIS import ACIS
-import common
 
 class StationFinder(ACIS):
     '''
@@ -11,11 +11,23 @@ class StationFinder(ACIS):
     -------
     Object to find weather stations using ACIS Web Services.
 
-
     '''
+    interval = None     #Not applicable when finding stations
+    add = None          #Not applicable when finding stations
+    duration = None     #Not applicable when finding stations
+    reduceCodes = []    #Not applicable when finding stations
+
     def __init__(self, *args, **kwargs):
         super(StationFinder, self).__init__(*args, **kwargs)
         self.webServiceSource = 'StnMeta'
+
+    def _formatElems(self):
+        '''
+        Unfortunately, the formatting of elements is different when requesting
+        a list of stations. Thus, there is the need to override the standard ACIS
+        method.
+        '''
+        self.elems = self.climateParameters
 
     def findStation(self, unitCode = None, distance = 0,
         climateParameters = None, sdate = None, edate = None
@@ -48,35 +60,35 @@ class StationFinder(ACIS):
         -------
         An object of station metadata (See StationDict.py)
         '''
-        metadata = ['uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids']
-        self._formatClimateParameters(climateParameters)
 
-        bbox = common.getBoundingBox(unitCode, distance)
+        #ACIS handles start and end dates differently when searching for stations
+        if not sdate:
+            sdate = 'NA'
+        if not edate:
+            edate = 'NA'
 
-        results =  self._call_ACIS(elems = self.climateParameters
-            ,bbox = bbox, sDate = sdate, eDate = edate
-            ,meta = metadata)
+        metadata = ('uid', 'name', 'state', 'll', 'elev', 'valid_daterange', 'sids')
+
+        kwargs = self._formatArguments(unitCode = unitCode, distance = distance
+            , climateParameters = climateParameters, reduceCodes = self.reduceCodes,
+            sdate = sdate, edate = edate, meta = metadata )
+
+        results =  self._call_ACIS(kwargs = kwargs)
         self._checkResponseForErrors(results)
 
-        #adds unitCode to input_dict following the call to ACIS
-        if unitCode:
-            self._input_dict['unitCode'] = unitCode
-
-        si = DailyStationDict(queryParameters = self._input_dict, climateParameters = self.climateParameters)
+        si = StationDict(observationClass = WxOb, queryParameters = self._input_dict, climateParameters = self.climateParameters)
         for station in results['meta']:
-            station['unitCode'] = unitCode
+            station['unitCode'] = unitCode #added to associate each station with a unit code
             si._addStation(stationID = station['uid'], stationMeta = station)
         if filePathAndName:
                 si.exportMeta(filePathAndName)
         return si
 
-
-
 if __name__ == '__main__':
     sf = StationFinder()
 
     wxStations = sf.findStation(unitCode = 'NOCA',
-        filePathAndName  = 'C:\\TEMP\\test.csv', sdate = '1940-01-01', edate = '1940-01-01')
+        sdate = '1940-01-01', edate = '1940-01-01')
     print wxStations.queryParameters
     print wxStations
     print sf.supportedParameters

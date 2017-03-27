@@ -42,52 +42,52 @@ class Test_StationFinder(unittest.TestCase):
         self.unitCode = 'ROMO'
         self.distance = 30
         self.climateParameters = 'maxt, mint'
-        self.sdate = None
-        self.edate = None
+        self.sdate = 'NA'
+        self.edate = 'NA'
         self.refFile = 'SF_Test01.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
-    def test01_R(self):
-        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,14]
-        self.unitCode = 'ROMO'
-        self.distance = 30
-        self.climateParameters = 'maxt, mint'
-        self.sdate = None
-        self.edate = None
-        self.refFile = 'Test01_R.csv'
-        self.confirmContent_NoOrder()
-        Test_StationFinder.testColumns = Test_StationFinder.default_columns
-        self.assertEquals(self.results, [])
+##    def test01_R(self):
+##        Test_StationFinder.testColumns = [0,1,2,4,5,6,7,8,9,10,12,14]
+##        self.unitCode = 'ROMO'
+##        self.distance = 30
+##        self.climateParameters = 'maxt, mint'
+##        self.sdate = None
+##        self.edate = None
+##        self.refFile = 'Test01_R.csv'
+##        self.confirmContent_NoOrder()
+##        Test_StationFinder.testColumns = Test_StationFinder.default_columns
+##        self.assertEquals(self.results, [])
 
     def test02(self):
         self.unitCode = 'AGFO'
         self.distance = 10
         self.climateParameters = None
-        self.sdate = None
-        self.edate = None
+        self.sdate = 'NA'
+        self.edate = 'NA'
         self.refFile = 'SF_Test02.csv'
         self.confirmContent_NoOrder()
         self.assertEquals(self.results, [])
 
-    def test02_R(self):
-        Test_StationFinder.testColumns = [0,1,2,3,4,5,6,7,8,9,10,12,14]
-        self.unitCode = 'AGFO'
-        self.distance = 10
-        self.climateParameters = None
-        self.sdate = None
-        self.edate = None
-        self.refFile = 'Test02_R.csv'
-        self.confirmContent_NoOrder()
-        Test_StationFinder.testColumns = Test_StationFinder.default_columns
-        self.assertEquals(self.results, [])
+##    def test02_R(self):
+##        Test_StationFinder.testColumns = [0,1,2,3,4,5,6,7,8,9,10,12,14]
+##        self.unitCode = 'AGFO'
+##        self.distance = 10
+##        self.climateParameters = None
+##        self.sdate = None
+##        self.edate = None
+##        self.refFile = 'Test02_R.csv'
+##        self.confirmContent_NoOrder()
+##        Test_StationFinder.testColumns = Test_StationFinder.default_columns
+##        self.assertEquals(self.results, [])
 
 class Test_StationDataRequestor_getDailyWxObs(unittest.TestCase):
 
-    rootFolder = '../TestExamples/StationDataRequestor/'
+    rootFolder = '../TestExamples/StationDataRequestor/getDailyWxObservations/'
     def confirmContent(self):
         '''
-        Confirms that all information the same, ignoring record order
+        Confirms that all information is the same, ignoring record order
         '''
         dr = StationDataRequestor()
         wxData =  dr.getDailyWxObservations(climateStations =  self.climateStations,
@@ -143,6 +143,17 @@ class Test_StationDataRequestor_getDailyWxObs(unittest.TestCase):
         self.confirmContent()
         self.assertEqual(self.result,[])
 
+    def test05(self):
+        sf = StationFinder()
+        stationList = sf.findStation(unitCode = 'CAHA', distance = 10, climateParameters = ['pcpn', 'mint', 'maxt'])
+        self.climateStations = stationList
+        self.climateParameters = ['pcpn', 'mint', 'maxt']
+        self.sdate = 'por'
+        self.edate = 'por'
+        self.refDataFile = 'Test05_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
 class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
 
     rootFolder = '../TestExamples/StationDataRequestor/getMonthlyWxSummaryByYear/'
@@ -153,7 +164,8 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         dr = StationDataRequestor()
         wxData =  dr.getMonthlyWxSummaryByYear(climateStations =  self.climateStations,
             climateParameters = self.climateParameters, reduceCodes = self.reduceCodes
-            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing)
+            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing,
+            includeNormals = self.includeNormals, includeNormalDepartures = self.includeNormalDepartures)
         wxData.export('temp.csv')
         infile = open('temp.csv','r')
         testData = infile.read()
@@ -170,21 +182,25 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.reduceCodes = None
         self.sdate = '201401'
         self.edate = '201501'
-        self.maxMissing = None
+        self.maxMissing = 1
+        self.includeNormals = False
+        self.includeNormalDepartures = False
         self.refDataFile = 'Test01_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
-##    def test01_R(self):
-##        self.climateStations =  '61193, 26215'
-##        self.climateParameters = None
-##        self.reduceCodes = None
-##        self.sdate = '201401'
-##        self.edate = '201501'
-##        self.maxMissing = None
-##        self.refDataFile = 'Test01_R.csv'
-##        self.confirmContent()
-##        self.assertEqual(self.result,[])
+####    def test01_R(self):
+####        self.climateStations =  '61193, 26215'
+####        self.climateParameters = None
+####        self.reduceCodes = None
+####        self.sdate = '201401'
+####        self.edate = '201501'
+####        self.maxMissing = None
+####        self.includeNormals = False
+####        self.includeNormalDepartures = False
+####        self.refDataFile = 'Test01_R.csv'
+####        self.confirmContent()
+####        self.assertEqual(self.result,[])
 
     def test02(self):
         self.climateStations =  26215
@@ -193,31 +209,46 @@ class Test_StationDataRequestor_getMonthlyWxSummaryByYear(unittest.TestCase):
         self.sdate = None
         self.edate = '2016-09'
         self.maxMissing = 2
+        self.includeNormals = False
+        self.includeNormalDepartures = False
         self.refDataFile = 'Test02_Py.csv'
         self.confirmContent()
         self.assertEqual(self.result,[])
 
-##    def test02_R(self):
-##        self.climateStations =  26215
-##        self.climateParameters = 'pcpn'
-##        self.reduceCodes = 'min'
-##        self.sdate = None
-##        self.edate = '2016-09'
-##        self.maxMissing = 2
-##        self.refDataFile = 'Test02_R.csv'
-##        self.confirmContent()
-##        self.assertEqual(self.result,[])
+##    #THIS IS FAILING BECAUSE OF THE ELEVATION PRECISION
+####    def test02_R(self):
+####        self.climateStations =  26215
+####        self.climateParameters = 'pcpn'
+####        self.reduceCodes = 'min'
+####        self.sdate = None
+####        self.edate = '2016-09'
+####        self.maxMissing = 2
+####        self.refDataFile = 'Test02_R.csv'
+####        self.confirmContent()
+####        self.assertEqual(self.result,[])
 
 
+    def test03(self):
+        self.climateStations =  29699
+        self.climateParameters = 'maxt'
+        self.reduceCodes = 'mean'
+        self.sdate = '2003-01'
+        self.edate = '2003-02'
+        self.maxMissing = 1
+        self.includeNormals = True
+        self.includeNormalDepartures = True
+        self.refDataFile = 'Test03_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
 
 class Test_GridRequestor(unittest.TestCase):
     rootFolder = '../TestExamples/GridRequestor/'
-    gr = GridRequestor()
-    def confirmAsciiGrid(self):
 
-        data =  self.method(sdate = self.sdate, edate = self.edate,
+    def confirmAsciiGrid(self):
+        gr = GridRequestor()
+        data =  gr.getGrids(sdate = self.sdate, edate = self.edate,
             unitCode = self.unitCode, distance = self.distance,
-            climateParameters = self.climateParameters)
+            climateParameters = self.climateParameters, duration = self.duration)
         testDataFile = data.export()[0]
         testFile = open(testDataFile,'r')
         testData = testFile.read()
@@ -229,54 +260,149 @@ class Test_GridRequestor(unittest.TestCase):
         refDataFile.close()
         self.result =  list(numpy.setdiff1d(refData.split('/n'),testData.split('/n')))
 
-    def test_01(self):
+    def test_getDailyGrids_01(self):
         #DAILY GRID - PRISM
-        self.method = self.gr.getDailyGrids
+        self.duration = 'dly'
         self.sdate = '2015-01-01'
         self.edate = '2015-01-01'
         self.climateParameters = 'mint'
         self.unitCode = 'APPA'
         self.distance = 0
-        self.refDataFile = 'Test01/PY_PRISM_mint_dly_2015-01-01.asc'
+        self.refDataFile = 'getDailyGrids/Test01/PY_PRISM_mint_dly_2015-01-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
 
-##    def test_01_R(self):
+##    def test_getDailyGrids_01_R(self):
 ##        self.method = self.gr.getMonthlyGrids
 ##        self.sdate = '2015-01-01'
 ##        self.edate = '2015-01-01'
 ##        self.climateParameters = 'mint'
 ##        self.unitCode = 'APPA'
 ##        self.distance = 0
-##        self.refDataFile = 'Test01/R_PRISM_mint_dly_2015-01-01.asc'
+##        self.refDataFile = 'getDailyGrids/Test01/R_PRISM_mint_dly_2015-01-01.asc'
 ##        self.confirmAsciiGrid()
 ##        self.assertEquals(self.result,[])
 
-    def test_02(self):
+    def test_getMonthlyGrids_01(self):
         #MONTHLY GRID - PRISM
-        self.method = self.gr.getMonthlyGrids
+        self.duration = 'mly'
         self.sdate = '1900-01'
         self.edate = '1900-01'
         self.climateParameters = 'mint'
         self.unitCode = 'GRKO'
         self.distance = 0
-        self.refDataFile = 'Test02/PY_PRISM_mly_mint_mly_1900-01.asc'
+        self.refDataFile = 'getMonthlyGrids/Test01/PY_PRISM_mly_mint_mly_1900-01.asc'
         self.confirmAsciiGrid()
         self.assertEquals(self.result,[])
 
-##    def test_02_R(self):
+##    def test_getMonthlyGrids_01_R(self):
 ##        #MONTHLY GRID - PRISM
-##        self.method = self.gr.getMonthlyGrids
+##        self.duration = 'mly'
 ##        self.sdate = '1900-01'
 ##        self.edate = '1900-01'
 ##        self.climateParameters = 'mint'
 ##        self.unitCode = 'GRKO'
 ##        self.distance = 0
-##        self.refDataFile = 'Test02/R_PRISM_mly_mint_mly_1900-01.asc'
+##        self.refDataFile = 'getMonthlyGrids/Test01/R_PRISM_mly_mint_mly_1900-01.asc'
 ##        self.confirmAsciiGrid()
 ##        self.assertEquals(self.result,[])
+##
+##
+    def test_getYearlyGrids_01(self):
+        #PRISM
+        self.duration = 'yly'
+        self.sdate = '1970'
+        self.edate = '1970'
+        self.climateParameters = 'pcpn'
+        self.unitCode = 'ARPO'
+        self.distance = 5
+        self.refDataFile = 'getYearlyGrids/Test01/PY_PRISM_yly_pcpn_yly_1970.asc'
+        self.confirmAsciiGrid()
+        self.assertEquals(self.result,[])
 
+
+class Test_StationDataRequestor_getYearlyWxSummary(unittest.TestCase):
+
+    rootFolder = '../TestExamples/StationDataRequestor/getYearlyWxSummary/'
+    def confirmContent(self):
+        '''
+        Confirms that all information is the same, ignoring record order
+        '''
+        dr = StationDataRequestor()
+        wxData =  dr.getYearlyWxSummary(climateStations =  self.climateStations,
+            climateParameters = self.climateParameters, reduceCodes = self.reduceCodes
+            ,sdate = self.sdate, edate = self.edate, maxMissing = self.maxMissing,
+            includeNormals = self.includeNormals, includeNormalDepartures = self.includeNormalDepartures)
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
+        testData = infile.read()
+        refDataFile = open(Test_StationDataRequestor_getYearlyWxSummary.rootFolder + self.refDataFile, 'r')
+        refData = refDataFile.read()
+        infile.close()
+        refDataFile.close()
+        os.remove('temp.csv')
+        self.result =  list(numpy.setdiff1d(refData.split('/n'), testData.split('/n')))
+
+    def test01(self):
+        self.climateStations =  29699
+        self.climateParameters = 'mint'
+        self.reduceCodes = 'mean'
+        self.sdate = 2001
+        self.edate = 2005
+        self.maxMissing = 0
+        self.includeNormals = True
+        self.includeNormalDepartures = True
+        self.refDataFile = 'Test01_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+class Test_StationDataRequestor_getDayCountByThreshold(unittest.TestCase):
+
+    rootFolder = '../TestExamples/StationDataRequestor/getDayCountByThreshold/'
+    def confirmContent(self):
+        '''
+        Confirms that all information is the same, ignoring record order
+        '''
+        dr = StationDataRequestor()
+        wxData =  dr.getDayCountByThreshold(climateStations =  self.climateStations,
+            climateParameters = self.climateParameters
+            ,sdate = self.sdate, edate = self.edate, thresholdValue = self.thresholdValue,
+            timeInterval = self.timeInterval, thresholdType = self.thresholdType)
+
+        wxData.export('temp.csv')
+        infile = open('temp.csv','r')
+        testData = infile.read()
+        refDataFile = open(Test_StationDataRequestor_getDayCountByThreshold.rootFolder + self.refDataFile, 'r')
+        refData = refDataFile.read()
+        infile.close()
+        refDataFile.close()
+        os.remove('temp.csv')
+        self.result =  list(numpy.setdiff1d(refData.split('/n'), testData.split('/n')))
+
+    def test01(self):
+        self.climateStations =  29699
+        self.climateParameters = 'mint'
+        self.sdate = '200101'
+        self.edate = '200105'
+        self.thresholdValue = 90
+        self.thresholdType = 'gt'
+        self.timeInterval = 'mly'
+        self.refDataFile = 'Test01_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
+
+    def test02(self):
+        self.climateStations =  29699
+        self.climateParameters = 'mint'
+        self.sdate = 2001
+        self.edate = 2010
+        self.thresholdValue = 10
+        self.thresholdType = 'le'
+        self.timeInterval = 'yly'
+        self.refDataFile = 'Test02_Py.csv'
+        self.confirmContent()
+        self.assertEqual(self.result,[])
 
 if __name__ == '__main__':
     unittest.main()

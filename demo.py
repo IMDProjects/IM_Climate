@@ -6,7 +6,7 @@ from IM_Climate_py.GridRequestor import GridRequestor
 This demo script showcases the utility of the IM_Climate.py package
 '''
 #specify local folder where demo files will be saved
-localFolder = 'c:\\temp\\'
+localFolder = 'c:\\temp\\climate\\'
 
 ##******************************************************************************
 ##*****************************************************************************
@@ -58,6 +58,12 @@ dr = StationDataRequestor()
 wxData = dr.getDailyWxObservations(climateStations = [66176, 31746],
     climateParameters = 'mint, maxt', sdate= '2012-01-01' , edate = '2012-02-01')
 
+#alternatively, there is a more generic call to get all wx data where duration
+#becomes an additional argument
+wxData = dr.getWxObservations(duration = 'dly', climateStations = [66176, 31746],
+    climateParameters = 'mint, maxt', sdate= '2012-01-01' , edate = '2012-02-01')
+
+
 #get daily data using wxStations object (from Example #1) for average termperature
 wxData = dr.getDailyWxObservations(climateStations =  wxStations, climateParameters = 'mint, maxt'
     ,sdate = '2012-01-01', edate = '2012-02-01')
@@ -97,15 +103,17 @@ print (wxData[33658].data['mint_min']['2015-10'])
 #print the minimum monthly value of minimum temperature for October 2016
 print (wxData[33658].data['mint_min']['2015-10'].wxOb)
 
+
 #******************************************************************************
 #*****************************************************************************
 # GRID REQUESTER - Module to request gridded data
 
 gr = GridRequestor()
 
-#get daily PRISM grids for GRKO and 10-km buffer for minimum temperature
-grids=  gr.getDailyGrids(sdate = '2015-01-01', edate = '2015-01-10', unitCode = 'GRKO'
-    ,distance = 10, climateParameters = 'mint')
+# #### DAILY GRIDS
+#get daily grids (PRISM only) for GRKO and 10-km buffer for minimum temperature
+grids = gr.getGrids(duration = 'dly', sdate = '2015-01-01', edate = '2015-01-10'
+    , unitCode = 'GRKO', distance = 10, climateParameters = 'mint')
 
 #view gridded data
 print (grids)
@@ -124,3 +132,12 @@ grids.export(filePath = localFolder)
 
 #export a single grid - note that filename is required. The prj file is automatically created
 grids['mint']['2015-01-01'].export(localFolder + 'GRKO_PRISM_mint_20150101.asc')
+
+# #### MONTHLY GRIDS
+#get monthly grids (PRISM only) for ARPO and a 5-km buffer for 1895
+grids = gr.getGrids(duration = 'mly', sdate = '1895-01', edate = '1895-12'
+        , unitCode = 'ARPO', distance = 5, climateParameters = 'pcpn')
+
+# #### YEARLY GRIDS
+grids = gr.getGrids(duration = 'yly', sdate = '1895', edate = '1895', unitCode = 'ARPO'
+    ,distance = 5, climateParameters = 'pcpn')

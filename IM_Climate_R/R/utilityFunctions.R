@@ -36,13 +36,19 @@ getStationSubtype <- function(testType, testSid) {
 }
 
 #' formatRequest generates the JSON-formatted request to send to ACIS
-#' @param requestType type of request: getDailyWxObservations, getMonthlyWxObservations, getDailyGrids, getMonthlyGrids, (findStation)
+#' @param requestType type of request: getDailyWxObservations, getMonthlyWxObservations, getGrids, (findStation)
 #' @param climateParameters A list of one or more climate parameters defined in calling source
-#' @param luElements lookup values defined in calling source
-#' @param duration (optional) station data duration specified in calling source; used for getWxObservations and getGrids
+#' @param sdate sdate (required) Start data defined in calling source
+#' @param edate sdate (required) End date defined in calling source
+#' @param cUID (optional) station UID defined in calling source, used for getWXObservation requests
+#' @param duration (optional) station data duration specified in calling source; used for getWxObservations and getGrids requests
+#' @param paramFlags (optional) used for getWxObservations (daily). Parameter flags: f = ACIS flag, s = source flag
+#' @param reduceList (optional) used for getWxObservations (monthly). Defaults to min, max, sum, and mean.
+#' @param maxMissing (optional) used for getWxObservations (monthly). Defaults to 1 (~3.3% missing days/month).
+#' @param gridElements grid request values defined in calling source
 #' @export
 #' 
-formatRequest <- function(requestType, climateParameters, luElements, duration=NULL) {
+formatRequest <- function(requestType, climateParameters, sdate, edate, cUid=NULL, duration=NULL, paramFlags=NULL, reduceList=NULL, maxMissing=NULL, gridElements=NULL) {
   print(requestType)
   
   # Hard-coded request elements
@@ -51,28 +57,104 @@ formatRequest <- function(requestType, climateParameters, luElements, duration=N
   # Metadata elements (not used explicitly)
   metaElements <-
     list('uid', 'll', 'name', 'elev', 'sids', 'state')
-  
-  # Daily grid elements
-  gridElements <-
-    list(
-      interval = "dly", 
-      duration = "dly", 
-      gridSource = "PRISM",
-      dataPrecision = 1,
-      output = "json",
-      meta = "ll"
-    )
-  
+  # # Used for grid requests
+  # gridElements <-
+  #   list(
+  #     #interval = "dly",
+  #     duration = duration,
+  #     gridSource = "PRISM",
+  #     dataPrecision = 1,
+  #     output = "json",
+  #     meta = "ll"
+  #   )
+  # gridElements <- c(gridElements, grid = luElements[[1]]$code)
   # Reduce flags: mcnt = count of missing values in the reduction period
   reduceFlags <- c("mcnt")
-  
-  # Build elems list
-  # Iterate parameter list to create elems element:
+  paramCount <- length(climateParameters)
+  if (!is.null(reduceList)) {
+    reduceCount <- length(reduceList)
+  }
+  # List of elements
   eList <- NULL
   
-  # Build body (bList)
+  # Build request
+  if (requestType == "getWxObservations") {
+    # Build elems list
+    if (duration == "mly") {
+      eList <- vector('list', paramCount*reduceCount)
+      counter <- 1
+      # Iterate parameter list to create elems element:
+      for (i in 1:paramCount) {
+        for (j in 1:reduceCount) { #listJ, listI
+          e <-
+            list(
+              name = unlist(c(climateParameters[i])),
+              interval = duration, #"dly",#interval,
+              duration = duration,
+              reduce = c(reduceList[j]), 
+              maxmissing = maxMissing #unlist(mmElem)
+            )
+          eList[[counter]] <- e
+          counter <- counter + 1
+        }
+      }
+    }
+    else {
+      eList <- vector('list', paramCount)
+      # Iterate parameter list to create elems element:
+      for (i in 1:paramCount) {
+        e <- list(name = unlist(c(climateParameters[i])), add = paramFlags)
+        #print(e)
+        eList[[i]] <- e
+      }
+    }
+    # Climate parameters as JSON with flags
+    elems <- toJSON(eList, auto_unbox = TRUE)
+    # Build body (bList)
+    bList <-
+      list(
+        uid = cUid,
+        sdate = sdate,
+        edate = edate,
+        elems = elems
+      )
+    reqBody  <- stripEscapes(bList)
+  }
+  else if ("getGrids") {
+    # Build elems list
+    # Iterate parameter list to create elems element:
+    # Iterate parameter list to create elems element:
+    eList <- vector('list', paramCount)
+    for (i in 1:paramCount) {
+      e <-
+        list(
+          name = unlist(c(climateParameters[i])),
+          #interval = gridElements$interval,
+          duration = gridElements$duration,
+          prec = gridElements$dataPrecision
+        )
+      #print(e)
+      eList[[i]] <- e
+    }
+    # Climate parameters as JSON with flags
+    elems <- toJSON(eList, auto_unbox = TRUE)
+    # Build body (bList)
+    bList <- c(bList, output = unlist(gridElements$output))
+    bList <- c(bList, grid = unlist(gridElements$grid))
+    bList <- c(bList, meta = unlist(gridElements$meta))
+    
+    reqBody  <- stripEscapes(c(bList, elems = elems))
+  }
+  # else { # placeholder for findStation
+  #   # Build elems list
+  #   # Iterate parameter list to create elems element:
+  #   eList <- NULL
+  #   
+  #   # Build body (bList)
+  # }
   
   # Return request JSON
+  return(reqBody)
 }
 
 #' formatWxObservations converts get*WxObservation response to a data frame, iterating by date and value
@@ -152,7 +234,8 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
   dfMeta  <-
     cbind(dfMeta, as.data.frame(as.character(as.vector(sid1_type))))
   colnames(dfMeta)[6]  <- "sid1_type"
-  if (identical(dim(dfMetaInit), as.integer(c(9, 1)))) {
+  # Check if SIDS 3 is present (dim 9,1 or dim 10,1 - 4th SID is ignored)
+  if (identical(dim(dfMetaInit), as.integer(c(9, 1))) || identical(dim(dfMetaInit), as.integer(c(10, 1)))) {
     dfMeta  <-
       cbind(dfMeta, as.data.frame(as.character(as.vector(
         dfMetaInit[5,]
@@ -185,11 +268,13 @@ formatWxObservations  <- function(rList, duration, climateParameters, reduceCode
     colnames(dfMeta)[10]  <- "sid3_type"
   }
   else {
-    # missing one or more sid elements
+    # missing one or more sid elements; first case is sid1 and sid2, no sid3
     if (identical(dim(dfMetaInit), as.integer(c(8, 1)))) {
       dfMeta  <-
         cbind(dfMeta, as.data.frame(as.character(as.vector(
-          dfMetaInit[5,]
+          dfMetaInit[4,]
+          #cbind(dfMeta, as.data.frame(as.character(as.vector(
+          #dfMetaInit[5,]
         ))))
       colnames(dfMeta)[7]  <- "sid2"
       dfMeta$sid2  <- as.character(dfMeta$sid2)

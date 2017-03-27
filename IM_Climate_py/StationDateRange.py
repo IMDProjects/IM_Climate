@@ -1,5 +1,5 @@
 import datetime
-from common import missingValue
+from common import missingValue, formatStringArguments
 from datetime import date
 
 class StationDateRange(dict):
@@ -16,7 +16,6 @@ class StationDateRange(dict):
         self._minRange = missingValue
         self._addDates(dateRanges, climateParameters)
 
-
     def _addDates(self, dateRanges, climateParameters):
         pass #Method needs to be defined in child class
 
@@ -31,7 +30,7 @@ class StationDateRange(dict):
     def climateParameters(self):
         return self.keys()
 
-    def __repr__(self):
+    def __str__(self):
         return  self.validDateRange
 
     @property
@@ -52,11 +51,13 @@ class StationDateRange(dict):
         return self._minRange.isoformat()
 
     def _addDates(self, dateRanges, climateParameters):
+
+        #if there aren't any climate parameters, terminate. Otherwise, set the climate
+        #parameters to an iterable list
         if not climateParameters:
             return
         if type(climateParameters) == str:
-            climateParameters = climateParameters.split(',')
-
+            climateParameters = formatStringArguments(climateParameters)
 
         #Assign Begin and End Dates to Each Parameter
         for index, p in enumerate(climateParameters):
@@ -70,8 +71,7 @@ class StationDateRange(dict):
 
         #Calculate the range of dates based on all parameters
         self._minRange = date(2100,1,1)
-        self._maxRange =  date(1492,1,1)
-
+        self._maxRange = date(1492,1,1)
         for p in self.items():
             if p[1]['begin'] <> missingValue:
                 if p[1]['begin'] < self._minRange:
