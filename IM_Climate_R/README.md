@@ -35,16 +35,11 @@ Functionality - Get monthly station summary by year for station data
   
 #### Release 1.1 - 20161006 ####
 
-<<<<<<< HEAD
-#### Release 1.2 - 20161122  ####
-
 In development - Get monthly gridded data (PRISM only)
-=======
+
 Functionality - Get daily gridded data (PRISM only)
   
 #### Release 1.0 - 20160906 ####
-
->>>>>>> 52fbaff070c6fa38d2efcecdfc81cbbe7a4e0a58
 
 #### R - Installing the IM_Climate Package ####
 

@@ -295,7 +295,7 @@ class StationDataRequestor(ACIS):
                          ,filePathAndName = filePathAndName)
         else:
             raise Exception('Invalid duration code: ' + duration )
->>>>>>> 52fbaff070c6fa38d2efcecdfc81cbbe7a4e0a58
+
 
 if __name__=='__main__':
 
