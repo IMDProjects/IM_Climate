@@ -11,7 +11,7 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
 + Formats outputs consistently regardless of implementation technique (R, Python)
 
-  * Limits alteration to data returned from ACIS web services
+  * Limits alteration to data returned from ACIS web services to display formatting only
   
 + Current Documentation: https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
  
