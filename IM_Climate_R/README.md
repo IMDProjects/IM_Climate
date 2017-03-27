@@ -13,7 +13,15 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * Limits alteration to data returned from ACIS web services
 
-#### Release 1.4 - Planned 20170127 ####
+#### Release 1.6 - Spring 2017 ####
+
+Functionality - Generic station discovery; station parameter summary; monthly data by year
+
+#### Release 1.5 - 20170327 ####
+
+Functionality - Get yearly gridded data (PRISM only)
+  
+#### Release 1.4 - Tabled - functionality moved to v1.6 ####
 
 Functionality - Get yearly gridded data (PRISM only)
 

@@ -19,10 +19,25 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 	#### Development Roadmap ####
 	Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
-	#### Version 1.3 ####
-	Release Date: Planned for 12/1/2016
+    #### 'Version 1.6' ####
+	Release Date: Spring 2017
+	Functionality: Generic station discovery; station parameter summary; monthly data by year
+	v1.6 Documentation: In Development
+
+	#### Version 1.5 ####
+	Release Date: 3/27/2017
+	Functionality: Get yearly gridded data (PRISM only)
+	v1.5 Documentation: https://drive.google.com/open?id=1DqGeuBnAeVH0_Foltws7mpEYM7Q_1RGcFoc-dsoyMxM
+    
+    #### Version 1.4 ####
+	Release Date: Tabled - functionality moved to v1.6
 	Functionality: Get monthly gridded data (PRISM only)
-	v1.3 Documentation: In Development
+	v1.4 Documentation: Tabled
+    
+    #### Version 1.3 ####
+	Release Date: Planned for 12/1/2016
+	Functionality: Get monthly data by year
+	v1.3 Documentation:  https://drive.google.com/open?id=1P8yfIYoQ6pzL7ikjrfatHQKPq6a-2yL3ys49mntAHGY
 	
 	#### Version 1.2 ####
 	Release Date: Planned for 11/1/2016
