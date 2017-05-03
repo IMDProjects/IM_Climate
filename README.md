@@ -13,20 +13,22 @@ To serve the broadest user community, it is implemented in both Python and R. Re
 
   * Limits alteration to data returned from ACIS web services to display formatting only
   
-+ Current Documentation: https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
++ Current Documentation:
+	* Data Store: https://irma.nps.gov/DataStore/Reference/Profile/2239495
+	* https://drive.google.com/open?id=1I-Db7Gqyeoz2C7ALOyY1QvTX3DoE7sQjWaEz-phG1iM
  
 #### Past, Present and Future Development
 	#### Development Roadmap ####
 	Development Roadmap: https://docs.google.com/spreadsheets/d/1LoAwf0fz0mIpZySpNO68OW2ArEEAGTiBYfTsk5ywvts
 
     #### 'Version 1.6' ####
-	Release Date: Spring 2017
-	Functionality: Generic station discovery; station parameter summary; monthly data by year
+	Release Date: Summer 2017
+	Functionality: Generic station discovery; station parameter summary; day counts; normals
 	v1.6 Documentation: In Development
 
 	#### Version 1.5 ####
 	Release Date: 3/27/2017
-	Functionality: Get yearly gridded data (PRISM only)
+	Functionality: Get yearly gridded data (PRISM only); monthly station data by year
 	v1.5 Documentation: https://drive.google.com/open?id=1DqGeuBnAeVH0_Foltws7mpEYM7Q_1RGcFoc-dsoyMxM
     
     #### Version 1.4 ####
