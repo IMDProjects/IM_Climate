@@ -145,7 +145,7 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
     options(digits = 1)
     elev <- as.numeric(stationListInit$meta[,5])
     options(digits = 7)
-    stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, longitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
+    stationList <- cbind( uid, name=stationListInit$meta[,1], longitude, latitude, sid1, sid1_type, sid2, sid2_type, sid3, sid3_type, state=stationListInit$meta[,4], elev=stationListInit$meta[,5], minDate, maxDate)
     stationList$unitCode <- unitCode[1]
     # Convert factors to character vectors
     fc  <- sapply(stationList, is.factor)
