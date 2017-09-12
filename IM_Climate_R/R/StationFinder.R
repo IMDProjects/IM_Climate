@@ -172,7 +172,12 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   }
   # Output file
   if (!is.null(filePathAndName)) {
-    write.table(stationList, file=filePathAndName, append = TRUE, sep=",", row.names=FALSE, qmethod="double")
+    if (file.exists(filePathAndName)) {
+      write.table(stationList, file=filePathAndName, append = TRUE, sep=",", row.names=FALSE, col.names=FALSE, qmethod="double")
+    }
+    else {
+      write.table(stationList, file=filePathAndName, sep=",", row.names=FALSE, qmethod="double")
+    }
   }
   else {
     return (stationList)
