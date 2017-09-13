@@ -147,6 +147,10 @@
 		"code": "10",
 		"description": "CoCoRaHS",
 		"subtypes": ""
+	}, {
+		"code": "12",
+		"description": "Unknown",
+		"subtypes": ""
 	}],
 	"duration": [{
 		"code": "dly",
