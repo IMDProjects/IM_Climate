@@ -80,7 +80,7 @@ formatRequest <- function(requestType, climateParameters, sdate, edate, cUid=NUL
   # Build request
   if (requestType == "getWxObservations") {
     # Build elems list
-    if (duration == "mly") {
+    if (duration == "mly" || duration == "yly") {
       eList <- vector('list', paramCount*reduceCount)
       counter <- 1
       # Iterate parameter list to create elems element:
@@ -454,39 +454,50 @@ stripEscapesGrid <- function(inputStr) {
 #' @param bboxExpand buffer distance in decimal degrees (assumes WGS984)
 #' @export
 #'
-getBBox <- function (unitCode, expandBBox) {
-  # NPS codes are alphabetic; FWS codes are alphanumeric
-  if (grepl('^[A-Za-z]+$', unitCode) == TRUE) {
-    bboxURLBase <-
-      "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+getBBox <- function (unitCode, expandBBox, bboxCustom=NULL) {
+  
+  if (is.null(bboxCustom)) {
+    # NPS codes are alphabetic; FWS codes are alphanumeric
+    if (grepl('^[A-Za-z]+$', unitCode) == TRUE) {
+      bboxURLBase <-
+        "http://irmaservices.nps.gov/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+    }
+    else {
+      bboxURLBase <-
+        "https://ecos.fws.gov/ServCatServices/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+    }
+    config <- add_headers(Accept = "'Accept':'application/json'")
+    # Get bounding box for park(s)
+    bboxURL <- gsub("CODE", unitCode, bboxURLBase)
+    # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
+    bboxWKT <-
+      strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
+    # Extract vertices and 'buffer' by bboxExpand distance or default of 0.011 degrees (~33 km)
+    # TODO: add Eastern Hemisphere detection
+    LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
+    LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
+    UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
+    UL  <-
+      strsplit(gsub("))", "", substring(bboxWKT[[1]][4], 2)), " ")
+    
+    LLX  <- as.numeric(LL[[1]][1]) - expandBBox
+    LLY  <- as.numeric(LL[[1]][2]) - expandBBox
+    LRX  <- as.numeric(LR[[1]][1]) + expandBBox
+    LRY  <- as.numeric(LR[[1]][2]) - expandBBox
+    URX  <- as.numeric(UR[[1]][1]) + expandBBox
+    URY  <- as.numeric(UR[[1]][2]) + expandBBox
+    ULX  <-  as.numeric(UL[[1]][1]) - expandBBox
+    ULY  <- as.numeric(UL[[1]][2]) + expandBBox
   }
+  
   else {
-    bboxURLBase <-
-      "https://ecos.fws.gov/ServCatServices/v2/rest/unit/CODE/geography?detail=envelope&dataformat=wkt&format=json"
+    # Custom bounding box provided
+    bboxRAW <- strsplit(bboxCustom, ",")
+    LLX  <- as.numeric(bboxRAW[[1]][1]) - expandBBox
+    LLY  <- as.numeric(bboxRAW[[1]][2]) - expandBBox
+    URX  <- as.numeric(bboxRAW[[1]][3]) + expandBBox
+    URY  <- as.numeric(bboxRAW[[1]][4]) + expandBBox
   }
-  config <- add_headers(Accept = "'Accept':'application/json'")
-  # Get bounding box for park(s)
-  bboxURL <- gsub("CODE", unitCode, bboxURLBase)
-  # Counter-clockwise vertices (as WKT): LL, LR, UR, UL
-  bboxWKT <-
-    strsplit(content(GET(bboxURL, config))[[1]]$Geography, ",")
-  # Extract vertices and 'buffer' by bboxExpand distance or default of 0.011 degrees (~33 km)
-  # TODO: add Eastern Hemisphere detection
-  LL <- strsplit(substring(bboxWKT[[1]][1], 11), " ")
-  LR <- strsplit(substring(bboxWKT[[1]][2], 2), " ")
-  UR  <- strsplit(substring(bboxWKT[[1]][3], 2), " ")
-  UL  <-
-    strsplit(gsub("))", "", substring(bboxWKT[[1]][4], 2)), " ")
-  
-  LLX  <- as.numeric(LL[[1]][1]) - expandBBox
-  LLY  <- as.numeric(LL[[1]][2]) - expandBBox
-  LRX  <- as.numeric(LR[[1]][1]) + expandBBox
-  LRY  <- as.numeric(LR[[1]][2]) - expandBBox
-  URX  <- as.numeric(UR[[1]][1]) + expandBBox
-  URY  <- as.numeric(UR[[1]][2]) + expandBBox
-  ULX  <-  as.numeric(UL[[1]][1]) - expandBBox
-  ULY  <- as.numeric(UL[[1]][2]) + expandBBox
-  
   bbox  <- paste(c(LLX, LLY, URX, URY), collapse = ", ")
   return(bbox)
 }

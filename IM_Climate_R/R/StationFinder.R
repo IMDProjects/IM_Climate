@@ -36,7 +36,7 @@
 
 # TODO: iterate unitCode list; add either/or capability for park code/bbox
 
-findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePathAndName=NULL) {
+findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePathAndName=NULL, customBBox=NULL) {
   # URLs and request parameters
   
   # NPS Park bounding boxes
@@ -70,7 +70,12 @@ findStation <- function (unitCode, distance=NULL, climateParameters=NULL, filePa
   # http://data.rcc-acis.org/StnMeta?bbox=-104.895308730118,%2041.8657116369158,%20-104.197521654032,%2042.5410939149279
   
   # Get bounding box for park(s)
-  bbox <- getBBox(unitCode, bboxExpand) 
+  if (is.null(customBBox)) {
+    bbox <- getBBox(unitCode, bboxExpand)
+  }
+  else {
+    bbox <- getBBox(unitCode, bboxExpand, customBBox)
+  }
   body  <- list(bbox = bbox)
 
   # Format GET URL for use in jsonlite request

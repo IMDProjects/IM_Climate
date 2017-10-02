@@ -56,8 +56,13 @@ getWxObservations <-
     # Reduce flags: mcnt = count of missing values in the reduction period
     reduceFlags <- c("mcnt")
     reduceList <- NULL
-    # Interval and duration (TODO: add as function params in v1.4)
-    interval <- c("dly")
+    # Interval and duration (TODO: add interval as function param in v1.7)
+    if (!is.null(duration)) {
+      interval <- duration
+    }
+    else {
+      interval <- c("dly")
+    }
     #duration <- c("mly")
     metaElements <-
       list('uid', 'll', 'name', 'elev', 'sids', 'state')
@@ -73,7 +78,7 @@ getWxObservations <-
       climateParameters <- climateParameters0[1:7]
       #climateParameters <- list('pcpn', 'mint', 'maxt', 'avgt', 'obst', 'snow', 'snwd')
     }
-    if (duration == "mly") {
+    if (duration == "mly" || duration == "yly") {
       # If reduceCodes is NULL, default to min, max, sum, and mean.
       if (is.null(reduceCodes)) {
         reduceCodes <- list('min', 'max', 'sum', 'mean')
